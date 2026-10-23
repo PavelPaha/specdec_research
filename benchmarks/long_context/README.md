@@ -90,6 +90,12 @@ nohup .venv/bin/python -m benchmarks.long_context.sweep \
 - `effective_vllm_config.txt`, `console.log`: фактическая конфигурация и вывод движка.
 - `rounds.jsonl.gz`: длина префикса до каждого раунда, предложенные/принятые
   драфт-токены, выходные token IDs, время шага и фаза относительно первого EOS.
+  `proposed` и `accepted` — счётчики vLLM. V2 Model Runner передаёт scheduler
+  маркеры `-1` вместо фактических ID предложенных токенов: они сохраняются
+  в `scheduled_draft_token_ids`, а `draft_token_ids` в этом случае равен `null`
+  и `draft_token_ids_available=false`. В ранних smoke/boundary-логах эти
+  маркеры лежат непосредственно в `draft_token_ids`; это не настоящие token IDs.
+  Все фактически выданные target токены доступны в `token_ids` и выходных потоках.
 - `requests.started.jsonl`, `requests.jsonl`: соответствие внутренних ID,
   завершённость, фактическая длина, TTFT, полное время, tok/s, хеш ответа.
 - `*.tokens.jsonl.gz`, `*.text.txt.gz`: все выходные токены и декодированный текст.

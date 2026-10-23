@@ -66,12 +66,16 @@ class TracingScheduler(Scheduler):
                             phase = "crosses_eos"
                             break
                 proposed, accepted = self.counts.get(request_id, (0, 0))
+                scheduled_ids = scheduler_output.scheduled_spec_decode_tokens.get(request_id, [])
+                draft_ids_available = all(token >= 0 for token in scheduled_ids)
                 record = {
                     "request_id": request_id, "step": self.step_index,
                     "prefix_tokens": prefix, "generated_before": generated,
                     "proposed": proposed, "accepted": accepted,
                     "emitted": len(tokens), "token_ids": tokens,
-                    "draft_token_ids": scheduler_output.scheduled_spec_decode_tokens.get(request_id, []),
+                    "draft_token_ids": scheduled_ids if draft_ids_available else None,
+                    "draft_token_ids_available": draft_ids_available,
+                    "scheduled_draft_token_ids": scheduled_ids,
                     "phase": phase, "first_eos_output_index": first_eos,
                     "step_seconds": elapsed, "unix_time": time.time(),
                     "is_prefill": generated == 0,
