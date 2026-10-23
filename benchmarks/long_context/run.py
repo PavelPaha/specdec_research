@@ -1,0 +1,173 @@
+"""Run one method/budget in an isolated vLLM process on one explicitly selected GPU."""
+
+import argparse
+import gzip
+import hashlib
+import importlib.metadata
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", default="benchmarks/long_context/config.json")
+    parser.add_argument("--prompts", default="data/long_context_prompts.jsonl")
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--method", choices=["ar", "mtp", "dflash", "eagle3"], required=True)
+    parser.add_argument("--budget", type=int, default=3)
+    parser.add_argument("--limit", type=int)
+    parser.add_argument("--offset", type=int, default=0)
+    parser.add_argument("--max-new-tokens", type=int)
+    parser.add_argument("--enforce-eager", action="store_true")
+    parser.add_argument("--gpu-memory-utilization", type=float, default=0.85)
+    args = parser.parse_args()
+    assert os.environ.get("CUDA_VISIBLE_DEVICES"), "Select exactly one GPU explicitly"
+    assert "," not in os.environ["CUDA_VISIBLE_DEVICES"]
+    config = json.loads(Path(args.config).read_text())
+    output = Path(args.output).resolve()
+    output.mkdir(parents=True, exist_ok=True)
+    if (output / "metadata.json").exists():
+        raise FileExistsError(f"Refusing to overwrite {output}")
+    source_snapshot = output / "source_snapshot"
+    source_snapshot.mkdir()
+    source_hashes = {}
+    for source in Path(__file__).parent.iterdir():
+        if source.is_file() and source.suffix in (".py", ".json", ".txt", ".md"):
+            shutil.copy2(source, source_snapshot / source.name)
+            source_hashes[source.name] = hashlib.sha256(source.read_bytes()).hexdigest()
+    os.environ["VLLM_ALLOW_LONG_MAX_MODEL_LEN"] = "1"
+    os.environ["VLLM_COMPUTE_NANS_IN_LOGITS"] = "1"
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["SPECDEC_TRACE_PATH"] = str(output / "rounds.jsonl.gz")
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
+    os.environ.setdefault("CUDA_HOME", "/usr/local/cuda")
+    from transformers import AutoTokenizer, GenerationConfig
+    from vllm import LLM, SamplingParams
+    from vllm.sampling_params import RequestOutputKind
+
+    tokenizer = AutoTokenizer.from_pretrained(config["target"], revision=config["target_revision"])
+    gen_config = GenerationConfig.from_pretrained(config["target"], revision=config["target_revision"])
+    eos_ids = gen_config.eos_token_id
+    if isinstance(eos_ids, int):
+        eos_ids = [eos_ids]
+    eos_ids = sorted(set((eos_ids or []) + [tokenizer.eos_token_id]))
+    os.environ["SPECDEC_EOS_IDS"] = json.dumps(eos_ids)
+    spec = None
+    if args.method != "ar":
+        spec = dict(config["drafters"][args.method])
+        spec.update(method=args.method, num_speculative_tokens=args.budget,
+                    max_model_len=config["max_model_len"])
+    engine_args = dict(
+        model=config["target"], revision=config["target_revision"],
+        tokenizer_revision=config["target_revision"], dtype=config["dtype"],
+        tensor_parallel_size=1, max_model_len=config["max_model_len"],
+        max_num_seqs=1, max_num_batched_tokens=4096,
+        gpu_memory_utilization=args.gpu_memory_utilization,
+        enable_prefix_caching=False, async_scheduling=False,
+        language_model_only=True, speculative_config=spec,
+        scheduler_cls="benchmarks.long_context.trace.TracingScheduler",
+        seed=config["seed"], enforce_eager=args.enforce_eager,
+        disable_log_stats=False, generation_config="vllm",
+    )
+    metadata = {
+        "config": config, "args": vars(args), "engine_args": engine_args,
+        "source_sha256": source_hashes,
+        "eos_token_ids": eos_ids, "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"],
+        "environment": {key: os.environ.get(key) for key in
+                        ["VLLM_ALLOW_LONG_MAX_MODEL_LEN", "VLLM_COMPUTE_NANS_IN_LOGITS",
+                         "HF_HUB_OFFLINE", "CUDA_HOME"]},
+        "packages": {p: importlib.metadata.version(p) for p in
+                     ["vllm", "torch", "transformers", "huggingface_hub"]},
+        "prompt_file_sha256": hashlib.sha256(Path(args.prompts).read_bytes()).hexdigest(),
+        "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+        "git_dirty": bool(subprocess.check_output(["git", "status", "--porcelain"], text=True)),
+        "gpu": subprocess.check_output(["nvidia-smi", "--query-gpu=index,uuid,name,memory.total,driver_version", "--format=csv"], text=True),
+        "started_at": time.time(), "status": "initializing",
+    }
+    (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
+    llm = LLM(**engine_args)
+    (output / "effective_vllm_config.txt").write_text(str(llm.llm_engine.vllm_config))
+    prompts = [json.loads(line) for line in Path(args.prompts).read_text().splitlines()]
+    prompts = prompts[args.offset:]
+    if args.limit:
+        prompts = prompts[:args.limit]
+    metadata["status"] = "running"
+    (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
+    summaries = output / "requests.jsonl"
+    for prompt in prompts:
+        request_id = prompt["id"]
+        prompt_ids = prompt["prompt_token_ids"]
+        max_tokens = config["max_model_len"] - len(prompt_ids)
+        if args.max_new_tokens:
+            max_tokens = min(max_tokens, args.max_new_tokens)
+        sampling = SamplingParams(
+            temperature=config["temperature"], top_p=1.0, top_k=-1,
+            seed=config["seed"], ignore_eos=True, max_tokens=max_tokens,
+            detokenize=False, output_kind=RequestOutputKind.DELTA,
+        )
+        generated_ids = []
+        started = time.perf_counter()
+        first_token_time = None
+        finish_reason = None
+        print(f"START {request_id} input={len(prompt_ids)} max_new={max_tokens}", flush=True)
+        engine_request_id = llm.llm_engine.add_request(
+            request_id, {"prompt_token_ids": prompt_ids}, sampling
+        )
+        with (output / "requests.started.jsonl").open("a") as handle:
+            handle.write(json.dumps({"id": request_id, "engine_request_id": engine_request_id,
+                                     "domain": prompt["domain"], "max_new_tokens": max_tokens}) + "\n")
+        with gzip.open(output / f"{request_id}.tokens.jsonl.gz", "wt", compresslevel=1) as stream:
+            while llm.llm_engine.has_unfinished_requests():
+                for result in llm.llm_engine.step():
+                    for completion in result.outputs:
+                        tokens = list(completion.token_ids)
+                        if tokens:
+                            now = time.perf_counter()
+                            first_token_time = first_token_time or now
+                            generated_ids.extend(tokens)
+                            stream.write(json.dumps({"elapsed": now - started, "token_ids": tokens}) + "\n")
+                        if completion.finish_reason:
+                            finish_reason = completion.finish_reason
+        elapsed = time.perf_counter() - started
+        first_eos = next((i for i, token in enumerate(generated_ids) if token in eos_ids), None)
+        with gzip.open(output / f"{request_id}.text.txt.gz", "wt") as handle:
+            handle.write(tokenizer.decode(generated_ids, skip_special_tokens=False))
+        summary = {
+            "id": request_id, "engine_request_id": engine_request_id,
+            "domain": prompt["domain"], "prompt_tokens": len(prompt_ids),
+            "generated_tokens": len(generated_ids), "final_context": len(prompt_ids) + len(generated_ids),
+            "max_new_tokens": max_tokens, "seconds": elapsed,
+            "tokens_per_second": len(generated_ids) / elapsed,
+            "ttft_seconds": first_token_time - started if first_token_time else None,
+            "first_eos_output_index": first_eos, "finish_reason": finish_reason,
+            "output_sha256": hashlib.sha256(json.dumps(generated_ids).encode()).hexdigest(),
+            "completed_requested_length": len(generated_ids) == max_tokens,
+        }
+        with summaries.open("a") as handle:
+            handle.write(json.dumps(summary) + "\n")
+        print(json.dumps(summary), flush=True)
+        if len(generated_ids) != max_tokens:
+            raise RuntimeError(f"{request_id}: stopped before requested length")
+    llm.llm_engine.engine_core.shutdown()
+    metadata["status"] = "complete"
+    metadata["finished_at"] = time.time()
+    (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except BaseException as error:
+        if "--output" in sys.argv:
+            path = Path(sys.argv[sys.argv.index("--output") + 1]) / "metadata.json"
+            if path.exists():
+                metadata = json.loads(path.read_text())
+                metadata.update(status="failed", error=repr(error), finished_at=time.time())
+                path.write_text(json.dumps(metadata, indent=2))
+        raise

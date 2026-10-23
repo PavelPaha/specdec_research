@@ -1,0 +1,27 @@
+{
+  "target": "Qwen/Qwen3.6-35B-A3B",
+  "target_revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+  "native_context": 262144,
+  "max_model_len": 393216,
+  "rope_scaling": null,
+  "dtype": "bfloat16",
+  "tensor_parallel_size": 1,
+  "max_num_seqs": 1,
+  "temperature": 0.0,
+  "ignore_eos": true,
+  "enable_thinking": true,
+  "seed": 20261024,
+  "prompts_per_domain": 50,
+  "draft_budgets": [3, 7],
+  "drafters": {
+    "dflash": {
+      "model": "z-lab/Qwen3.6-35B-A3B-DFlash",
+      "revision": "f181eece646affea2c38b2765f1aaa01a9734ccd"
+    },
+    "eagle3": {
+      "model": "Dogacel/specdrift-qwen3.6-35b-a3b-eagle3",
+      "revision": "cda3d86f3681352ea988ff78aba08adf153b026a"
+    },
+    "mtp": {}
+  }
+}

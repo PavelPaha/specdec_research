@@ -2,6 +2,9 @@
 
 Базовый список статей и материалов для проекта по speculative decoding на длинном контексте.
 
+Код и протокол эксперимента из [issue #11](https://github.com/PavelPaha/specdec_research/issues/11):
+[acceptance на растущем префиксе до 393 216 токенов](benchmarks/long_context/README.md).
+
 ## Архитектуры
 
 - **EAGLE-1** — [EAGLE: Speculative Sampling Requires Rethinking Feature Uncertainty](https://arxiv.org/abs/2401.15077).
