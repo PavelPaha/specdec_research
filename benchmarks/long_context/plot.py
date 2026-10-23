@@ -158,7 +158,7 @@ def main():
     domains = ["math", "code", "chat", "reasoning"]
     labels = {"acceptance_rate": "Accepted / proposed draft tokens",
               "accepted_per_round": "Accepted draft tokens / verification round (no bonus)",
-              "decode_tokens_per_second": "Decode tokens/s (scheduler wall time)",
+              "decode_tokens_per_second": "Per-request decode tokens/s (scheduler wall time)",
               "speedup_vs_ar": "Paired decode speedup vs AR"}
     for phase in ["all", "pre_eos", "post_eos"]:
         for metric, ylabel in labels.items():
