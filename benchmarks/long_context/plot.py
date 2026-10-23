@@ -174,9 +174,13 @@ def main():
                     x = (group.prefix_bin_start + group.prefix_bin_end) / 2 / 1024
                     n_low, n_high = group.n_prompts.min(), group.n_prompts.max()
                     count_label = str(n_low) if n_low == n_high else f"{n_low}–{n_high}"
-                    ax.plot(x, group["mean"], marker=".", markersize=3,
-                            label=f"{method} (n={count_label})")
+                    line, = ax.plot(x, group["mean"], marker=".", markersize=3,
+                                    label=f"{method} (n={count_label})")
                     ax.fill_between(x, group.low, group.high, alpha=0.15)
+                    if len(group) == 1 and group.low.notna().all():
+                        ax.errorbar(x, group["mean"], fmt="none", capsize=3,
+                                    color=line.get_color(),
+                                    yerr=[group["mean"] - group.low, group.high - group["mean"]])
                 ax.axvline(native / 1024, color="black", linestyle="--", label="Native context")
                 ax.set_xlim(0, limit / 1024)
                 if metric == "acceptance_rate":
