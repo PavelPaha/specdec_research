@@ -44,12 +44,14 @@ def main():
     os.environ["VLLM_COMPUTE_NANS_IN_LOGITS"] = "1"
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["SPECDEC_TRACE_PATH"] = str(output / "rounds.jsonl.gz")
+    os.environ["SPECDEC_POSITION_CACHE_LEN"] = str(config["max_model_len"])
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
     os.environ.setdefault("CUDA_HOME", "/usr/local/cuda")
     from transformers import AutoTokenizer, GenerationConfig
     from vllm import LLM, SamplingParams
     from vllm.sampling_params import RequestOutputKind
+    from benchmarks.long_context.positions import extend_position_cache
 
     tokenizer = AutoTokenizer.from_pretrained(config["target"], revision=config["target_revision"])
     gen_config = GenerationConfig.from_pretrained(config["target"], revision=config["target_revision"])
@@ -74,14 +76,16 @@ def main():
         scheduler_cls="benchmarks.long_context.trace.TracingScheduler",
         seed=config["seed"], enforce_eager=args.enforce_eager,
         disable_log_stats=False, generation_config="vllm",
+        hf_overrides=extend_position_cache,
     )
     metadata = {
-        "config": config, "args": vars(args), "engine_args": engine_args,
+        "config": config, "args": vars(args),
+        "engine_args": {**engine_args, "hf_overrides": "benchmarks.long_context.positions.extend_position_cache"},
         "source_sha256": source_hashes,
         "eos_token_ids": eos_ids, "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"],
         "environment": {key: os.environ.get(key) for key in
                         ["VLLM_ALLOW_LONG_MAX_MODEL_LEN", "VLLM_COMPUTE_NANS_IN_LOGITS",
-                         "HF_HUB_OFFLINE", "CUDA_HOME"]},
+                         "HF_HUB_OFFLINE", "CUDA_HOME", "SPECDEC_POSITION_CACHE_LEN"]},
         "packages": {p: importlib.metadata.version(p) for p in
                      ["vllm", "torch", "transformers", "huggingface_hub"]},
         "prompt_file_sha256": hashlib.sha256(Path(args.prompts).read_bytes()).hexdigest(),
