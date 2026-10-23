@@ -35,6 +35,8 @@ def read_jsonl(path, compressed=False):
 def aggregate(run_dir, bin_size=8192, include_partial=False):
     metadata = json.loads((run_dir / "metadata.json").read_text())
     label = metadata["args"]["method"]
+    if label == "eagle3":
+        label = "eagle3.1"
     if label != "ar":
         label += f" k={metadata['args']['budget']}"
     requests = {r["engine_request_id"]: r for r in read_jsonl(run_dir / "requests.started.jsonl")}
