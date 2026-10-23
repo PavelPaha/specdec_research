@@ -101,6 +101,9 @@ def main():
                     time.sleep(10)
                     summary_path = destination / "requests.jsonl"
                     state["completed_requests"] = len(summary_path.read_text().splitlines()) if summary_path.exists() else 0
+                    progress_path = destination / "progress.json"
+                    if progress_path.exists():
+                        state["progress"] = json.loads(progress_path.read_text())
                     state["heartbeat_at"] = time.time()
                     (root / "status.json").write_text(json.dumps(state, indent=2))
                     if time.monotonic() - last_plot >= 600:
@@ -128,6 +131,12 @@ def main():
                             *[str(p.parent) for p in paths], "--output", str(plot_dir)],
                            check=True)
             print(f"COMPLETE {stage} {name}", flush=True)
+            # A reversible boundary stop lets an operator migrate the controller
+            # to a frozen checkout without interrupting an active GPU run.
+            if (root / "STOP_AFTER_CONFIGURATION").exists():
+                state.update(status="stopped_at_configuration_boundary", finished_at=time.time())
+                (root / "status.json").write_text(json.dumps(state, indent=2))
+                return
     (root / "status.json").write_text(json.dumps({"status": "complete", "finished_at": time.time()}))
 
 

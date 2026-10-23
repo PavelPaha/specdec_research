@@ -3,6 +3,7 @@
 import gzip
 import json
 import os
+from pathlib import Path
 import time
 
 from vllm.v1.core.sched.scheduler import Scheduler
@@ -20,6 +21,9 @@ class TracingScheduler(Scheduler):
         self.last_flush = time.monotonic()
         self.step_started = self.last_flush
         self.counts = {}
+        self.progress = {}
+        self.preemptions = 0
+        self.progress_path = Path(os.environ["SPECDEC_TRACE_PATH"]).with_name("progress.json")
 
     def schedule(self, *args, **kwargs):
         self.step_started = time.perf_counter()
@@ -42,6 +46,7 @@ class TracingScheduler(Scheduler):
                 before[request_id] = (request.num_tokens, request.num_output_tokens)
         self.counts = {}
         result = super().update_from_output(scheduler_output, model_runner_output)
+        self.preemptions += len(scheduler_output.preempted_req_ids or ())
         elapsed = time.perf_counter() - self.step_started
         self.step_index += 1
         for batch in result.values():
@@ -74,13 +79,32 @@ class TracingScheduler(Scheduler):
                     "scheduled_requests": len(scheduler_output.num_scheduled_tokens),
                 }
                 self.trace_file.write(json.dumps(record, separators=(",", ":")) + "\n")
+                previous = self.progress.get(request_id, {})
+                self.progress[request_id] = {
+                    "context_tokens": prefix + len(tokens),
+                    "generated_tokens": generated + len(tokens),
+                    "first_eos_output_index": first_eos,
+                    "proposed": previous.get("proposed", 0) + proposed,
+                    "accepted": previous.get("accepted", 0) + accepted,
+                    "nan_logits": previous.get("nan_logits", 0) + (record["num_nans_in_logits"] or 0),
+                }
         if time.monotonic() - self.last_flush >= 10:
             self.trace_file.flush()
+            self.write_progress()
             self.last_flush = time.monotonic()
         return result
+
+    def write_progress(self):
+        temporary = self.progress_path.with_suffix(".tmp")
+        temporary.write_text(json.dumps({
+            "updated_at": time.time(), "step": self.step_index,
+            "preemptions": self.preemptions, "requests": self.progress,
+        }, indent=2))
+        temporary.replace(self.progress_path)
 
     def shutdown(self):
         try:
             self.trace_file.close()
+            self.write_progress()
         finally:
             super().shutdown()
