@@ -97,6 +97,14 @@ def main():
     (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
     llm = LLM(**engine_args)
     (output / "effective_vllm_config.txt").write_text(str(llm.llm_engine.vllm_config))
+    effective = llm.llm_engine.vllm_config
+    (output / "effective_target_hf_config.json").write_text(
+        json.dumps(effective.model_config.hf_config.to_dict(), indent=2)
+    )
+    if effective.speculative_config is not None:
+        (output / "effective_draft_hf_config.json").write_text(
+            json.dumps(effective.speculative_config.draft_model_config.hf_config.to_dict(), indent=2)
+        )
     prompts = [json.loads(line) for line in Path(args.prompts).read_text().splitlines()]
     prompts = prompts[args.offset:]
     if args.limit:

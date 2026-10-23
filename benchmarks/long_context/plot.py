@@ -161,7 +161,7 @@ def main():
                 for method, group in subset[subset.domain == domain].groupby("method"):
                     group = group.sort_values("prefix_bin_start")
                     x = (group.prefix_bin_start + group.prefix_bin_end) / 2 / 1024
-                    ax.plot(x, group["mean"], label=method)
+                    ax.plot(x, group["mean"], marker=".", markersize=3, label=method)
                     ax.fill_between(x, group.low, group.high, alpha=0.15)
                 ax.axvline(native / 1024, color="black", linestyle="--", label="Native context")
                 ax.set_xlim(0, limit / 1024)
@@ -171,7 +171,8 @@ def main():
                 ax.grid(alpha=0.25)
                 ax.legend(fontsize=8)
             partial = " (partial run)" if args.include_partial else ""
-            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · {phase} · 95% prompt bootstrap CI{partial}")
+            smoke = " · SHORT SMOKE TEST" if first_meta["args"].get("max_new_tokens") else ""
+            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · {phase} · 95% prompt bootstrap CI{partial}{smoke}")
             fig.tight_layout()
             fig.savefig(output / f"{metric}_{phase}.png", dpi=160)
             fig.savefig(output / f"{metric}_{phase}.pdf")
