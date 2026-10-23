@@ -21,9 +21,9 @@ class TracingScheduler(Scheduler):
         self.step_started = self.last_flush
         self.counts = {}
 
-    def schedule(self):
+    def schedule(self, *args, **kwargs):
         self.step_started = time.perf_counter()
-        return super().schedule()
+        return super().schedule(*args, **kwargs)
 
     def make_spec_decoding_stats(self, spec_decoding_stats, num_draft_tokens,
                                 num_accepted_tokens, num_invalid_spec_tokens, request_id):
