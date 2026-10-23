@@ -16,7 +16,9 @@ def adapt_eagle_checkpoint(spec):
     from safetensors.torch import load_file, save_file
     import torch
 
-    source = Path(snapshot_download(spec["model"], revision=spec["revision"], local_files_only=True))
+    source = Path(snapshot_download(spec["model"], revision=spec["revision"],
+                                    allow_patterns=["config.json", "model.safetensors"],
+                                    local_files_only=True))
     original = source / "model.safetensors"
     config = json.loads((source / "config.json").read_text())
     destination = Path.home() / ".cache/specdec_research" / f"eagle-fc-norm-v1-{spec['revision']}"

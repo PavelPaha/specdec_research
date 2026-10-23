@@ -2,6 +2,7 @@
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import signal
@@ -23,6 +24,22 @@ def stop_worker(process):
         os.killpg(process.pid, signal.SIGKILL)
     except ProcessLookupError:
         pass
+
+
+def boundary_prompt(root, config):
+    """Artificial input only for CUDA/RoPE range validation, never a data point."""
+    source = Path("data/long_context_prompts.jsonl")
+    prompts = [json.loads(line) for line in source.read_text().splitlines()]
+    corpus = [token for prompt in prompts for token in prompt["prompt_token_ids"]]
+    length = config["max_model_len"] - 128
+    ids = (corpus * (length // len(corpus) + 1))[:length]
+    record = dict(id="boundary-diagnostic", domain="diagnostic", prompt_tokens=length,
+                  prompt_token_ids=ids, source="artificial concatenation and repetition",
+                  source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+                  exclude_from_benchmark=True)
+    path = root / "boundary-prompt.jsonl"
+    path.write_text(json.dumps(record) + "\n")
+    return path
 
 
 def main():
@@ -51,12 +68,15 @@ def main():
                               for method in ["mtp", "dflash", "eagle3"]]
     # Run every budget through initialization, sampling and logging before the
     # multi-day experiment. All stages are resumable at configuration boundaries.
-    stages = ["smoke"] if args.smoke_only else ["smoke", "pilot", "full"]
+    stages = ["smoke"] if args.smoke_only else ["smoke", "boundary", "pilot", "full"]
     for stage in stages:
         ordered = variants if stage == "smoke" else [
             ("dflash", 7), ("mtp", 3), ("eagle3", 3), ("ar", 0),
             ("dflash", 3), ("mtp", 7), ("eagle3", 7),
         ]
+        if stage == "boundary":
+            ordered = [("ar", 0)] + [(method, max(config["draft_budgets"]))
+                                     for method in ["mtp", "dflash", "eagle3"]]
         for method, budget in ordered:
             name = f"{method}-k{budget}"
             destination = root / stage / name
@@ -82,6 +102,9 @@ def main():
                        "--config", args.config]
             if stage == "smoke":
                 command += ["--limit", str(pilot_count), "--max-new-tokens", "1024"]
+            elif stage == "boundary":
+                command += ["--prompts", str(boundary_prompt(root, config)), "--limit", "1",
+                            "--max-new-tokens", "128"]
             elif stage == "pilot":
                 command += ["--limit", str(pilot_count)]
             else:
@@ -106,7 +129,7 @@ def main():
                         state["progress"] = json.loads(progress_path.read_text())
                     state["heartbeat_at"] = time.time()
                     (root / "status.json").write_text(json.dumps(state, indent=2))
-                    if time.monotonic() - last_plot >= 600:
+                    if stage != "boundary" and time.monotonic() - last_plot >= 600:
                         paths = (sorted((root / stage).glob("*/metadata.json")) if stage == "smoke"
                                  else sorted(root.glob("pilot/*/metadata.json")) + sorted(root.glob("full/*/metadata.json")))
                         plot_dir = root / "smoke" / "plots" if stage == "smoke" else root / "plots"
@@ -127,9 +150,10 @@ def main():
             paths = (sorted((root / stage).glob("*/metadata.json")) if stage == "smoke"
                      else sorted(root.glob("pilot/*/metadata.json")) + sorted(root.glob("full/*/metadata.json")))
             plot_dir = root / "smoke" / "plots" if stage == "smoke" else root / "plots"
-            subprocess.run([sys.executable, "-m", "benchmarks.long_context.plot",
-                            *[str(p.parent) for p in paths], "--output", str(plot_dir)],
-                           check=True)
+            if stage != "boundary":
+                subprocess.run([sys.executable, "-m", "benchmarks.long_context.plot",
+                                *[str(p.parent) for p in paths], "--output", str(plot_dir)],
+                               check=True)
             print(f"COMPLETE {stage} {name}", flush=True)
             # A reversible boundary stop lets an operator migrate the controller
             # to a frozen checkout without interrupting an active GPU run.
