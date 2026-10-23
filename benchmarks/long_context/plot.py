@@ -80,16 +80,16 @@ def summarize(frame):
     keys = ["method", "domain", "phase", "prefix_bin_start", "prefix_bin_end"]
     for key, group in frame.groupby(keys):
         base = dict(zip(keys, key))
-        base["n_prompts"] = group["id"].nunique()
         metrics = ["acceptance_rate", "accepted_per_round", "decode_tokens_per_second"]
         if "speedup_vs_ar" in group:
             metrics.append("speedup_vs_ar")
         for metric in metrics:
-            values = group[metric].dropna().to_numpy()
+            measured = group[group[metric].notna()]
+            values = measured[metric].to_numpy()
             if not len(values):
                 continue
             means = rng.choice(values, (500, len(values)), replace=True).mean(axis=1) if len(values) > 1 else None
-            rows.append(dict(base, metric=metric, mean=values.mean(),
+            rows.append(dict(base, metric=metric, n_prompts=measured["id"].nunique(), mean=values.mean(),
                              low=np.quantile(means, 0.025) if means is not None else np.nan,
                              high=np.quantile(means, 0.975) if means is not None else np.nan))
     return pd.DataFrame(rows)

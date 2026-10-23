@@ -51,3 +51,15 @@ def test_position_extension_preserves_rope_frequencies_for_target_and_draft(monk
         assert result is config
         assert text.max_position_embeddings == 393216
         assert text.rope_parameters == rope
+
+
+def test_partial_baseline_counts_only_measured_pairs():
+    common = dict(method="mtp", domain="math", phase="all", prefix_bin_start=0,
+                  prefix_bin_end=8192, acceptance_rate=0.5,
+                  accepted_per_round=1.5, decode_tokens_per_second=100)
+    rows = [dict(common, id="a", speedup_vs_ar=2.0),
+            dict(common, id="b", speedup_vs_ar=float("nan"))]
+    result = summarize(pd.DataFrame(rows)).set_index("metric")
+    assert result.loc["speedup_vs_ar", "n_prompts"] == 1
+    assert pd.isna(result.loc["speedup_vs_ar", "low"])
+    assert result.loc["acceptance_rate", "n_prompts"] == 2

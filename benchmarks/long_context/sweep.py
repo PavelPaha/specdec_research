@@ -141,4 +141,14 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BaseException as error:
+        if "--output" in sys.argv:
+            path = Path(sys.argv[sys.argv.index("--output") + 1]) / "status.json"
+            if path.exists():
+                state = json.loads(path.read_text())
+                state.update(status="interrupted" if isinstance(error, (KeyboardInterrupt, SystemExit))
+                             else "failed", error=repr(error), finished_at=time.time())
+                path.write_text(json.dumps(state, indent=2))
+        raise
