@@ -88,9 +88,10 @@ def summarize(frame):
             values = group[metric].dropna().to_numpy()
             if not len(values):
                 continue
-            means = rng.choice(values, (500, len(values)), replace=True).mean(axis=1)
+            means = rng.choice(values, (500, len(values)), replace=True).mean(axis=1) if len(values) > 1 else None
             rows.append(dict(base, metric=metric, mean=values.mean(),
-                             low=np.quantile(means, 0.025), high=np.quantile(means, 0.975)))
+                             low=np.quantile(means, 0.025) if means is not None else np.nan,
+                             high=np.quantile(means, 0.975) if means is not None else np.nan))
     return pd.DataFrame(rows)
 
 
@@ -125,9 +126,17 @@ def main():
     output = Path(args.output)
     output.mkdir(parents=True, exist_ok=True)
     rows = []
+    comparison_signature = None
     for name in args.runs:
         path = Path(name)
         if (path / "metadata.json").exists():
+            meta = json.loads((path / "metadata.json").read_text())
+            signature = tuple(meta["config"][key] for key in [
+                "target_revision", "max_model_len", "max_num_seqs", "temperature", "dtype"])
+            if comparison_signature is None:
+                comparison_signature = signature
+            elif signature != comparison_signature:
+                raise ValueError("Cannot combine different targets, lengths, concurrency or sampling settings")
             rows.extend(aggregate(path, args.bin_size, args.include_partial))
     if not rows:
         print("No measured rounds available yet; no plots fabricated.")
@@ -161,7 +170,10 @@ def main():
                 for method, group in subset[subset.domain == domain].groupby("method"):
                     group = group.sort_values("prefix_bin_start")
                     x = (group.prefix_bin_start + group.prefix_bin_end) / 2 / 1024
-                    ax.plot(x, group["mean"], marker=".", markersize=3, label=method)
+                    n_low, n_high = group.n_prompts.min(), group.n_prompts.max()
+                    count_label = str(n_low) if n_low == n_high else f"{n_low}–{n_high}"
+                    ax.plot(x, group["mean"], marker=".", markersize=3,
+                            label=f"{method} (n={count_label})")
                     ax.fill_between(x, group.low, group.high, alpha=0.15)
                 ax.axvline(native / 1024, color="black", linestyle="--", label="Native context")
                 ax.set_xlim(0, limit / 1024)
@@ -172,7 +184,8 @@ def main():
                 ax.legend(fontsize=8)
             partial = " (partial run)" if args.include_partial else ""
             smoke = " · SHORT SMOKE TEST" if first_meta["args"].get("max_new_tokens") else ""
-            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · {phase} · 95% prompt bootstrap CI{partial}{smoke}")
+            concurrency = first_meta["config"]["max_num_seqs"]
+            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · C≤{concurrency} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
             fig.tight_layout()
             fig.savefig(output / f"{metric}_{phase}.png", dpi=160)
             fig.savefig(output / f"{metric}_{phase}.pdf")

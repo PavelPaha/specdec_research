@@ -28,6 +28,7 @@ def stop_worker(process):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", required=True)
+    parser.add_argument("--config", default="benchmarks/long_context/config.json")
     parser.add_argument("--gpu", required=True, help="GPU UUID; exactly one device")
     parser.add_argument("--smoke-only", action="store_true")
     args = parser.parse_args()
@@ -44,7 +45,8 @@ def main():
 
     signal.signal(signal.SIGTERM, terminate)
     signal.signal(signal.SIGINT, terminate)
-    config = json.loads(Path("benchmarks/long_context/config.json").read_text())
+    config = json.loads(Path(args.config).read_text())
+    pilot_count = max(4, config["max_num_seqs"])
     variants = [("ar", 0)] + [(method, budget) for budget in config["draft_budgets"]
                               for method in ["mtp", "dflash", "eagle3"]]
     # Run every budget through initialization, sampling and logging before the
@@ -65,6 +67,8 @@ def main():
                     print(f"SKIP complete {destination}", flush=True)
                     continue
                 raise RuntimeError(f"Incomplete run exists: {destination}; inspect before resuming")
+            if destination.exists() and any(destination.iterdir()):
+                raise RuntimeError(f"Startup artifacts exist: {destination}; preserve them before retrying")
             usage = subprocess.check_output([
                 "nvidia-smi", f"--id={args.gpu}", "--query-gpu=memory.used,utilization.gpu",
                 "--format=csv,noheader,nounits",
@@ -74,13 +78,14 @@ def main():
                 raise RuntimeError(f"Selected GPU is busy before start: {usage}")
             destination.mkdir(parents=True, exist_ok=True)
             command = [sys.executable, "-m", "benchmarks.long_context.run", "--method", method,
-                       "--budget", str(budget), "--output", str(destination)]
+                       "--budget", str(budget), "--output", str(destination),
+                       "--config", args.config]
             if stage == "smoke":
-                command += ["--limit", "4", "--max-new-tokens", "1024"]
+                command += ["--limit", str(pilot_count), "--max-new-tokens", "1024"]
             elif stage == "pilot":
-                command += ["--limit", "4"]
+                command += ["--limit", str(pilot_count)]
             else:
-                command += ["--offset", "4"]
+                command += ["--offset", str(pilot_count)]
             state = dict(stage=stage, method=method, budget=budget, command=command,
                          started_at=time.time(), status="running")
             (root / "status.json").write_text(json.dumps(state, indent=2))

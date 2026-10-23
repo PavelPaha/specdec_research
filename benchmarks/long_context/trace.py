@@ -71,6 +71,7 @@ class TracingScheduler(Scheduler):
                     "step_seconds": elapsed, "unix_time": time.time(),
                     "is_prefill": generated == 0,
                     "num_nans_in_logits": (model_runner_output.num_nans_in_logits or {}).get(request_id),
+                    "scheduled_requests": len(scheduler_output.num_scheduled_tokens),
                 }
                 self.trace_file.write(json.dumps(record, separators=(",", ":")) + "\n")
         if time.monotonic() - self.last_flush >= 10:

@@ -1,6 +1,7 @@
 """Run one method/budget in an isolated vLLM process on one explicitly selected GPU."""
 
 import argparse
+from contextlib import ExitStack
 import gzip
 import hashlib
 import importlib.metadata
@@ -69,7 +70,7 @@ def main():
         model=config["target"], revision=config["target_revision"],
         tokenizer_revision=config["target_revision"], dtype=config["dtype"],
         tensor_parallel_size=1, max_model_len=config["max_model_len"],
-        max_num_seqs=1, max_num_batched_tokens=4096,
+        max_num_seqs=config["max_num_seqs"], max_num_batched_tokens=4096,
         gpu_memory_utilization=args.gpu_memory_utilization,
         enable_prefix_caching=False, async_scheduling=False,
         language_model_only=True, speculative_config=spec,
@@ -112,60 +113,83 @@ def main():
     metadata["status"] = "running"
     (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
     summaries = output / "requests.jsonl"
-    for prompt in prompts:
-        request_id = prompt["id"]
-        prompt_ids = prompt["prompt_token_ids"]
-        max_tokens = config["max_model_len"] - len(prompt_ids)
-        if args.max_new_tokens:
-            max_tokens = min(max_tokens, args.max_new_tokens)
-        sampling = SamplingParams(
-            temperature=config["temperature"], top_p=1.0, top_k=-1,
-            seed=config["seed"], ignore_eos=True, max_tokens=max_tokens,
-            detokenize=False, output_kind=RequestOutputKind.DELTA,
-        )
-        generated_ids = []
-        started = time.perf_counter()
-        first_token_time = None
-        finish_reason = None
-        print(f"START {request_id} input={len(prompt_ids)} max_new={max_tokens}", flush=True)
-        engine_request_id = llm.llm_engine.add_request(
-            request_id, {"prompt_token_ids": prompt_ids}, sampling
-        )
-        with (output / "requests.started.jsonl").open("a") as handle:
-            handle.write(json.dumps({"id": request_id, "engine_request_id": engine_request_id,
-                                     "domain": prompt["domain"], "max_new_tokens": max_tokens}) + "\n")
-        with gzip.open(output / f"{request_id}.tokens.jsonl.gz", "wt", compresslevel=1) as stream:
+    concurrency = config["max_num_seqs"]
+    for batch_start in range(0, len(prompts), concurrency):
+        batch = prompts[batch_start:batch_start + concurrency]
+        states = {}
+        lookup = {}
+        batch_started = time.perf_counter()
+        with ExitStack() as stack:
+            for prompt in batch:
+                request_id = prompt["id"]
+                prompt_ids = prompt["prompt_token_ids"]
+                max_tokens = config["max_model_len"] - len(prompt_ids)
+                if args.max_new_tokens:
+                    max_tokens = min(max_tokens, args.max_new_tokens)
+                sampling = SamplingParams(
+                    temperature=config["temperature"], top_p=1.0, top_k=-1,
+                    seed=config["seed"], ignore_eos=True, max_tokens=max_tokens,
+                    detokenize=False, output_kind=RequestOutputKind.DELTA,
+                )
+                state = dict(prompt=prompt, generated_ids=[], started=time.perf_counter(),
+                             first_token_time=None, finished=None, finish_reason=None,
+                             max_tokens=max_tokens)
+                state["stream"] = stack.enter_context(gzip.open(
+                    output / f"{request_id}.tokens.jsonl.gz", "wt", compresslevel=1))
+                states[request_id] = state
+                print(f"START {request_id} input={len(prompt_ids)} max_new={max_tokens}", flush=True)
+                internal_id = llm.llm_engine.add_request(
+                    request_id, {"prompt_token_ids": prompt_ids}, sampling)
+                state["engine_request_id"] = internal_id
+                lookup[request_id] = lookup[internal_id] = state
+                with (output / "requests.started.jsonl").open("a") as handle:
+                    handle.write(json.dumps({"id": request_id, "engine_request_id": internal_id,
+                                             "domain": prompt["domain"], "max_new_tokens": max_tokens,
+                                             "batch_size": len(batch)}) + "\n")
             while llm.llm_engine.has_unfinished_requests():
                 for result in llm.llm_engine.step():
+                    state = lookup[result.request_id]
                     for completion in result.outputs:
                         tokens = list(completion.token_ids)
                         if tokens:
                             now = time.perf_counter()
-                            first_token_time = first_token_time or now
-                            generated_ids.extend(tokens)
-                            stream.write(json.dumps({"elapsed": now - started, "token_ids": tokens}) + "\n")
+                            state["first_token_time"] = state["first_token_time"] or now
+                            state["generated_ids"].extend(tokens)
+                            state["stream"].write(json.dumps({
+                                "elapsed": now - state["started"], "token_ids": tokens}) + "\n")
                         if completion.finish_reason:
-                            finish_reason = completion.finish_reason
-        elapsed = time.perf_counter() - started
-        first_eos = next((i for i, token in enumerate(generated_ids) if token in eos_ids), None)
-        with gzip.open(output / f"{request_id}.text.txt.gz", "wt") as handle:
-            handle.write(tokenizer.decode(generated_ids, skip_special_tokens=False))
-        summary = {
-            "id": request_id, "engine_request_id": engine_request_id,
-            "domain": prompt["domain"], "prompt_tokens": len(prompt_ids),
-            "generated_tokens": len(generated_ids), "final_context": len(prompt_ids) + len(generated_ids),
-            "max_new_tokens": max_tokens, "seconds": elapsed,
-            "tokens_per_second": len(generated_ids) / elapsed,
-            "ttft_seconds": first_token_time - started if first_token_time else None,
-            "first_eos_output_index": first_eos, "finish_reason": finish_reason,
-            "output_sha256": hashlib.sha256(json.dumps(generated_ids).encode()).hexdigest(),
-            "completed_requested_length": len(generated_ids) == max_tokens,
-        }
-        with summaries.open("a") as handle:
-            handle.write(json.dumps(summary) + "\n")
-        print(json.dumps(summary), flush=True)
-        if len(generated_ids) != max_tokens:
-            raise RuntimeError(f"{request_id}: stopped before requested length")
+                            state["finish_reason"] = completion.finish_reason
+                            state["finished"] = time.perf_counter()
+        batch_elapsed = time.perf_counter() - batch_started
+        with (output / "batches.jsonl").open("a") as handle:
+            total = sum(len(s["generated_ids"]) for s in states.values())
+            handle.write(json.dumps({"ids": list(states), "seconds": batch_elapsed,
+                                     "generated_tokens": total,
+                                     "aggregate_tokens_per_second": total / batch_elapsed}) + "\n")
+        for request_id, state in states.items():
+            prompt = state["prompt"]
+            generated_ids = state["generated_ids"]
+            assert state["finished"] is not None, f"{request_id}: missing finish event"
+            elapsed = state["finished"] - state["started"]
+            first_eos = next((i for i, token in enumerate(generated_ids) if token in eos_ids), None)
+            with gzip.open(output / f"{request_id}.text.txt.gz", "wt") as handle:
+                handle.write(tokenizer.decode(generated_ids, skip_special_tokens=False))
+            summary = {
+                "id": request_id, "engine_request_id": state["engine_request_id"],
+                "domain": prompt["domain"], "prompt_tokens": prompt["prompt_tokens"],
+                "generated_tokens": len(generated_ids), "final_context": prompt["prompt_tokens"] + len(generated_ids),
+                "max_new_tokens": state["max_tokens"], "seconds": elapsed,
+                "tokens_per_second": len(generated_ids) / elapsed, "batch_size": len(batch),
+                "ttft_seconds": state["first_token_time"] - state["started"] if state["first_token_time"] else None,
+                "first_eos_output_index": first_eos, "finish_reason": state["finish_reason"],
+                "output_sha256": hashlib.sha256(json.dumps(generated_ids).encode()).hexdigest(),
+                "completed_requested_length": len(generated_ids) == state["max_tokens"],
+            }
+            with summaries.open("a") as handle:
+                handle.write(json.dumps(summary) + "\n")
+            print(json.dumps(summary), flush=True)
+            if not summary["completed_requested_length"]:
+                raise RuntimeError(f"{request_id}: stopped before requested length")
     llm.llm_engine.engine_core.shutdown()
     metadata["status"] = "complete"
     metadata["finished_at"] = time.time()

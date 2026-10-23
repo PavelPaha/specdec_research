@@ -1,7 +1,12 @@
 # Issue #11: acceptance на растущем префиксе
 
 Целевая модель: `Qwen/Qwen3.6-35B-A3B`, BF16, TP=1, одна GPU,
-один активный запрос. Нативный контекст — **262 144**, лимит эксперимента —
+`config.json` задаёт один активный запрос, `config-b8.json` — до восьми
+(`max_num_seqs` в конфигурации). Для полного прогона выбран режим до восьми.
+Runner поддерживает несколько одновременных запросов на той же GPU,
+с отдельным учётом каждого запроса и суммарной скоростью батча в `batches.jsonl`.
+Разные значения concurrency не объединяются на одном графике.
+Нативный контекст — **262 144**, лимит эксперимента —
 **393 216 токенов**, включая вход. RoPE остаётся исходным, **YaRN выключен**.
 Источник: [карточка Qwen](https://huggingface.co/Qwen/Qwen3.6-35B-A3B).
 
@@ -50,13 +55,15 @@ uv pip install --python .venv/bin/python -r benchmarks/long_context/requirements
 # UUID нужно выбрать по nvidia-smi; sweep проверяет свободную память перед запуском.
 mkdir -p runs
 nohup .venv/bin/python -m benchmarks.long_context.sweep \
-  --gpu GPU-UUID --output runs/issue11-20261024 \
+  --gpu GPU-UUID --config benchmarks/long_context/config-b8.json \
+  --output runs/issue11-20261024-b8 \
   > runs/issue11-controller.log 2>&1 &
 ```
 
 Сначала все семь конфигураций проходят короткую проверку на четырёх доменах,
-затем длинную проверку на первых четырёх промптах (`pilot/`), затем оставшиеся
-196 промптов (`full/`). Pilot входит в общие 200 примеров и не дублируется.
+затем длинную проверку на первых восьми промптах (`pilot/`), затем оставшиеся
+192 промпта (`full/`). Pilot входит в общие 200 примеров и не дублируется.
+При concurrency=1 размеры этих частей составляют 4 и 196.
 Ошибка останавливает очередь и записывается
 в `status.json`; повреждённый результат не считается успешным. Полные логи
 хранятся локально в `runs/`, в Git не добавляются. При перезапуске завершённые
@@ -86,9 +93,9 @@ Acceptance определяется как `accepted / proposed`, бонусны
 
 ```bash
 .venv/bin/python -m benchmarks.long_context.plot \
-  runs/issue11-20261024/pilot/*-k* \
-  runs/issue11-20261024/full/*-k* \
-  --output runs/issue11-20261024/plots --include-partial
+  runs/issue11-20261024-b8/pilot/*-k* \
+  runs/issue11-20261024-b8/full/*-k* \
+  --output runs/issue11-20261024-b8/plots --include-partial
 ```
 
 Промежуточные графики обновляются каждые десять минут и после каждой завершённой
