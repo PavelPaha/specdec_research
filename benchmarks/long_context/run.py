@@ -62,8 +62,13 @@ def main():
     eos_ids = sorted(set((eos_ids or []) + [tokenizer.eos_token_id]))
     os.environ["SPECDEC_EOS_IDS"] = json.dumps(eos_ids)
     spec = None
+    adaptation = None
     if args.method != "ar":
         spec = dict(config["drafters"][args.method])
+        if args.method == "eagle3":
+            from benchmarks.long_context.checkpoints import adapt_eagle_checkpoint
+            spec["model"], adaptation = adapt_eagle_checkpoint(spec)
+            spec.pop("revision")
         spec.update(method=args.method, num_speculative_tokens=args.budget,
                     max_model_len=config["max_model_len"])
     engine_args = dict(
@@ -83,6 +88,7 @@ def main():
         "config": config, "args": vars(args),
         "engine_args": {**engine_args, "hf_overrides": "benchmarks.long_context.positions.extend_position_cache"},
         "source_sha256": source_hashes,
+        "checkpoint_adaptation": adaptation,
         "eos_token_ids": eos_ids, "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"],
         "environment": {key: os.environ.get(key) for key in
                         ["VLLM_ALLOW_LONG_MAX_MODEL_LEN", "VLLM_COMPUTE_NANS_IN_LOGITS",
