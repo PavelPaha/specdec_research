@@ -121,7 +121,15 @@ def main():
                             "--limit", str(args.boundary_requests),
                             "--max-new-tokens", "128"]
                 if args.boundary_requests > 1:
-                    command += ["--prefill-chunk-limit", str(4096 // args.boundary_requests)]
+                    # DFlash reserves K extra input slots per request even in
+                    # prefill. Without subtracting them, the last request gets
+                    # less work each step and never reaches the boundary with
+                    # the others. EAGLE/MTP here use sequential drafting (0).
+                    draft_slots = budget if method == "dflash" else 0
+                    chunk = 4096 // args.boundary_requests - draft_slots
+                    if chunk <= 0:
+                        raise ValueError("Boundary request count exceeds the input budget")
+                    command += ["--prefill-chunk-limit", str(chunk)]
             elif stage == "pilot":
                 command += ["--limit", str(pilot_count)]
             else:

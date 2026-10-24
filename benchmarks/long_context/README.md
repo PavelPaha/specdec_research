@@ -101,7 +101,8 @@ nohup .venv/bin/python -m benchmarks.long_context.sweep \
 `--config benchmarks/long_context/config-c16-async.json` с отдельным `--output`.
 Для проверки одновременного размещения 16 максимальных контекстов:
 `--stages boundary --variants dflash:7 --boundary-requests 16`.
-В этой диагностике prefill ограничен 256 токенами на запрос за шаг,
+В этой диагностике prefill ограничен `4096 // requests - draft_slots`
+токенами на запрос за шаг (249 для DFlash k=7 при 16 запросах),
 чтобы короткий ответ первого запроса не завершился до prefill остальных.
 `peak_running_computed_tokens` в `progress.json` показывает фактически
 вычисленный суммарный контекст одновременно активных запросов.
