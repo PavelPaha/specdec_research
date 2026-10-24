@@ -26,19 +26,21 @@ def stop_worker(process):
         pass
 
 
-def boundary_prompt(root, config):
+def boundary_prompt(root, config, count=1):
     """Artificial input only for CUDA/RoPE range validation, never a data point."""
     source = Path("data/long_context_prompts.jsonl")
     prompts = [json.loads(line) for line in source.read_text().splitlines()]
     corpus = [token for prompt in prompts for token in prompt["prompt_token_ids"]]
     length = config["max_model_len"] - 128
     ids = (corpus * (length // len(corpus) + 1))[:length]
-    record = dict(id="boundary-diagnostic", domain="diagnostic", prompt_tokens=length,
+    record = dict(domain="diagnostic", prompt_tokens=length,
                   prompt_token_ids=ids, source="artificial concatenation and repetition",
                   source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
                   exclude_from_benchmark=True)
     path = root / "boundary-prompt.jsonl"
-    path.write_text(json.dumps(record) + "\n")
+    with path.open("w") as handle:
+        for index in range(count):
+            handle.write(json.dumps(dict(record, id=f"boundary-diagnostic-{index:03d}")) + "\n")
     return path
 
 
@@ -53,6 +55,7 @@ def main():
     parser.add_argument("--smoke-prompts", type=int)
     parser.add_argument("--smoke-new-tokens", type=int, default=1024)
     parser.add_argument("--full-offset", type=int, help="Use 0 for a fresh full 200-prompt cohort")
+    parser.add_argument("--boundary-requests", type=int, default=1)
     args = parser.parse_args()
     root = Path(args.output).resolve()
     root.mkdir(parents=True, exist_ok=True)
@@ -114,8 +117,11 @@ def main():
                 command += ["--limit", str(args.smoke_prompts or pilot_count),
                             "--max-new-tokens", str(args.smoke_new_tokens)]
             elif stage == "boundary":
-                command += ["--prompts", str(boundary_prompt(root, config)), "--limit", "1",
+                command += ["--prompts", str(boundary_prompt(root, config, args.boundary_requests)),
+                            "--limit", str(args.boundary_requests),
                             "--max-new-tokens", "128"]
+                if args.boundary_requests > 1:
+                    command += ["--prefill-chunk-limit", str(4096 // args.boundary_requests)]
             elif stage == "pilot":
                 command += ["--limit", str(pilot_count)]
             else:

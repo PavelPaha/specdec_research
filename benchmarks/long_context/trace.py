@@ -23,6 +23,8 @@ class TracingScheduler(Scheduler):
         self.counts = {}
         self.progress = {}
         self.preemptions = 0
+        self.peak_running_requests = 0
+        self.peak_running_computed_tokens = 0
         self.progress_path = Path(os.environ["SPECDEC_TRACE_PATH"]).with_name("progress.json")
         from vllm.v1.core.kv_cache_utils import get_kv_cache_capacity
         tokens, capacity = get_kv_cache_capacity(self.vllm_config, self.kv_cache_config)
@@ -54,6 +56,10 @@ class TracingScheduler(Scheduler):
         self.counts = {}
         result = super().update_from_output(scheduler_output, model_runner_output)
         self.preemptions += len(scheduler_output.preempted_req_ids or ())
+        running = [r for r in self.running if not r.is_finished()]
+        self.peak_running_requests = max(self.peak_running_requests, len(running))
+        self.peak_running_computed_tokens = max(self.peak_running_computed_tokens,
+                                               sum(r.num_computed_tokens for r in running))
         elapsed = time.perf_counter() - self.step_started
         self.step_index += 1
         for batch in result.values():
@@ -110,6 +116,8 @@ class TracingScheduler(Scheduler):
         temporary.write_text(json.dumps({
             "updated_at": time.time(), "step": self.step_index,
             "preemptions": self.preemptions, "requests": self.progress,
+            "peak_running_requests": self.peak_running_requests,
+            "peak_running_computed_tokens": self.peak_running_computed_tokens,
         }, indent=2))
         temporary.replace(self.progress_path)
 

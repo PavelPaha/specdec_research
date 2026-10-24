@@ -25,6 +25,8 @@ def main():
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--max-new-tokens", type=int)
     parser.add_argument("--enforce-eager", action="store_true")
+    parser.add_argument("--prefill-chunk-limit", type=int, default=0,
+                        help="Diagnostic fair-share prefill cap; 0 keeps vLLM defaults")
     parser.add_argument("--gpu-memory-utilization", type=float)
     args = parser.parse_args()
     assert os.environ.get("CUDA_VISIBLE_DEVICES"), "Select exactly one GPU explicitly"
@@ -87,6 +89,9 @@ def main():
         disable_log_stats=False, generation_config="vllm",
         hf_overrides=extend_position_cache,
     )
+    if args.prefill_chunk_limit:
+        engine_args["long_prefill_token_threshold"] = args.prefill_chunk_limit
+        engine_args["long_prefill_token_threshold_adaptive"] = False
     metadata = {
         "config": config, "args": vars(args),
         "engine_args": {**engine_args, "hf_overrides": "benchmarks.long_context.positions.extend_position_cache"},
