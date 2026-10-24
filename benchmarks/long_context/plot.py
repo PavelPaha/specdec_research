@@ -136,7 +136,8 @@ def main():
             signature = tuple(meta["config"][key] for key in [
                 "target_revision", "max_model_len", "max_num_seqs", "temperature", "dtype"])
             signature += (meta["config"].get("batching", "fixed"),
-                          meta["engine_args"].get("gpu_memory_utilization", 0.85))
+                          meta["engine_args"].get("gpu_memory_utilization", 0.85),
+                          meta["config"].get("async_scheduling", False))
             if comparison_signature is None:
                 comparison_signature = signature
             elif signature != comparison_signature:
@@ -164,6 +165,8 @@ def main():
               "accepted_per_round": "Accepted draft tokens / verification round (no bonus)",
               "decode_tokens_per_second": "Per-request decode tokens/s (scheduler wall time)",
               "speedup_vs_ar": "Paired decode speedup vs AR"}
+    if first_meta["config"].get("async_scheduling", False):
+        labels["decode_tokens_per_second"] = "Per-request output tokens/s (arrival wall time)"
     for phase in ["all", "pre_eos", "post_eos"]:
         for metric, ylabel in labels.items():
             subset = stats[(stats.phase == phase) & (stats.metric == metric)]
@@ -194,7 +197,8 @@ def main():
             smoke = " · SHORT SMOKE TEST" if first_meta["args"].get("max_new_tokens") else ""
             concurrency = first_meta["config"]["max_num_seqs"]
             batching = first_meta["config"].get("batching", "fixed")
-            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · C≤{concurrency} {batching} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
+            scheduling = "async" if first_meta["config"].get("async_scheduling", False) else "sync"
+            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · C≤{concurrency} {batching}/{scheduling} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
             fig.tight_layout()
             fig.savefig(output / f"{metric}_{phase}.png", dpi=160)
             fig.savefig(output / f"{metric}_{phase}.pdf")

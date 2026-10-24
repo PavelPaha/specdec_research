@@ -82,9 +82,11 @@ def main():
         max_num_seqs=config["max_num_seqs"], max_num_batched_tokens=4096,
         gpu_memory_utilization=(args.gpu_memory_utilization if args.gpu_memory_utilization is not None
                                 else config.get("gpu_memory_utilization", 0.85)),
-        enable_prefix_caching=False, async_scheduling=False,
+        enable_prefix_caching=False, async_scheduling=config.get("async_scheduling", False),
         language_model_only=True, speculative_config=spec,
-        scheduler_cls="benchmarks.long_context.trace.TracingScheduler",
+        scheduler_cls=("benchmarks.long_context.trace.TracingAsyncScheduler"
+                       if config.get("async_scheduling", False)
+                       else "benchmarks.long_context.trace.TracingScheduler"),
         seed=config["seed"], enforce_eager=args.enforce_eager,
         disable_log_stats=False, generation_config="vllm",
         hf_overrides=extend_position_cache,

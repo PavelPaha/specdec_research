@@ -7,19 +7,19 @@ from pathlib import Path
 import time
 
 from vllm.v1.core.sched.scheduler import Scheduler
+from vllm.v1.core.sched.async_scheduler import AsyncScheduler
 
 
-class TracingScheduler(Scheduler):
+class TraceMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.scheduler_config.async_scheduling:
-            raise ValueError("Tracing requires synchronous scheduling")
         self.trace_file = gzip.open(os.environ["SPECDEC_TRACE_PATH"], "wt", compresslevel=1)
         self.eos_ids = set(json.loads(os.environ["SPECDEC_EOS_IDS"]))
         self.first_eos = {}
         self.step_index = 0
         self.last_flush = time.monotonic()
-        self.step_started = self.last_flush
+        self.schedule_times = {}
+        self.last_emission = {}
         self.counts = {}
         self.progress = {}
         self.preemptions = 0
@@ -35,8 +35,10 @@ class TracingScheduler(Scheduler):
             raise RuntimeError(f"KV cache fits {capacity:.2f} full-context requests; need {required:.2f}")
 
     def schedule(self, *args, **kwargs):
-        self.step_started = time.perf_counter()
-        return super().schedule(*args, **kwargs)
+        started = time.perf_counter()
+        result = super().schedule(*args, **kwargs)
+        self.schedule_times[id(result)] = started
+        return result
 
     def make_spec_decoding_stats(self, spec_decoding_stats, num_draft_tokens,
                                 num_accepted_tokens, num_invalid_spec_tokens, request_id):
@@ -60,7 +62,8 @@ class TracingScheduler(Scheduler):
         self.peak_running_requests = max(self.peak_running_requests, len(running))
         self.peak_running_computed_tokens = max(self.peak_running_computed_tokens,
                                                sum(r.num_computed_tokens for r in running))
-        elapsed = time.perf_counter() - self.step_started
+        arrived = time.perf_counter()
+        elapsed = arrived - self.schedule_times.pop(id(scheduler_output))
         self.step_index += 1
         for batch in result.values():
             for output in batch.outputs:
@@ -81,6 +84,8 @@ class TracingScheduler(Scheduler):
                 proposed, accepted = self.counts.get(request_id, (0, 0))
                 scheduled_ids = scheduler_output.scheduled_spec_decode_tokens.get(request_id, [])
                 draft_ids_available = all(token >= 0 for token in scheduled_ids)
+                interarrival = arrived - self.last_emission.get(request_id, arrived)
+                self.last_emission[request_id] = arrived
                 record = {
                     "request_id": request_id, "step": self.step_index,
                     "prefix_tokens": prefix, "generated_before": generated,
@@ -90,7 +95,10 @@ class TracingScheduler(Scheduler):
                     "draft_token_ids_available": draft_ids_available,
                     "scheduled_draft_token_ids": scheduled_ids,
                     "phase": phase, "first_eos_output_index": first_eos,
-                    "step_seconds": elapsed, "unix_time": time.time(),
+                    "step_seconds": interarrival if self.scheduler_config.async_scheduling else elapsed,
+                    "scheduler_latency_seconds": elapsed,
+                    "timing": "output_interarrival" if self.scheduler_config.async_scheduling else "scheduler_wall",
+                    "unix_time": time.time(),
                     "is_prefill": generated == 0,
                     "num_nans_in_logits": (model_runner_output.num_nans_in_logits or {}).get(request_id),
                     "scheduled_requests": len(scheduler_output.num_scheduled_tokens),
@@ -127,3 +135,11 @@ class TracingScheduler(Scheduler):
             self.write_progress()
         finally:
             super().shutdown()
+
+
+class TracingScheduler(TraceMixin, Scheduler):
+    """Legacy synchronous control experiment."""
+
+
+class TracingAsyncScheduler(TraceMixin, AsyncScheduler):
+    """Observe official async scheduler accounting without changing its decisions."""
