@@ -131,6 +131,9 @@ def main():
         return
     summaries = output / "requests.jsonl"
     concurrency = config["max_num_seqs"]
+    workload_started = time.perf_counter()
+    workload_tokens = 0
+    workload_finished = workload_started
     for batch_start in range(0, len(prompts), concurrency):
         batch = prompts[batch_start:batch_start + concurrency]
         states = {}
@@ -178,8 +181,10 @@ def main():
                             state["finish_reason"] = completion.finish_reason
                             state["finished"] = time.perf_counter()
         batch_elapsed = time.perf_counter() - batch_started
+        workload_finished = max(s["finished"] for s in states.values())
         with (output / "batches.jsonl").open("a") as handle:
             total = sum(len(s["generated_ids"]) for s in states.values())
+            workload_tokens += total
             handle.write(json.dumps({"ids": list(states), "seconds": batch_elapsed,
                                      "generated_tokens": total,
                                      "aggregate_tokens_per_second": total / batch_elapsed}) + "\n")
@@ -207,6 +212,11 @@ def main():
             print(json.dumps(summary), flush=True)
             if not summary["completed_requested_length"]:
                 raise RuntimeError(f"{request_id}: stopped before requested length")
+    workload_seconds = workload_finished - workload_started
+    (output / "workload.json").write_text(json.dumps(dict(
+        batching="fixed", requests=len(prompts), generated_tokens=workload_tokens,
+        seconds=workload_seconds, aggregate_tokens_per_second=workload_tokens/workload_seconds,
+    ), indent=2))
     llm.llm_engine.engine_core.shutdown()
     metadata["status"] = "complete"
     metadata["finished_at"] = time.time()

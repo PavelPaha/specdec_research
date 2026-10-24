@@ -75,6 +75,8 @@ def main():
     # multi-day experiment. All stages are resumable at configuration boundaries.
     stages = args.stages or (["smoke"] if args.smoke_only else ["smoke", "boundary", "pilot", "full"])
     selected = {tuple(name.split(":")) for name in args.variants} if args.variants else None
+    if selected is not None and not selected <= {(m, str(k)) for m, k in variants}:
+        raise ValueError(f"Unknown variants: {selected}")
     for stage in stages:
         ordered = variants if stage == "smoke" else [
             ("dflash", 7), ("mtp", 3), ("eagle3", 3), ("ar", 0),
