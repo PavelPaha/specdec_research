@@ -1,0 +1,95 @@
+{
+  "gpu": "NVIDIA B300 / GPU-2666bcad-b34a-afcf-9712-65d86316cadd",
+  "target": "Qwen/Qwen3.6-35B-A3B",
+  "method": "DFlash",
+  "draft_budget": 7,
+  "output_tokens_per_request": 8192,
+  "notes": [
+    "One run per configuration; no statistical estimate of throughput uncertainty.",
+    "Same 32 inputs; free greedy continuations may differ with batching and scheduling.",
+    "Workload seconds exclude engine initialization and include the final queue tail.",
+    "GPU samples every 10 seconds; full-batch samples selected using contemporaneous scheduler traces.",
+    "Short calibration is not a measurement of throughput at 393216 tokens."
+  ],
+  "runs": [
+    {
+      "run": "runs/issue11-20261024-b8-calibration/smoke/dflash-k7",
+      "git_commit": "10ad68d3734721a971ae69417821bf815056653a",
+      "prompt_file_sha256": "4d1abf5e5cb67e25d4d68278e1083442bff475d8960018c09e2d53c0003c9cc0",
+      "concurrency": 8,
+      "async_scheduling": false,
+      "gpu_memory_utilization": 0.85,
+      "batching": "fixed",
+      "requests": 32,
+      "generated_tokens": 262144,
+      "seconds": 250.6306171119213,
+      "aggregate_tokens_per_second": 1045.9376552663448,
+      "acceptance_aggregate": 0.3903693504792547,
+      "gpu_full_batch_samples": [
+        58.0,
+        62.0,
+        68.0,
+        67.0,
+        56.0,
+        60.0,
+        57.0,
+        59.0,
+        65.0
+      ],
+      "gpu_full_batch_mean": 61.333333333333336,
+      "gpu_generation_mean": 54.12,
+      "preemptions": 0,
+      "nan_logits": 0
+    },
+    {
+      "run": "runs/issue11-20261024-c16-calibration/smoke/dflash-k7",
+      "git_commit": "4eb442e918961a2017da2959727b7be4dc7edc0d",
+      "prompt_file_sha256": "4d1abf5e5cb67e25d4d68278e1083442bff475d8960018c09e2d53c0003c9cc0",
+      "concurrency": 16,
+      "async_scheduling": false,
+      "gpu_memory_utilization": 0.9,
+      "batching": "continuous",
+      "requests": 32,
+      "generated_tokens": 262144,
+      "seconds": 112.19506631605327,
+      "aggregate_tokens_per_second": 2336.502028186702,
+      "acceptance_aggregate": 0.5091242282511668,
+      "gpu_full_batch_samples": [
+        58.0,
+        63.0,
+        61.0,
+        62.0,
+        55.0
+      ],
+      "gpu_full_batch_mean": 59.8,
+      "gpu_generation_mean": 53.90909090909091,
+      "preemptions": 0,
+      "nan_logits": 0
+    },
+    {
+      "run": "runs/issue11-20261024-c16-async-calibration/smoke/dflash-k7",
+      "git_commit": "60f370ac3883c0ca3d50997e92fd658b777f643b",
+      "prompt_file_sha256": "4d1abf5e5cb67e25d4d68278e1083442bff475d8960018c09e2d53c0003c9cc0",
+      "concurrency": 16,
+      "async_scheduling": true,
+      "gpu_memory_utilization": 0.9,
+      "batching": "continuous",
+      "requests": 32,
+      "generated_tokens": 262144,
+      "seconds": 89.69926961604506,
+      "aggregate_tokens_per_second": 2922.476416163691,
+      "acceptance_aggregate": 0.41604952483276414,
+      "gpu_full_batch_samples": [
+        100.0,
+        100.0,
+        25.0,
+        100.0,
+        100.0
+      ],
+      "gpu_full_batch_mean": 85.0,
+      "gpu_generation_mean": 75.625,
+      "preemptions": 0,
+      "nan_logits": 0
+    }
+  ]
+}
