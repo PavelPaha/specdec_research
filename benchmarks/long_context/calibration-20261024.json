@@ -91,5 +91,26 @@
       "preemptions": 0,
       "nan_logits": 0
     }
-  ]
+  ],
+  "long_context_residency_validation": {
+    "run": "runs/issue11-20261024-c16-async-checks2/boundary/dflash-k7",
+    "git_commit": "424eb1ad9f196c0d14d9311cd370d82e67639bd9",
+    "status": "complete",
+    "requests": 16,
+    "input_tokens_per_request": 393088,
+    "output_tokens_per_request": 128,
+    "all_final_context_393216": true,
+    "prefill_chunk_limit": 249,
+    "capacity": {
+      "kv_tokens": 6597903,
+      "max_context_concurrency": 16.779336734693878,
+      "required_concurrency": 16.32
+    },
+    "peak_running_computed_tokens": 6291185,
+    "peak_running_requests": 16,
+    "preemptions": 0,
+    "nan_logits": 0,
+    "excluded_from_acceptance_benchmark": true,
+    "earlier_diagnostic": "runs/issue11-20261024-c16-async-checks/boundary/dflash-k7/residency-review.json"
+  }
 }
