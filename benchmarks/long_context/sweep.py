@@ -48,6 +48,11 @@ def main():
     parser.add_argument("--config", default="benchmarks/long_context/config.json")
     parser.add_argument("--gpu", required=True, help="GPU UUID; exactly one device")
     parser.add_argument("--smoke-only", action="store_true")
+    parser.add_argument("--stages", nargs="+", choices=["smoke", "boundary", "pilot", "full"])
+    parser.add_argument("--variants", nargs="+", help="Optional method:budget filter, e.g. dflash:7")
+    parser.add_argument("--smoke-prompts", type=int)
+    parser.add_argument("--smoke-new-tokens", type=int, default=1024)
+    parser.add_argument("--full-offset", type=int, help="Use 0 for a fresh full 200-prompt cohort")
     args = parser.parse_args()
     root = Path(args.output).resolve()
     root.mkdir(parents=True, exist_ok=True)
@@ -68,7 +73,8 @@ def main():
                               for method in ["mtp", "dflash", "eagle3"]]
     # Run every budget through initialization, sampling and logging before the
     # multi-day experiment. All stages are resumable at configuration boundaries.
-    stages = ["smoke"] if args.smoke_only else ["smoke", "boundary", "pilot", "full"]
+    stages = args.stages or (["smoke"] if args.smoke_only else ["smoke", "boundary", "pilot", "full"])
+    selected = {tuple(name.split(":")) for name in args.variants} if args.variants else None
     for stage in stages:
         ordered = variants if stage == "smoke" else [
             ("dflash", 7), ("mtp", 3), ("eagle3", 3), ("ar", 0),
@@ -78,6 +84,8 @@ def main():
             ordered = [("ar", 0)] + [(method, max(config["draft_budgets"]))
                                      for method in ["mtp", "dflash", "eagle3"]]
         for method, budget in ordered:
+            if selected is not None and (method, str(budget)) not in selected:
+                continue
             name = f"{method}-k{budget}"
             destination = root / stage / name
             metadata_path = destination / "metadata.json"
@@ -101,14 +109,15 @@ def main():
                        "--budget", str(budget), "--output", str(destination),
                        "--config", args.config]
             if stage == "smoke":
-                command += ["--limit", str(pilot_count), "--max-new-tokens", "1024"]
+                command += ["--limit", str(args.smoke_prompts or pilot_count),
+                            "--max-new-tokens", str(args.smoke_new_tokens)]
             elif stage == "boundary":
                 command += ["--prompts", str(boundary_prompt(root, config)), "--limit", "1",
                             "--max-new-tokens", "128"]
             elif stage == "pilot":
                 command += ["--limit", str(pilot_count)]
             else:
-                command += ["--offset", str(pilot_count)]
+                command += ["--offset", str(pilot_count if args.full_offset is None else args.full_offset)]
             state = dict(stage=stage, method=method, budget=budget, command=command,
                          started_at=time.time(), status="running")
             (root / "status.json").write_text(json.dumps(state, indent=2))
@@ -127,6 +136,15 @@ def main():
                     progress_path = destination / "progress.json"
                     if progress_path.exists():
                         state["progress"] = json.loads(progress_path.read_text())
+                    gpu_values = subprocess.check_output([
+                        "nvidia-smi", f"--id={args.gpu}",
+                        "--query-gpu=utilization.gpu,utilization.memory,power.draw,memory.used",
+                        "--format=csv,noheader,nounits"], text=True).strip().split(",")
+                    state["gpu"] = dict(zip(["utilization_percent", "memory_utilization_percent",
+                                              "power_watts", "allocated_mib"],
+                                             map(float, gpu_values)))
+                    with (destination / "gpu.jsonl").open("a") as handle:
+                        handle.write(json.dumps({"unix_time": time.time(), **state["gpu"]}) + "\n")
                     state["heartbeat_at"] = time.time()
                     (root / "status.json").write_text(json.dumps(state, indent=2))
                     if stage != "boundary" and time.monotonic() - last_plot >= 600:

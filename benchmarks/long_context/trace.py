@@ -24,6 +24,13 @@ class TracingScheduler(Scheduler):
         self.progress = {}
         self.preemptions = 0
         self.progress_path = Path(os.environ["SPECDEC_TRACE_PATH"]).with_name("progress.json")
+        from vllm.v1.core.kv_cache_utils import get_kv_cache_capacity
+        tokens, capacity = get_kv_cache_capacity(self.vllm_config, self.kv_cache_config)
+        required = float(os.environ.get("SPECDEC_MIN_KV_CAPACITY", "0"))
+        self.progress_path.with_name("capacity.json").write_text(json.dumps(dict(
+            kv_tokens=tokens, max_context_concurrency=capacity, required_concurrency=required), indent=2))
+        if capacity < required:
+            raise RuntimeError(f"KV cache fits {capacity:.2f} full-context requests; need {required:.2f}")
 
     def schedule(self, *args, **kwargs):
         self.step_started = time.perf_counter()

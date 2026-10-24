@@ -135,6 +135,8 @@ def main():
             meta = json.loads((path / "metadata.json").read_text())
             signature = tuple(meta["config"][key] for key in [
                 "target_revision", "max_model_len", "max_num_seqs", "temperature", "dtype"])
+            signature += (meta["config"].get("batching", "fixed"),
+                          meta["engine_args"].get("gpu_memory_utilization", 0.85))
             if comparison_signature is None:
                 comparison_signature = signature
             elif signature != comparison_signature:
@@ -191,7 +193,8 @@ def main():
             partial = " (partial run)" if args.include_partial else ""
             smoke = " · SHORT SMOKE TEST" if first_meta["args"].get("max_new_tokens") else ""
             concurrency = first_meta["config"]["max_num_seqs"]
-            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · C≤{concurrency} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
+            batching = first_meta["config"].get("batching", "fixed")
+            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · C≤{concurrency} {batching} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
             fig.tight_layout()
             fig.savefig(output / f"{metric}_{phase}.png", dpi=160)
             fig.savefig(output / f"{metric}_{phase}.pdf")

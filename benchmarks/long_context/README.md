@@ -1,11 +1,15 @@
 # Issue #11: acceptance на растущем префиксе
 
 Целевая модель: `Qwen/Qwen3.6-35B-A3B`, BF16, TP=1, одна GPU,
-`config.json` задаёт один активный запрос, `config-b8.json` — до восьми
-(`max_num_seqs` в конфигурации). Для полного прогона выбран режим до восьми.
-Runner поддерживает несколько одновременных запросов на той же GPU,
-с отдельным учётом каждого запроса и суммарной скоростью батча в `batches.jsonl`.
-Разные значения concurrency не объединяются на одном графике.
+`config.json` задаёт один активный запрос, `config-b8.json` — фиксированные
+группы по восемь, `config-c16.json` — до 16 с continuous batching.
+После первого пилота по просьбе пользователя основной прогон переведён на C16:
+новый запрос занимает освободившийся слот сразу, без ожидания остальных.
+Результаты C8 сохранены как отдельный контрольный прогон. Для единообразного
+сравнения C16 включает заново все 200 промптов, включая первые восемь.
+Разные concurrency, способы подачи запросов и лимиты памяти не объединяются.
+В C16 выделяется 90% памяти GPU; перед генерацией проверяется, что рассчитанная
+vLLM ёмкость KV-кеша вмещает 16 контекстов по 393 216 с запасом не менее 2%.
 Нативный контекст — **262 144**, лимит эксперимента —
 **393 216 токенов**, включая вход. RoPE остаётся исходным, **YaRN выключен**.
 Источник: [карточка Qwen](https://huggingface.co/Qwen/Qwen3.6-35B-A3B).
@@ -60,24 +64,35 @@ uv venv --python 3.12 .venv
 uv pip install --python .venv/bin/python -r benchmarks/long_context/requirements.txt
 .venv/bin/python -m benchmarks.long_context.download
 .venv/bin/python -m benchmarks.long_context.prepare
-.venv/bin/python -m pytest benchmarks/long_context/test_plot.py -q
+.venv/bin/python -m pytest benchmarks/long_context/test_plot.py benchmarks/long_context/test_continuous.py -q
 
 # UUID нужно выбрать по nvidia-smi; sweep проверяет свободную память перед запуском.
 mkdir -p runs
 nohup .venv/bin/python -m benchmarks.long_context.sweep \
-  --gpu GPU-UUID --config benchmarks/long_context/config-b8.json \
-  --output runs/issue11-20261024-b8 \
+  --gpu GPU-UUID --config benchmarks/long_context/config-c16.json \
+  --stages full --full-offset 0 --output runs/issue11-20261024-c16 \
   > runs/issue11-controller.log 2>&1 &
 ```
 
-Сначала все семь конфигураций проходят короткую проверку на четырёх доменах,
+Без явного `--stages` сначала все семь конфигураций проходят короткую проверку на четырёх доменах,
 затем каждый метод проходит техническую проверку диапазона позиций (`boundary/`):
 искусственно склеенный и повторённый префикс длиной 393 088 плюс 128 новых токенов.
 Она проверяет реальные CUDA/RoPE-операции у верхней границы и не входит в графики
 или 200 исследовательских примеров. После неё выполняется
 длинная проверка на первых восьми промптах (`pilot/`), затем оставшиеся
 192 промпта (`full/`). Pilot входит в общие 200 примеров и не дублируется.
-При concurrency=1 размеры этих частей составляют 4 и 196.
+Размер пилота по умолчанию равен `max(4, max_num_seqs)`;
+при C1 части составляют 4 и 196, при C16 — 16 и 184.
+Приведённая выше команда C16 пропускает уже выполненные архитектурные проверки
+и запускает сразу все 200 промптов. Калибровку батча можно выполнить отдельно:
+
+```bash
+.venv/bin/python -m benchmarks.long_context.sweep \
+  --gpu GPU-UUID --config benchmarks/long_context/config-c16.json \
+  --stages smoke --variants dflash:7 --smoke-prompts 32 --smoke-new-tokens 8192 \
+  --output runs/issue11-calibration-c16
+```
+
 Ошибка останавливает очередь и записывается
 в `status.json`; повреждённый результат не считается успешным. Полные логи
 хранятся локально в `runs/`, в Git не добавляются. При перезапуске завершённые
@@ -88,6 +103,10 @@ nohup .venv/bin/python -m benchmarks.long_context.sweep \
 - `metadata.json`: веса, параметры, версии библиотек, GPU, хеш данных, статус.
 - `progress.json`: обновляемые каждые десять секунд длины запросов,
   счётчики принятия, NaN и вытеснений запросов из KV-кеша.
+- `capacity.json`: рассчитанная ёмкость KV-кеша для полного контекста.
+- `gpu.jsonl`: загрузка GPU и памяти, мощность и выделенная память каждые десять секунд.
+- `throughput.jsonl`, `workload.json`: интервальная и итоговая суммарная скорость
+  continuous batching; `requests.jsonl` дополняется сразу после завершения каждого запроса.
 - `effective_vllm_config.txt`, `console.log`: фактическая конфигурация и вывод движка.
 - `rounds.jsonl.gz`: длина префикса до каждого раунда, предложенные/принятые
   драфт-токены, выходные token IDs, время шага и фаза относительно первого EOS.
@@ -111,15 +130,14 @@ Acceptance определяется как `accepted / proposed`, бонусны
 промпты усредняются с равным весом; 95% интервалы — bootstrap по промптам.
 Число наблюдаемых промптов в каждом бине сохраняется в `curves.csv`.
 Скорость по бинам относится к одному запросу и использует время шагов scheduler
-без prefill; суммарная скорость одновременно обрабатываемого батча записана
-отдельно в `batches.jsonl`. Скорость целого
+без prefill; суммарная скорость фиксированной группы записана
+отдельно в `batches.jsonl`, непрерывной очереди — в `workload.json`. Скорость целого
 запроса включает prefill и клиентское обслуживание. Они подписываются отдельно.
 
 ```bash
 .venv/bin/python -m benchmarks.long_context.plot \
-  runs/issue11-20261024-b8/pilot/*-k* \
-  runs/issue11-20261024-b8/full/*-k* \
-  --output runs/issue11-20261024-b8/plots --include-partial
+  runs/issue11-20261024-c16/full/*-k* \
+  --output runs/issue11-20261024-c16/plots --include-partial
 ```
 
 Промежуточные графики обновляются каждые десять минут и после каждой завершённой

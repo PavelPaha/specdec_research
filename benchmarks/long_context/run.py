@@ -25,7 +25,7 @@ def main():
     parser.add_argument("--offset", type=int, default=0)
     parser.add_argument("--max-new-tokens", type=int)
     parser.add_argument("--enforce-eager", action="store_true")
-    parser.add_argument("--gpu-memory-utilization", type=float, default=0.85)
+    parser.add_argument("--gpu-memory-utilization", type=float)
     args = parser.parse_args()
     assert os.environ.get("CUDA_VISIBLE_DEVICES"), "Select exactly one GPU explicitly"
     assert "," not in os.environ["CUDA_VISIBLE_DEVICES"]
@@ -46,6 +46,8 @@ def main():
     os.environ["HF_HUB_OFFLINE"] = "1"
     os.environ["SPECDEC_TRACE_PATH"] = str(output / "rounds.jsonl.gz")
     os.environ["SPECDEC_POSITION_CACHE_LEN"] = str(config["max_model_len"])
+    os.environ["SPECDEC_MIN_KV_CAPACITY"] = str(
+        config["max_num_seqs"] * config.get("min_kv_capacity_factor", 0))
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
     os.environ["PATH"] = str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"]
     os.environ.setdefault("CUDA_HOME", "/usr/local/cuda")
@@ -76,7 +78,8 @@ def main():
         tokenizer_revision=config["target_revision"], dtype=config["dtype"],
         tensor_parallel_size=1, max_model_len=config["max_model_len"],
         max_num_seqs=config["max_num_seqs"], max_num_batched_tokens=4096,
-        gpu_memory_utilization=args.gpu_memory_utilization,
+        gpu_memory_utilization=(args.gpu_memory_utilization if args.gpu_memory_utilization is not None
+                                else config.get("gpu_memory_utilization", 0.85)),
         enable_prefix_caching=False, async_scheduling=False,
         language_model_only=True, speculative_config=spec,
         scheduler_cls="benchmarks.long_context.trace.TracingScheduler",
@@ -92,7 +95,8 @@ def main():
         "eos_token_ids": eos_ids, "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"],
         "environment": {key: os.environ.get(key) for key in
                         ["VLLM_ALLOW_LONG_MAX_MODEL_LEN", "VLLM_COMPUTE_NANS_IN_LOGITS",
-                         "HF_HUB_OFFLINE", "CUDA_HOME", "SPECDEC_POSITION_CACHE_LEN"]},
+                         "HF_HUB_OFFLINE", "CUDA_HOME", "SPECDEC_POSITION_CACHE_LEN",
+                         "SPECDEC_MIN_KV_CAPACITY"]},
         "packages": {p: importlib.metadata.version(p) for p in
                      ["vllm", "torch", "transformers", "huggingface_hub"]},
         "prompt_file_sha256": hashlib.sha256(Path(args.prompts).read_bytes()).hexdigest(),
@@ -118,6 +122,13 @@ def main():
         prompts = prompts[:args.limit]
     metadata["status"] = "running"
     (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
+    if config.get("batching", "fixed") == "continuous":
+        from benchmarks.long_context.continuous import run_continuous
+        run_continuous(llm, tokenizer, prompts, config, args, eos_ids, output)
+        llm.llm_engine.engine_core.shutdown()
+        metadata.update(status="complete", finished_at=time.time())
+        (output / "metadata.json").write_text(json.dumps(metadata, indent=2))
+        return
     summaries = output / "requests.jsonl"
     concurrency = config["max_num_seqs"]
     for batch_start in range(0, len(prompts), concurrency):
