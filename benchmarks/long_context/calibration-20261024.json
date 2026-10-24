@@ -112,5 +112,49 @@
     "nan_logits": 0,
     "excluded_from_acceptance_benchmark": true,
     "earlier_diagnostic": "runs/issue11-20261024-c16-async-checks/boundary/dflash-k7/residency-review.json"
-  }
+  },
+  "additional_async_architecture_validation": [
+    {
+      "run": "runs/issue11-20261024-c16-async-checks2/smoke/ar-k0",
+      "method": "ar",
+      "budget": 0,
+      "git_commit": "424eb1ad9f196c0d14d9311cd370d82e67639bd9",
+      "requests": 20,
+      "output_tokens_per_request": 1024,
+      "all_requested_lengths_completed": true,
+      "observed_timing_modes": [
+        "output_interarrival"
+      ],
+      "preemptions": 0,
+      "nan_logits": 0
+    },
+    {
+      "run": "runs/issue11-20261024-c16-async-checks2/smoke/eagle3-k7",
+      "method": "eagle3",
+      "budget": 7,
+      "git_commit": "424eb1ad9f196c0d14d9311cd370d82e67639bd9",
+      "requests": 20,
+      "output_tokens_per_request": 1024,
+      "all_requested_lengths_completed": true,
+      "observed_timing_modes": [
+        "output_interarrival"
+      ],
+      "preemptions": 0,
+      "nan_logits": 0
+    },
+    {
+      "run": "runs/issue11-20261024-c16-async-checks2/smoke/mtp-k7",
+      "method": "mtp",
+      "budget": 7,
+      "git_commit": "424eb1ad9f196c0d14d9311cd370d82e67639bd9",
+      "requests": 20,
+      "output_tokens_per_request": 1024,
+      "all_requested_lengths_completed": true,
+      "observed_timing_modes": [
+        "output_interarrival"
+      ],
+      "preemptions": 0,
+      "nan_logits": 0
+    }
+  ]
 }
