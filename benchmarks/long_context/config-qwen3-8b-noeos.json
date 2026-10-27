@@ -1,0 +1,44 @@
+{
+  "target": "Qwen/Qwen3-8B",
+  "target_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "native_context": 32768,
+  "checkpoint_max_position_embeddings": 40960,
+  "max_model_len": 49152,
+  "rope_scaling": null,
+  "dtype": "bfloat16",
+  "tensor_parallel_size": 1,
+  "max_num_seqs": 28,
+  "max_num_batched_tokens": 4096,
+  "temperature": 0.0,
+  "ignore_eos": true,
+  "eos_policy": "bad_words",
+  "enable_thinking": true,
+  "seed": 20261024,
+  "prompts_per_domain": 50,
+  "draft_budgets": [
+    7
+  ],
+  "drafters": {
+    "dflash": {
+      "model": "z-lab/Qwen3-8B-DFlash-b16",
+      "revision": "9b41424b7109f9c5413454f481b09a82b85333f4"
+    },
+    "eagle2": {
+      "model": "Tengyunw/qwen3_8b_eagle2_v0",
+      "revision": "16b967218adafc9e99689b6c1a334ad5c5a63b9b"
+    },
+    "eagle3": {
+      "model": "Tengyunw/qwen3_8b_eagle3",
+      "revision": "2a1059d51f622b8cad7d7d72840153ffea5488a0"
+    }
+  },
+  "batching": "continuous",
+  "gpu_memory_utilization": 0.92,
+  "min_kv_capacity_factor": 1.02,
+  "async_scheduling": true,
+  "excluded_variants": {
+    "eagle2": "Checkpoint uses unsupported LlamaForCausalLMEagle architecture and trained fc.bias absent in native vLLM EAGLE implementation. User requested no model/runtime patches.",
+    "eagle2_tree": "No native EAGLE tree support in installed vLLM; deferred by user.",
+    "eagle3_tree": "No native EAGLE tree support in installed vLLM; deferred by user."
+  }
+}

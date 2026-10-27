@@ -24,6 +24,9 @@ def validate(path):
             assert row["prefix_tokens"] == summaries[rid]["prompt_tokens"] + emitted[rid]
             assert 0 <= row["accepted"] <= row["proposed"]
             assert row["emitted"] == len(row["token_ids"])
+            if metadata["config"].get("eos_policy") == "bad_words":
+                assert not eos_ids.intersection(row["token_ids"]), (rid, "EOS emitted despite mask")
+            assert not row.get("num_nans_in_logits"), (rid, "NaN logits")
             if rid not in eos_index:
                 for i, token in enumerate(row["token_ids"]):
                     if token in eos_ids:
@@ -38,6 +41,8 @@ def validate(path):
         assert summary["first_eos_output_index"] == eos_index.get(rid)
         if metadata["args"]["method"] != "ar":
             assert proposed[rid] > 0, (rid, "speculation never enabled")
+    progress = json.loads((path / "progress.json").read_text())
+    assert progress["preemptions"] == 0, "KV capacity was insufficient"
     print(f"PASS {path}: {len(summaries)} requests, {sum(emitted.values())} emitted tokens")
 
 

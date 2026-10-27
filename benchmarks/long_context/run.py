@@ -19,7 +19,7 @@ def main():
     parser.add_argument("--config", default="benchmarks/long_context/config.json")
     parser.add_argument("--prompts", default="data/long_context_prompts.jsonl")
     parser.add_argument("--output", required=True)
-    parser.add_argument("--method", choices=["ar", "mtp", "dflash", "eagle3"], required=True)
+    parser.add_argument("--method", choices=["ar", "mtp", "dflash", "eagle2", "eagle3"], required=True)
     parser.add_argument("--budget", type=int, default=3)
     parser.add_argument("--limit", type=int)
     parser.add_argument("--offset", type=int, default=0)
@@ -69,17 +69,18 @@ def main():
     adaptation = None
     if args.method != "ar":
         spec = dict(config["drafters"][args.method])
-        if args.method == "eagle3":
+        if args.method == "eagle3" and spec.get("model", "").startswith("Dogacel/specdrift-"):
             from benchmarks.long_context.checkpoints import adapt_eagle_checkpoint
             spec["model"], adaptation = adapt_eagle_checkpoint(spec)
             spec.pop("revision")
-        spec.update(method=args.method, num_speculative_tokens=args.budget,
+        spec.update(method="eagle" if args.method == "eagle2" else args.method,
+                    num_speculative_tokens=args.budget,
                     max_model_len=config["max_model_len"])
     engine_args = dict(
         model=config["target"], revision=config["target_revision"],
         tokenizer_revision=config["target_revision"], dtype=config["dtype"],
         tensor_parallel_size=1, max_model_len=config["max_model_len"],
-        max_num_seqs=config["max_num_seqs"], max_num_batched_tokens=4096,
+        max_num_seqs=config["max_num_seqs"], max_num_batched_tokens=config.get("max_num_batched_tokens", 4096),
         gpu_memory_utilization=(args.gpu_memory_utilization if args.gpu_memory_utilization is not None
                                 else config.get("gpu_memory_utilization", 0.85)),
         enable_prefix_caching=False, async_scheduling=config.get("async_scheduling", False),
@@ -99,6 +100,8 @@ def main():
         "engine_args": {**engine_args, "hf_overrides": "benchmarks.long_context.positions.extend_position_cache"},
         "source_sha256": source_hashes,
         "checkpoint_adaptation": adaptation,
+        "sampling_eos_bad_words": ([tokenizer.convert_ids_to_tokens(i) for i in eos_ids]
+                                   if config.get("eos_policy") == "bad_words" else []),
         "eos_token_ids": eos_ids, "cuda_visible_devices": os.environ["CUDA_VISIBLE_DEVICES"],
         "environment": {key: os.environ.get(key) for key in
                         ["VLLM_ALLOW_LONG_MAX_MODEL_LEN", "VLLM_COMPUTE_NANS_IN_LOGITS",
@@ -157,6 +160,8 @@ def main():
                     temperature=config["temperature"], top_p=1.0, top_k=-1,
                     seed=config["seed"], ignore_eos=True, max_tokens=max_tokens,
                     detokenize=False, output_kind=RequestOutputKind.DELTA,
+                    bad_words=([tokenizer.convert_ids_to_tokens(i) for i in eos_ids]
+                               if config.get("eos_policy") == "bad_words" else None),
                 )
                 state = dict(prompt=prompt, generated_ids=[], started=time.perf_counter(),
                              first_token_time=None, finished=None, finish_reason=None,

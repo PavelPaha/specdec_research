@@ -1,0 +1,8 @@
+{
+  "count": 200,
+  "source_prompt_file": "data/long_context_prompts.jsonl",
+  "source_sha256": "4d1abf5e5cb67e25d4d68278e1083442bff475d8960018c09e2d53c0003c9cc0",
+  "target": "Qwen/Qwen3-8B",
+  "target_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+  "sha256": "214ef8fac67c96e8625777fac300a39f6cba964f9d0c3a652b2f396b4661e171"
+}

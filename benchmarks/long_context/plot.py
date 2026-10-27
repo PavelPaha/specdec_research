@@ -35,7 +35,7 @@ def read_jsonl(path, compressed=False):
 def aggregate(run_dir, bin_size=8192, include_partial=False):
     metadata = json.loads((run_dir / "metadata.json").read_text())
     label = metadata["args"]["method"]
-    if label == "eagle3":
+    if label == "eagle3" and metadata["config"]["drafters"]["eagle3"].get("model", "").startswith("Dogacel/specdrift-"):
         label = "eagle3.1"
     if label != "ar":
         label += f" k={metadata['args']['budget']}"
@@ -97,12 +97,13 @@ def summarize(frame):
     return pd.DataFrame(rows)
 
 
-def write_report(frame, output, native, limit, partial):
+def write_report(frame, output, native, limit, partial, eos_masked=False):
     lines = ["# Измеренные срезы acceptance", "",
              "Промежуточный прогон; учитываются только уже полученные токены." if partial
              else "Срезы завершённых запросов; число промптов показано для каждого среза.", "",
              f"Нативный контекст: {native}; запрошенный предел: {limit}; YaRN выключен.", "",
-             "Числа ниже не доказывают причину деградации: после EOS модель принудительно продолжает ответ.", "",
+             ("EOS запрещён штатным bad_words у target при выборе и верификации. Драфтер не изменён и может предлагать EOS, который target отвергнет. Принудительное продолжение всё ещё может порождать повторения."
+              if eos_masked else "Числа ниже не доказывают причину деградации: после EOS модель принудительно продолжает ответ."), "",
              "| Домен | Метод | Фаза | Префикс | Промптов | Accepted / proposed |",
              "| --- | --- | --- | --- | ---: | ---: |"]
     windows = [(0, 8192), (32768, 65536), (native - 16384, native), (native, limit)]
@@ -159,7 +160,8 @@ def main():
     first_meta = json.loads((Path(args.runs[0]) / "metadata.json").read_text())
     native = first_meta["config"]["native_context"]
     limit = first_meta["config"]["max_model_len"]
-    write_report(frame, output, native, limit, args.include_partial)
+    write_report(frame, output, native, limit, args.include_partial,
+                 first_meta["config"].get("eos_policy") == "bad_words")
     domains = ["math", "code", "chat", "reasoning"]
     labels = {"acceptance_rate": "Accepted / proposed draft tokens",
               "accepted_per_round": "Accepted draft tokens / verification round (no bonus)",
@@ -198,7 +200,9 @@ def main():
             concurrency = first_meta["config"]["max_num_seqs"]
             batching = first_meta["config"].get("batching", "fixed")
             scheduling = "async" if first_meta["config"].get("async_scheduling", False) else "sync"
-            fig.suptitle(f"Qwen3.6-35B-A3B · TP1 · C≤{concurrency} {batching}/{scheduling} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
+            target = first_meta["config"]["target"].split("/")[-1]
+            eos_label = " · EOS banned (native bad_words)" if first_meta["config"].get("eos_policy") == "bad_words" else ""
+            fig.suptitle(f"{target} · TP1 · C≤{concurrency} {batching}/{scheduling}{eos_label} · {phase} · 95% bootstrap CI for n≥2{partial}{smoke}")
             fig.tight_layout()
             fig.savefig(output / f"{metric}_{phase}.png", dpi=160)
             fig.savefig(output / f"{metric}_{phase}.pdf")

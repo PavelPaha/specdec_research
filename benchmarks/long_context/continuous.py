@@ -60,6 +60,8 @@ def run_continuous(llm, tokenizer, prompts, config, args, eos_ids, output):
                 temperature=config["temperature"], top_p=1.0, top_k=-1,
                 seed=config["seed"], ignore_eos=True, max_tokens=max_tokens,
                 detokenize=False, output_kind=RequestOutputKind.DELTA,
+                bad_words=([tokenizer.convert_ids_to_tokens(i) for i in eos_ids]
+                           if config.get("eos_policy") == "bad_words" else None),
             )
             state = dict(prompt=prompt, generated_ids=[], started=time.perf_counter(),
                          started_at=time.time(),
