@@ -1,0 +1,32 @@
+[
+  {
+    "method": "ar-k0",
+    "peak_running_requests": 28,
+    "peak_running_computed_tokens": 1375452,
+    "theoretical_max": 1376256,
+    "preemptions": 0,
+    "requests": 28,
+    "eos": 0,
+    "nan_logits": 0
+  },
+  {
+    "method": "eagle3-k7",
+    "peak_running_requests": 28,
+    "peak_running_computed_tokens": 1374581,
+    "theoretical_max": 1376256,
+    "preemptions": 0,
+    "requests": 28,
+    "eos": 0,
+    "nan_logits": 0
+  },
+  {
+    "method": "dflash-k7",
+    "peak_running_requests": 28,
+    "peak_running_computed_tokens": 1375329,
+    "theoretical_max": 1376256,
+    "preemptions": 0,
+    "requests": 28,
+    "eos": 0,
+    "nan_logits": 0
+  }
+]

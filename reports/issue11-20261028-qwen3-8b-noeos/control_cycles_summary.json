@@ -1,0 +1,9 @@
+[
+  {
+    "run": "dflash-k15-control28",
+    "requests": 28,
+    "eos_tokens": 0,
+    "tail_exact_cycles": 23,
+    "tail_near_cycles": 23
+  }
+]

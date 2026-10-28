@@ -1,0 +1,4 @@
+method,budget,batching,requests,generated_tokens,seconds,aggregate_tokens_per_second,run_directory,throughput_ratio_vs_ar
+ar,0,continuous,200,9784196,6750.235042690001,1449.4600466683826,/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/ar-k0,1.0
+dflash,7,continuous,200,9784196,5715.410834020002,1711.8972343617459,/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/dflash-k7,1.1810585868141596
+eagle3,7,continuous,200,9784196,1849.7629476010006,5289.432363584396,/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/eagle3-k7,3.649243299766888

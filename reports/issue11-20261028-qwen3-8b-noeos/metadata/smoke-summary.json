@@ -1,0 +1,38 @@
+[
+  {
+    "method": "ar",
+    "budget": 0,
+    "batching": "continuous",
+    "requests": 32,
+    "generated_tokens": 65536,
+    "seconds": 17.916287866999483,
+    "aggregate_tokens_per_second": 3657.9005922712713,
+    "preemptions": 0,
+    "nan_logits": 0,
+    "requests_with_eos": 0
+  },
+  {
+    "method": "eagle3",
+    "budget": 7,
+    "batching": "continuous",
+    "requests": 32,
+    "generated_tokens": 65536,
+    "seconds": 12.970062915001108,
+    "aggregate_tokens_per_second": 5052.866777091836,
+    "preemptions": 0,
+    "nan_logits": 0,
+    "requests_with_eos": 0
+  },
+  {
+    "method": "dflash",
+    "budget": 7,
+    "batching": "continuous",
+    "requests": 32,
+    "generated_tokens": 65536,
+    "seconds": 9.49300679100088,
+    "aggregate_tokens_per_second": 6903.608250035847,
+    "preemptions": 0,
+    "nan_logits": 0,
+    "requests_with_eos": 0
+  }
+]

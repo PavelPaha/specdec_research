@@ -1,0 +1,42 @@
+[
+  {
+    "id": "chat-001",
+    "domain": "chat",
+    "audited_tokens": 8192,
+    "best_period": 206,
+    "lag_agreement": 1.0,
+    "near_cycle": true
+  },
+  {
+    "id": "chat-006",
+    "domain": "chat",
+    "audited_tokens": 8192,
+    "best_period": 225,
+    "lag_agreement": 1.0,
+    "near_cycle": true
+  },
+  {
+    "id": "chat-003",
+    "domain": "chat",
+    "audited_tokens": 8192,
+    "best_period": 191,
+    "lag_agreement": 1.0,
+    "near_cycle": true
+  },
+  {
+    "id": "code-006",
+    "domain": "code",
+    "audited_tokens": 8192,
+    "best_period": 161,
+    "lag_agreement": 1.0,
+    "near_cycle": true
+  },
+  {
+    "id": "code-000",
+    "domain": "code",
+    "audited_tokens": 8192,
+    "best_period": 302,
+    "lag_agreement": 1.0,
+    "near_cycle": true
+  }
+]

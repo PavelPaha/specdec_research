@@ -1,0 +1,142 @@
+{
+  "config": {
+    "target": "Qwen/Qwen3-8B",
+    "target_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "native_context": 32768,
+    "checkpoint_max_position_embeddings": 40960,
+    "max_model_len": 49152,
+    "rope_scaling": null,
+    "dtype": "bfloat16",
+    "tensor_parallel_size": 1,
+    "max_num_seqs": 28,
+    "max_num_batched_tokens": 4096,
+    "temperature": 0.0,
+    "ignore_eos": true,
+    "eos_policy": "bad_words",
+    "enable_thinking": true,
+    "seed": 20261024,
+    "prompts_per_domain": 50,
+    "draft_budgets": [
+      7
+    ],
+    "drafters": {
+      "dflash": {
+        "model": "z-lab/Qwen3-8B-DFlash-b16",
+        "revision": "9b41424b7109f9c5413454f481b09a82b85333f4"
+      },
+      "eagle2": {
+        "model": "Tengyunw/qwen3_8b_eagle2_v0",
+        "revision": "16b967218adafc9e99689b6c1a334ad5c5a63b9b"
+      },
+      "eagle3": {
+        "model": "Tengyunw/qwen3_8b_eagle3",
+        "revision": "2a1059d51f622b8cad7d7d72840153ffea5488a0"
+      }
+    },
+    "batching": "continuous",
+    "gpu_memory_utilization": 0.92,
+    "min_kv_capacity_factor": 1.02,
+    "async_scheduling": true,
+    "excluded_variants": {
+      "eagle2": "Checkpoint uses unsupported LlamaForCausalLMEagle architecture and trained fc.bias absent in native vLLM EAGLE implementation. User requested no model/runtime patches.",
+      "eagle2_tree": "No native EAGLE tree support in installed vLLM; deferred by user.",
+      "eagle3_tree": "No native EAGLE tree support in installed vLLM; deferred by user."
+    }
+  },
+  "args": {
+    "config": "benchmarks/long_context/config-qwen3-8b-noeos.json",
+    "prompts": "data/long_context_qwen3_8b_prompts.jsonl",
+    "output": "/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/eagle3-k7",
+    "method": "eagle3",
+    "budget": 7,
+    "limit": null,
+    "offset": 0,
+    "max_new_tokens": null,
+    "enforce_eager": false,
+    "prefill_chunk_limit": 0,
+    "gpu_memory_utilization": null
+  },
+  "engine_args": {
+    "model": "Qwen/Qwen3-8B",
+    "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "tokenizer_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "dtype": "bfloat16",
+    "tensor_parallel_size": 1,
+    "max_model_len": 49152,
+    "max_num_seqs": 28,
+    "max_num_batched_tokens": 4096,
+    "gpu_memory_utilization": 0.92,
+    "enable_prefix_caching": false,
+    "async_scheduling": true,
+    "language_model_only": true,
+    "speculative_config": {
+      "model": "Tengyunw/qwen3_8b_eagle3",
+      "revision": "2a1059d51f622b8cad7d7d72840153ffea5488a0",
+      "method": "eagle3",
+      "num_speculative_tokens": 7,
+      "max_model_len": 49152
+    },
+    "scheduler_cls": "benchmarks.long_context.trace.TracingAsyncScheduler",
+    "seed": 20261024,
+    "enforce_eager": false,
+    "disable_log_stats": false,
+    "generation_config": "vllm",
+    "hf_overrides": "benchmarks.long_context.positions.extend_position_cache"
+  },
+  "source_sha256": {
+    "calibration-20261024.json": "fe277b83913ee321673de956a783811a8544cf0d66ba063a80afb0277cd35403",
+    "test_plot.py": "6dda190c210a6fcf4e7e8f41f9bca2e4c97105af8e64a9aaa60eec3957bb82a7",
+    "run.py": "e54bf196b57023bda1b93e74a9824c427e93db45de9069c742258f1a1d21e512",
+    "config.json": "f7e244846ec5017c830f4debf2a473a59504936560b94c77659ea7c2f9816396",
+    "trace.py": "51a072fefb11b366bc94d49e09f1113d86450fcb6197b1e1704aaa807feb50d4",
+    "__init__.py": "3d2300c0d3c0108f84424253a11e1873336c95fa8a1481b5d8a94c014d0a7377",
+    "continuous.py": "b1c03827e6826a13721d80c91dfec1a37b7c0d931d738eb059ed2d3a02060117",
+    "sweep.py": "34df29bfa313e8b287fd6562dfd0abd3739a943f7c93617e989a78953c9e63e4",
+    "config-c16.json": "3b20262f17ae3006bd9f51d2bbbe773cf224a1c336b5aeacceab955bfd0d3372",
+    "download.py": "be8b3e5710a8316617262a73fe964dd9522f9c91dc64686e9272647878c26eb5",
+    "requirements.txt": "4155fae96629e6678ea2545676485b46388384d8dd53b45749e3dbe6d2002168",
+    "validate.py": "8b2b5ad6ccffab6ad24b43d11b1aa9d8c0b7dfb6ce518cde1aa9b72c05753070",
+    "config-b8.json": "68fc5c8add45e9bb0b13aecb25aacc405ae8dba356c4f50d96699b733aa5998c",
+    "checkpoints.py": "46ed43758f2db2aaf9fa8410f7242362aec85d85bc72d8ce73a3c99451f9fc15",
+    "positions.py": "345ed23338ec436786a3417c3283a3d97a7e6930f0f962aa5660a0e8624f805b",
+    "test_continuous.py": "43c9aef5a40f3a878d990484ae33701015bf663dcf0bb727ef4fb1d212f2b35e",
+    "plot.py": "5f6f575b29bdd4d30d9a35a28d04c306b102b77f5701bff40229645129c8ed2e",
+    "audit_cycles.py": "65f6985aa0909e2a6a698bf19fb22c7ce8aaca71c4486e3e25065766bfde611e",
+    "prepare.py": "5bc0c3597742a76aeb4a9f73bb89675e434b092651749045f4a5e0c8cedc0ebb",
+    "README.md": "50d1090b11abf86398fd5cb71b5f04d79f39c20eafe22cfedf30be1bb1f22a26",
+    "config-c16-async.json": "c231710c9cc2f27871a6f388651ae01e019a9a7f622c7eaf1eac7a2859319258",
+    "config-qwen3-8b-noeos.json": "0ca75356f2b644950f4e4817bcb0cacaa2182fedc30b3ab5d355c770d5d3ac11",
+    "parallel.py": "a1b2246e04ebb6460547e9bf33d699d5720ff8835cb87046e4763f0170a8fc6d"
+  },
+  "checkpoint_adaptation": null,
+  "sampling_eos_bad_words": [
+    "<|endoftext|>",
+    "<|im_end|>"
+  ],
+  "eos_token_ids": [
+    151643,
+    151645
+  ],
+  "cuda_visible_devices": "GPU-ab4bbb8d-46c2-6b0f-3ea8-3fe178a83b7c",
+  "environment": {
+    "VLLM_ALLOW_LONG_MAX_MODEL_LEN": "1",
+    "VLLM_COMPUTE_NANS_IN_LOGITS": "1",
+    "HF_HUB_OFFLINE": "1",
+    "CUDA_HOME": "/usr/local/cuda",
+    "SPECDEC_POSITION_CACHE_LEN": "49152",
+    "SPECDEC_MIN_KV_CAPACITY": "28.560000000000002"
+  },
+  "packages": {
+    "vllm": "0.32.0",
+    "torch": "2.13.0",
+    "transformers": "5.19.0",
+    "huggingface_hub": "2.3.0"
+  },
+  "prompt_file_sha256": "214ef8fac67c96e8625777fac300a39f6cba964f9d0c3a652b2f396b4661e171",
+  "git_commit": "517eb0a4790884c6959ad210134aba2e79aedf6f",
+  "git_dirty": true,
+  "gpu": "index, uuid, name, memory.total [MiB], driver_version\n0, GPU-d2eb77ce-386a-db47-e75a-1088608ce5f7, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n1, GPU-c1b8e5ea-76d1-2e08-985d-6730853b93f8, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n2, GPU-2666bcad-b34a-afcf-9712-65d86316cadd, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n3, GPU-ab4bbb8d-46c2-6b0f-3ea8-3fe178a83b7c, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n4, GPU-390cd25c-9f6b-e220-bd3b-d582f2288186, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n5, GPU-ede324eb-6563-44b7-864c-5db16a81f495, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n6, GPU-1aef6b07-5c50-392b-c2ca-dca88268af79, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n7, GPU-c31ab8ee-8135-ab09-488a-cc581e3d264f, NVIDIA B300 SXM6 AC, 275040 MiB, 595.45.04\n",
+  "started_at": 1793140101.7461095,
+  "status": "complete",
+  "finished_at": 1793142006.5552826
+}

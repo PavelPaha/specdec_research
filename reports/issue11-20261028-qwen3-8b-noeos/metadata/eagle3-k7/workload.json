@@ -1,0 +1,7 @@
+{
+  "batching": "continuous",
+  "requests": 200,
+  "generated_tokens": 9784196,
+  "seconds": 1849.7629476010006,
+  "aggregate_tokens_per_second": 5289.432363584396
+}

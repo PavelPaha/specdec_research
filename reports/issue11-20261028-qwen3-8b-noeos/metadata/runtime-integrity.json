@@ -1,0 +1,60 @@
+{
+  "vllm": "0.32.0",
+  "files": [
+    {
+      "file": "vllm/v1/worker/gpu_worker.py",
+      "sha256_base64": "6XCqKac4qhXNlj2fkgLKbT1QTpj9NElZ_ZmOlARypaA",
+      "installed_record_hash": "6XCqKac4qhXNlj2fkgLKbT1QTpj9NElZ_ZmOlARypaA",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/v1/worker/gpu/sample/sampler.py",
+      "sha256_base64": "YgsP8b6lBOvmF5S5GrB83CQ9PQX43qTEBEw3St12Jws",
+      "installed_record_hash": "YgsP8b6lBOvmF5S5GrB83CQ9PQX43qTEBEw3St12Jws",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/v1/worker/gpu/sample/bad_words.py",
+      "sha256_base64": "hcLxpKNOrA8XhM11vZ7TF-HvO4KpU8B94CpUiki0qtQ",
+      "installed_record_hash": "hcLxpKNOrA8XhM11vZ7TF-HvO4KpU8B94CpUiki0qtQ",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/v1/worker/gpu/spec_decode/speculator.py",
+      "sha256_base64": "sl763eY3ayFootUoT3iNI5B5sO8UgOaPr8JdVX1EOJo",
+      "installed_record_hash": "sl763eY3ayFootUoT3iNI5B5sO8UgOaPr8JdVX1EOJo",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/model_executor/models/qwen3.py",
+      "sha256_base64": "Br7kV-EnjOzD0HRfRcRLRxEkMzDowsGdXHMmJbZ_E3Q",
+      "installed_record_hash": "Br7kV-EnjOzD0HRfRcRLRxEkMzDowsGdXHMmJbZ_E3Q",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/model_executor/models/qwen3_dflash.py",
+      "sha256_base64": "U3VUMojnIhmrwfx3chmmQPDRc7PorFMXGNZmSDpG6no",
+      "installed_record_hash": "U3VUMojnIhmrwfx3chmmQPDRc7PorFMXGNZmSDpG6no",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/model_executor/models/llama_eagle.py",
+      "sha256_base64": "Scgxeb5Cm2srxewZaha4NBt0L7Px65Ap9-sYLl5aWNs",
+      "installed_record_hash": "Scgxeb5Cm2srxewZaha4NBt0L7Px65Ap9-sYLl5aWNs",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/model_executor/models/llama_eagle3.py",
+      "sha256_base64": "9mmZVkfnGZir5yHCvCFfCsRig4vdw9ch-6jcCqrl07k",
+      "installed_record_hash": "9mmZVkfnGZir5yHCvCFfCsRig4vdw9ch-6jcCqrl07k",
+      "matches_distribution_record": true
+    },
+    {
+      "file": "vllm/config/speculative.py",
+      "sha256_base64": "zhNWUaegND_1JvculUWTJhc3gWGr0DE11n7abeicYXw",
+      "installed_record_hash": "zhNWUaegND_1JvculUWTJhc3gWGr0DE11n7abeicYXw",
+      "matches_distribution_record": true
+    }
+  ],
+  "verified_at_unix": 1793148791.2323544
+}

@@ -1,0 +1,1609 @@
+{
+  "updated_at": 1793148816.9309156,
+  "step": 390451,
+  "preemptions": 0,
+  "requests": {
+    "math-000-948a73c2": {
+      "context_tokens": 49152,
+      "generated_tokens": 49113,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-000-a4bd7978": {
+      "context_tokens": 49152,
+      "generated_tokens": 49036,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-000-a5762bf7": {
+      "context_tokens": 49152,
+      "generated_tokens": 48716,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-000-bd07979b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49036,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-001-b39179c8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49083,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-001-a85a7416": {
+      "context_tokens": 49152,
+      "generated_tokens": 49021,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-001-ab0fa989": {
+      "context_tokens": 49152,
+      "generated_tokens": 48908,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-001-bdd30371": {
+      "context_tokens": 49152,
+      "generated_tokens": 48919,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-002-ae4ade1c": {
+      "context_tokens": 49152,
+      "generated_tokens": 48920,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-002-88cabd0e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49060,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-002-872e5244": {
+      "context_tokens": 49152,
+      "generated_tokens": 49037,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-002-89e707a5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49072,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-003-9b229ffe": {
+      "context_tokens": 49152,
+      "generated_tokens": 49122,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-003-a331f1e6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48914,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-003-b0fc9438": {
+      "context_tokens": 49152,
+      "generated_tokens": 48731,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-003-82b03b18": {
+      "context_tokens": 49152,
+      "generated_tokens": 48977,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-004-b925e69f": {
+      "context_tokens": 49152,
+      "generated_tokens": 48917,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-004-8f4881d8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-004-93a6a2e4": {
+      "context_tokens": 49152,
+      "generated_tokens": 48521,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-004-9542f8dd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49077,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-005-83cfe244": {
+      "context_tokens": 49152,
+      "generated_tokens": 49120,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-005-8ff86b25": {
+      "context_tokens": 49152,
+      "generated_tokens": 49072,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-005-b14936e1": {
+      "context_tokens": 49152,
+      "generated_tokens": 48297,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-005-aedc5674": {
+      "context_tokens": 49152,
+      "generated_tokens": 49004,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-006-a4feea41": {
+      "context_tokens": 49152,
+      "generated_tokens": 48969,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-006-ab7a43f6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48818,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-006-9d5c3288": {
+      "context_tokens": 49152,
+      "generated_tokens": 48910,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-006-b74611dd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49103,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-007-a4fc8974": {
+      "context_tokens": 49152,
+      "generated_tokens": 49030,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-007-b599ecfd": {
+      "context_tokens": 49152,
+      "generated_tokens": 48941,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-007-999437a4": {
+      "context_tokens": 49152,
+      "generated_tokens": 48610,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-007-9cb53e87": {
+      "context_tokens": 49152,
+      "generated_tokens": 48912,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-008-a699fe8b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49055,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-008-a6a46d6f": {
+      "context_tokens": 49152,
+      "generated_tokens": 48921,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-008-82ac5452": {
+      "context_tokens": 49152,
+      "generated_tokens": 48578,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-008-be1f56e7": {
+      "context_tokens": 49152,
+      "generated_tokens": 49046,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-009-87360aa0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49108,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-009-9a8e7074": {
+      "context_tokens": 49152,
+      "generated_tokens": 49014,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-009-855b0e66": {
+      "context_tokens": 49152,
+      "generated_tokens": 48685,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-009-9ea2261c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49006,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-010-800b437f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49114,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-010-8ab4e8c5": {
+      "context_tokens": 49152,
+      "generated_tokens": 48976,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-010-baadde13": {
+      "context_tokens": 49152,
+      "generated_tokens": 48246,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-010-8420ba41": {
+      "context_tokens": 49152,
+      "generated_tokens": 48942,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-011-b979cf39": {
+      "context_tokens": 49152,
+      "generated_tokens": 49069,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-011-913584ea": {
+      "context_tokens": 49152,
+      "generated_tokens": 49070,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-011-a85258f9": {
+      "context_tokens": 49152,
+      "generated_tokens": 48946,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-011-bde6f031": {
+      "context_tokens": 49152,
+      "generated_tokens": 49035,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-012-9185c085": {
+      "context_tokens": 49152,
+      "generated_tokens": 49122,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-012-97a6f496": {
+      "context_tokens": 49152,
+      "generated_tokens": 49004,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-012-81c33064": {
+      "context_tokens": 49152,
+      "generated_tokens": 48839,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-012-a1a47b8e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49008,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-013-aba41715": {
+      "context_tokens": 49152,
+      "generated_tokens": 49097,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-013-ace9c073": {
+      "context_tokens": 49152,
+      "generated_tokens": 49039,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-013-96745e59": {
+      "context_tokens": 49152,
+      "generated_tokens": 48730,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-013-b0b45c23": {
+      "context_tokens": 49152,
+      "generated_tokens": 49095,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-014-806707b9": {
+      "context_tokens": 49152,
+      "generated_tokens": 49095,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-014-9f5b3b16": {
+      "context_tokens": 49152,
+      "generated_tokens": 49063,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-014-8f8641ff": {
+      "context_tokens": 49152,
+      "generated_tokens": 48934,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-014-8242c93a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48964,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-015-a96cd464": {
+      "context_tokens": 49152,
+      "generated_tokens": 49123,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-015-a3291dda": {
+      "context_tokens": 49152,
+      "generated_tokens": 49037,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-015-83aaf8bf": {
+      "context_tokens": 49152,
+      "generated_tokens": 49042,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-015-ba38a9dd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49075,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-016-9cdd22cd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49128,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-016-b7c64852": {
+      "context_tokens": 49152,
+      "generated_tokens": 49054,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-016-abb09c01": {
+      "context_tokens": 49152,
+      "generated_tokens": 48460,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-016-aa5e3247": {
+      "context_tokens": 49152,
+      "generated_tokens": 49031,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-017-b2d191e6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49131,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-017-9940909e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48985,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-017-867edb69": {
+      "context_tokens": 49152,
+      "generated_tokens": 48845,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-017-8e5d26d7": {
+      "context_tokens": 49152,
+      "generated_tokens": 48975,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-018-84e8a3f0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49069,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-018-b96fefa8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49012,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-018-98140a3d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48734,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-018-bdbaa296": {
+      "context_tokens": 49152,
+      "generated_tokens": 48941,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-019-ac80c047": {
+      "context_tokens": 49152,
+      "generated_tokens": 49094,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-019-8e5c6343": {
+      "context_tokens": 49152,
+      "generated_tokens": 48995,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-019-bc89d5c6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48913,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-019-81ec52a5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49028,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-020-814f65b5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49114,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-020-81bcb8f0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49029,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-020-82de4764": {
+      "context_tokens": 49152,
+      "generated_tokens": 48791,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-020-b8fa9e97": {
+      "context_tokens": 49152,
+      "generated_tokens": 49001,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-021-a5a48ffd": {
+      "context_tokens": 49152,
+      "generated_tokens": 48933,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-021-b988d769": {
+      "context_tokens": 49152,
+      "generated_tokens": 48997,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-021-bf5fadb4": {
+      "context_tokens": 49152,
+      "generated_tokens": 48923,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-021-96746487": {
+      "context_tokens": 49152,
+      "generated_tokens": 48966,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-022-87c14051": {
+      "context_tokens": 49152,
+      "generated_tokens": 48829,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-022-96068607": {
+      "context_tokens": 49152,
+      "generated_tokens": 49020,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-022-9d429732": {
+      "context_tokens": 49152,
+      "generated_tokens": 48640,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-022-9209802a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49006,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-023-b5c357dd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49057,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-023-896e17ee": {
+      "context_tokens": 49152,
+      "generated_tokens": 48957,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-023-a19d81fc": {
+      "context_tokens": 49152,
+      "generated_tokens": 48417,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-023-95d2fdaf": {
+      "context_tokens": 49152,
+      "generated_tokens": 48992,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-024-897dae85": {
+      "context_tokens": 49152,
+      "generated_tokens": 49104,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-024-811dc50b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48937,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-024-b0f0a46f": {
+      "context_tokens": 49152,
+      "generated_tokens": 48480,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-024-a8660ef0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49099,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-025-b8533c83": {
+      "context_tokens": 49152,
+      "generated_tokens": 49081,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-025-93744da1": {
+      "context_tokens": 49152,
+      "generated_tokens": 48994,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-025-8725491d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48857,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-025-b9a24a00": {
+      "context_tokens": 49152,
+      "generated_tokens": 48998,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-026-b340f83b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49107,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-026-a0271f77": {
+      "context_tokens": 49152,
+      "generated_tokens": 49009,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-026-b3bd3cee": {
+      "context_tokens": 49152,
+      "generated_tokens": 48800,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-026-ac425707": {
+      "context_tokens": 49152,
+      "generated_tokens": 48944,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-027-ac318bcc": {
+      "context_tokens": 49152,
+      "generated_tokens": 49082,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-027-8e192261": {
+      "context_tokens": 49152,
+      "generated_tokens": 49018,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-027-aec0ea56": {
+      "context_tokens": 49152,
+      "generated_tokens": 48863,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-027-afdb443a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49001,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-028-a4a158c8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49093,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-028-93c1c6e5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49002,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-028-bbc18e37": {
+      "context_tokens": 49152,
+      "generated_tokens": 48110,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-028-8d10a21a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49023,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-029-a6e687ae": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-029-88f0a06f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49033,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-029-96d2ec84": {
+      "context_tokens": 49152,
+      "generated_tokens": 48627,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-029-997be5d0": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-030-a8ed3d8a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49115,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-030-bf58e0dc": {
+      "context_tokens": 49152,
+      "generated_tokens": 48979,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-030-8b399176": {
+      "context_tokens": 49152,
+      "generated_tokens": 48103,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-030-ba13cf18": {
+      "context_tokens": 49152,
+      "generated_tokens": 49074,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-031-94ef6fd0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49125,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-031-82dd2841": {
+      "context_tokens": 49152,
+      "generated_tokens": 49100,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-031-8e359d48": {
+      "context_tokens": 49152,
+      "generated_tokens": 48579,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-031-a1ee84bf": {
+      "context_tokens": 49152,
+      "generated_tokens": 48934,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-032-97385da1": {
+      "context_tokens": 49152,
+      "generated_tokens": 48353,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-032-82e8bb49": {
+      "context_tokens": 49152,
+      "generated_tokens": 48978,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-032-9449c150": {
+      "context_tokens": 49152,
+      "generated_tokens": 48759,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-032-9ee226e9": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-033-b5af6bd6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49115,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-033-9993939e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48829,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-033-82e12e7c": {
+      "context_tokens": 49152,
+      "generated_tokens": 48833,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-033-913b7cc5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49039,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-034-a58dc5ac": {
+      "context_tokens": 49152,
+      "generated_tokens": 49127,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-034-a4187bb6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48982,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-034-8c4927ea": {
+      "context_tokens": 49152,
+      "generated_tokens": 48586,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-034-a6d9ae5a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-035-83b894df": {
+      "context_tokens": 49152,
+      "generated_tokens": 49103,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-035-b34a5121": {
+      "context_tokens": 49152,
+      "generated_tokens": 48885,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-035-9346c9bf": {
+      "context_tokens": 49152,
+      "generated_tokens": 48348,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-035-9815d9b1": {
+      "context_tokens": 49152,
+      "generated_tokens": 49073,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-036-89b7b5ed": {
+      "context_tokens": 49152,
+      "generated_tokens": 49089,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-036-af05caf4": {
+      "context_tokens": 49152,
+      "generated_tokens": 49051,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-036-a522bdd0": {
+      "context_tokens": 49152,
+      "generated_tokens": 48389,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-036-93b8410e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49028,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-037-922f7d6d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48958,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-037-8a58fc31": {
+      "context_tokens": 49152,
+      "generated_tokens": 49055,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-037-badcaba8": {
+      "context_tokens": 49152,
+      "generated_tokens": 47955,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-037-a5c45b47": {
+      "context_tokens": 49152,
+      "generated_tokens": 48940,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-038-b25fffca": {
+      "context_tokens": 49152,
+      "generated_tokens": 49083,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-038-a11fd8ad": {
+      "context_tokens": 49152,
+      "generated_tokens": 48930,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-038-9cc6e10e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48372,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-038-8d3f387e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49105,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-039-a4ea90fe": {
+      "context_tokens": 49152,
+      "generated_tokens": 49086,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-039-8d62e37e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48914,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-039-bd183af6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48816,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-039-a389c58a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49019,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-040-9a13c3db": {
+      "context_tokens": 49152,
+      "generated_tokens": 49067,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-040-9599563d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49045,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-040-a7dba1bb": {
+      "context_tokens": 49152,
+      "generated_tokens": 48933,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-040-afd60539": {
+      "context_tokens": 49152,
+      "generated_tokens": 49055,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-041-80a75b22": {
+      "context_tokens": 49152,
+      "generated_tokens": 49105,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-041-930ccf75": {
+      "context_tokens": 49152,
+      "generated_tokens": 48845,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-041-a9cd646a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48662,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-041-bd93057f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49026,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-042-948b1557": {
+      "context_tokens": 49152,
+      "generated_tokens": 49079,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-042-bc497413": {
+      "context_tokens": 49152,
+      "generated_tokens": 49061,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-042-895bcf6a": {
+      "context_tokens": 49152,
+      "generated_tokens": 47964,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-042-81a3c6d1": {
+      "context_tokens": 49152,
+      "generated_tokens": 49076,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-043-be31f1b8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49076,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-043-b3f9d7be": {
+      "context_tokens": 49152,
+      "generated_tokens": 48962,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-043-9dc5b54a": {
+      "context_tokens": 49152,
+      "generated_tokens": 47969,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-043-8059140c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49003,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-044-bd7f6a7e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49069,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-044-bd70677c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49031,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-044-be22c912": {
+      "context_tokens": 49152,
+      "generated_tokens": 47931,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-044-9a1c442a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48936,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-045-97d94a20": {
+      "context_tokens": 49152,
+      "generated_tokens": 49130,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-045-88981654": {
+      "context_tokens": 49152,
+      "generated_tokens": 49067,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-045-b35cd870": {
+      "context_tokens": 49152,
+      "generated_tokens": 48909,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-045-bfafa23a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48941,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-046-8635965d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49110,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-046-9484c42d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49020,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-046-952f9109": {
+      "context_tokens": 49152,
+      "generated_tokens": 48484,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-046-9d774a77": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-047-823312ec": {
+      "context_tokens": 49152,
+      "generated_tokens": 48907,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-047-971703cc": {
+      "context_tokens": 49152,
+      "generated_tokens": 48983,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-047-857a18ae": {
+      "context_tokens": 49152,
+      "generated_tokens": 48599,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-047-b0419ea2": {
+      "context_tokens": 49152,
+      "generated_tokens": 48991,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-048-80b026e2": {
+      "context_tokens": 49152,
+      "generated_tokens": 49110,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-048-bea5b9a6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48829,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-048-86e87851": {
+      "context_tokens": 49152,
+      "generated_tokens": 48612,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-048-878d7c4e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48948,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "math-049-bcdf6791": {
+      "context_tokens": 49152,
+      "generated_tokens": 49114,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "code-049-972b8019": {
+      "context_tokens": 49152,
+      "generated_tokens": 49057,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "chat-049-a42dd4fb": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    },
+    "reasoning-049-84da0635": {
+      "context_tokens": 49152,
+      "generated_tokens": 49021,
+      "first_eos_output_index": null,
+      "proposed": 0,
+      "accepted": 0,
+      "nan_logits": 0
+    }
+  },
+  "peak_running_requests": 28,
+  "peak_running_computed_tokens": 1359026
+}

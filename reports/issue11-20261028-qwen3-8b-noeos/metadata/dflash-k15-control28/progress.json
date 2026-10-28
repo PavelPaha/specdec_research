@@ -1,0 +1,233 @@
+{
+  "updated_at": 1793146736.89614,
+  "step": 33529,
+  "preemptions": 0,
+  "requests": {
+    "math-000-90b58bcb": {
+      "context_tokens": 49152,
+      "generated_tokens": 49113,
+      "first_eos_output_index": null,
+      "proposed": 221666,
+      "accepted": 34322,
+      "nan_logits": 0
+    },
+    "code-000-b1d45123": {
+      "context_tokens": 49152,
+      "generated_tokens": 49036,
+      "first_eos_output_index": null,
+      "proposed": 156765,
+      "accepted": 38576,
+      "nan_logits": 0
+    },
+    "chat-000-aa9e3707": {
+      "context_tokens": 49152,
+      "generated_tokens": 48716,
+      "first_eos_output_index": null,
+      "proposed": 473745,
+      "accepted": 17128,
+      "nan_logits": 0
+    },
+    "reasoning-000-994a22d8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49036,
+      "first_eos_output_index": null,
+      "proposed": 126830,
+      "accepted": 40571,
+      "nan_logits": 0
+    },
+    "math-001-ab8a7b80": {
+      "context_tokens": 49152,
+      "generated_tokens": 49083,
+      "first_eos_output_index": null,
+      "proposed": 331741,
+      "accepted": 26955,
+      "nan_logits": 0
+    },
+    "code-001-b88c0e38": {
+      "context_tokens": 49152,
+      "generated_tokens": 49021,
+      "first_eos_output_index": null,
+      "proposed": 290495,
+      "accepted": 29643,
+      "nan_logits": 0
+    },
+    "chat-001-993c31b0": {
+      "context_tokens": 49152,
+      "generated_tokens": 48908,
+      "first_eos_output_index": null,
+      "proposed": 262365,
+      "accepted": 31405,
+      "nan_logits": 0
+    },
+    "reasoning-001-985b952b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48919,
+      "first_eos_output_index": null,
+      "proposed": 502765,
+      "accepted": 15394,
+      "nan_logits": 0
+    },
+    "math-002-880018b2": {
+      "context_tokens": 49152,
+      "generated_tokens": 48920,
+      "first_eos_output_index": null,
+      "proposed": 369159,
+      "accepted": 24301,
+      "nan_logits": 0
+    },
+    "code-002-b04fc4c4": {
+      "context_tokens": 49152,
+      "generated_tokens": 49060,
+      "first_eos_output_index": null,
+      "proposed": 255420,
+      "accepted": 32018,
+      "nan_logits": 0
+    },
+    "chat-002-b7bdd73c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49037,
+      "first_eos_output_index": null,
+      "proposed": 254789,
+      "accepted": 32037,
+      "nan_logits": 0
+    },
+    "reasoning-002-b78deb24": {
+      "context_tokens": 49152,
+      "generated_tokens": 49072,
+      "first_eos_output_index": null,
+      "proposed": 335307,
+      "accepted": 26708,
+      "nan_logits": 0
+    },
+    "math-003-9ec2d70a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49122,
+      "first_eos_output_index": null,
+      "proposed": 207091,
+      "accepted": 35305,
+      "nan_logits": 0
+    },
+    "code-003-bc319d47": {
+      "context_tokens": 49152,
+      "generated_tokens": 48914,
+      "first_eos_output_index": null,
+      "proposed": 405744,
+      "accepted": 21852,
+      "nan_logits": 0
+    },
+    "chat-003-92509a6a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48731,
+      "first_eos_output_index": null,
+      "proposed": 230051,
+      "accepted": 33383,
+      "nan_logits": 0
+    },
+    "reasoning-003-9d563205": {
+      "context_tokens": 49152,
+      "generated_tokens": 48977,
+      "first_eos_output_index": null,
+      "proposed": 365204,
+      "accepted": 24618,
+      "nan_logits": 0
+    },
+    "math-004-972f2466": {
+      "context_tokens": 49152,
+      "generated_tokens": 48917,
+      "first_eos_output_index": null,
+      "proposed": 196697,
+      "accepted": 35795,
+      "nan_logits": 0
+    },
+    "code-004-9c16be0d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 155995,
+      "accepted": 38693,
+      "nan_logits": 0
+    },
+    "chat-004-bc7c2a20": {
+      "context_tokens": 49152,
+      "generated_tokens": 48521,
+      "first_eos_output_index": null,
+      "proposed": 310204,
+      "accepted": 27827,
+      "nan_logits": 0
+    },
+    "reasoning-004-b01b512d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49077,
+      "first_eos_output_index": null,
+      "proposed": 266978,
+      "accepted": 31265,
+      "nan_logits": 0
+    },
+    "math-005-90a51e3f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49120,
+      "first_eos_output_index": null,
+      "proposed": 250722,
+      "accepted": 32396,
+      "nan_logits": 0
+    },
+    "code-005-967355f5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49072,
+      "first_eos_output_index": null,
+      "proposed": 320872,
+      "accepted": 27664,
+      "nan_logits": 0
+    },
+    "chat-005-911a94ee": {
+      "context_tokens": 49152,
+      "generated_tokens": 48297,
+      "first_eos_output_index": null,
+      "proposed": 236669,
+      "accepted": 32507,
+      "nan_logits": 0
+    },
+    "reasoning-005-8a7e08ef": {
+      "context_tokens": 49152,
+      "generated_tokens": 49004,
+      "first_eos_output_index": null,
+      "proposed": 230347,
+      "accepted": 33633,
+      "nan_logits": 0
+    },
+    "math-006-9aec2a3a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48969,
+      "first_eos_output_index": null,
+      "proposed": 326723,
+      "accepted": 27180,
+      "nan_logits": 0
+    },
+    "code-006-a9ad25fa": {
+      "context_tokens": 49152,
+      "generated_tokens": 48818,
+      "first_eos_output_index": null,
+      "proposed": 222101,
+      "accepted": 33999,
+      "nan_logits": 0
+    },
+    "chat-006-b70ecff7": {
+      "context_tokens": 49152,
+      "generated_tokens": 48910,
+      "first_eos_output_index": null,
+      "proposed": 290196,
+      "accepted": 29551,
+      "nan_logits": 0
+    },
+    "reasoning-006-a591c348": {
+      "context_tokens": 49152,
+      "generated_tokens": 49103,
+      "first_eos_output_index": null,
+      "proposed": 263667,
+      "accepted": 31510,
+      "nan_logits": 0
+    }
+  },
+  "peak_running_requests": 28,
+  "peak_running_computed_tokens": 986430
+}

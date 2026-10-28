@@ -107,6 +107,8 @@ def write_report(frame, output, native, limit, partial, eos_masked=False):
              "| Домен | Метод | Фаза | Префикс | Промптов | Accepted / proposed |",
              "| --- | --- | --- | --- | ---: | ---: |"]
     windows = [(0, 8192), (32768, 65536), (native - 16384, native), (native, limit)]
+    windows = list(dict.fromkeys((max(0, low), min(high, limit)) for low, high in windows
+                                if max(0, low) < min(high, limit)))
     for low, high in windows:
         subset = frame[(frame.prefix_bin_start >= low) & (frame.prefix_bin_start < high)]
         subset = subset[subset.proposed > 0]

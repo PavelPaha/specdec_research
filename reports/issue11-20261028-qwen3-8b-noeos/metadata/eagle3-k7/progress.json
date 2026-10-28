@@ -1,0 +1,1609 @@
+{
+  "updated_at": 1793142003.598307,
+  "step": 81691,
+  "preemptions": 0,
+  "requests": {
+    "math-000-a3aa174b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49113,
+      "first_eos_output_index": null,
+      "proposed": 78314,
+      "accepted": 37923,
+      "nan_logits": 0
+    },
+    "code-000-9d02a11e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49036,
+      "first_eos_output_index": null,
+      "proposed": 65805,
+      "accepted": 39633,
+      "nan_logits": 0
+    },
+    "chat-000-b81c51f5": {
+      "context_tokens": 49152,
+      "generated_tokens": 48716,
+      "first_eos_output_index": null,
+      "proposed": 57105,
+      "accepted": 40556,
+      "nan_logits": 0
+    },
+    "reasoning-000-8f5ab40c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49036,
+      "first_eos_output_index": null,
+      "proposed": 50532,
+      "accepted": 41815,
+      "nan_logits": 0
+    },
+    "math-001-8120a429": {
+      "context_tokens": 49152,
+      "generated_tokens": 49083,
+      "first_eos_output_index": null,
+      "proposed": 55860,
+      "accepted": 41100,
+      "nan_logits": 0
+    },
+    "code-001-a8475985": {
+      "context_tokens": 49152,
+      "generated_tokens": 49021,
+      "first_eos_output_index": null,
+      "proposed": 49684,
+      "accepted": 41922,
+      "nan_logits": 0
+    },
+    "chat-001-87ffe7e1": {
+      "context_tokens": 49152,
+      "generated_tokens": 48908,
+      "first_eos_output_index": null,
+      "proposed": 48603,
+      "accepted": 41963,
+      "nan_logits": 0
+    },
+    "reasoning-001-9eed3498": {
+      "context_tokens": 49152,
+      "generated_tokens": 48919,
+      "first_eos_output_index": null,
+      "proposed": 73376,
+      "accepted": 38434,
+      "nan_logits": 0
+    },
+    "math-002-9b4db829": {
+      "context_tokens": 49152,
+      "generated_tokens": 48920,
+      "first_eos_output_index": null,
+      "proposed": 59054,
+      "accepted": 40482,
+      "nan_logits": 0
+    },
+    "code-002-92c3b712": {
+      "context_tokens": 49152,
+      "generated_tokens": 49060,
+      "first_eos_output_index": null,
+      "proposed": 64469,
+      "accepted": 39848,
+      "nan_logits": 0
+    },
+    "chat-002-b09fdca0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49037,
+      "first_eos_output_index": null,
+      "proposed": 45848,
+      "accepted": 42486,
+      "nan_logits": 0
+    },
+    "reasoning-002-9c290997": {
+      "context_tokens": 49152,
+      "generated_tokens": 49072,
+      "first_eos_output_index": null,
+      "proposed": 78555,
+      "accepted": 37847,
+      "nan_logits": 0
+    },
+    "math-003-88820328": {
+      "context_tokens": 49152,
+      "generated_tokens": 49122,
+      "first_eos_output_index": null,
+      "proposed": 46417,
+      "accepted": 42490,
+      "nan_logits": 0
+    },
+    "code-003-a45ee282": {
+      "context_tokens": 49152,
+      "generated_tokens": 48914,
+      "first_eos_output_index": null,
+      "proposed": 59168,
+      "accepted": 40459,
+      "nan_logits": 0
+    },
+    "chat-003-8cdb25a6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48731,
+      "first_eos_output_index": null,
+      "proposed": 49777,
+      "accepted": 41618,
+      "nan_logits": 0
+    },
+    "reasoning-003-90ef185b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48977,
+      "first_eos_output_index": null,
+      "proposed": 45637,
+      "accepted": 42456,
+      "nan_logits": 0
+    },
+    "math-004-a17ccfd0": {
+      "context_tokens": 49152,
+      "generated_tokens": 48917,
+      "first_eos_output_index": null,
+      "proposed": 64139,
+      "accepted": 39752,
+      "nan_logits": 0
+    },
+    "code-004-bbfd1776": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 48179,
+      "accepted": 42217,
+      "nan_logits": 0
+    },
+    "chat-004-9ee2b064": {
+      "context_tokens": 49152,
+      "generated_tokens": 48521,
+      "first_eos_output_index": null,
+      "proposed": 46578,
+      "accepted": 41865,
+      "nan_logits": 0
+    },
+    "reasoning-004-b7c2d1ca": {
+      "context_tokens": 49152,
+      "generated_tokens": 49077,
+      "first_eos_output_index": null,
+      "proposed": 60382,
+      "accepted": 40448,
+      "nan_logits": 0
+    },
+    "math-005-a202d21c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49120,
+      "first_eos_output_index": null,
+      "proposed": 45194,
+      "accepted": 42662,
+      "nan_logits": 0
+    },
+    "code-005-905fab4d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49072,
+      "first_eos_output_index": null,
+      "proposed": 51605,
+      "accepted": 41697,
+      "nan_logits": 0
+    },
+    "chat-005-82ffb060": {
+      "context_tokens": 49152,
+      "generated_tokens": 48297,
+      "first_eos_output_index": null,
+      "proposed": 66570,
+      "accepted": 38784,
+      "nan_logits": 0
+    },
+    "reasoning-005-8eb70d51": {
+      "context_tokens": 49152,
+      "generated_tokens": 49004,
+      "first_eos_output_index": null,
+      "proposed": 49400,
+      "accepted": 41945,
+      "nan_logits": 0
+    },
+    "math-006-964b9c10": {
+      "context_tokens": 49152,
+      "generated_tokens": 48969,
+      "first_eos_output_index": null,
+      "proposed": 75507,
+      "accepted": 38181,
+      "nan_logits": 0
+    },
+    "code-006-b755b25b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48818,
+      "first_eos_output_index": null,
+      "proposed": 47038,
+      "accepted": 42097,
+      "nan_logits": 0
+    },
+    "chat-006-aff1f27b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48910,
+      "first_eos_output_index": null,
+      "proposed": 44190,
+      "accepted": 42596,
+      "nan_logits": 0
+    },
+    "reasoning-006-9d7f2404": {
+      "context_tokens": 49152,
+      "generated_tokens": 49103,
+      "first_eos_output_index": null,
+      "proposed": 53540,
+      "accepted": 41453,
+      "nan_logits": 0
+    },
+    "math-007-970f1814": {
+      "context_tokens": 49152,
+      "generated_tokens": 49030,
+      "first_eos_output_index": null,
+      "proposed": 57943,
+      "accepted": 40750,
+      "nan_logits": 0
+    },
+    "code-007-81e39620": {
+      "context_tokens": 49152,
+      "generated_tokens": 48941,
+      "first_eos_output_index": null,
+      "proposed": 46466,
+      "accepted": 42302,
+      "nan_logits": 0
+    },
+    "chat-007-8c0e72e2": {
+      "context_tokens": 49152,
+      "generated_tokens": 48610,
+      "first_eos_output_index": null,
+      "proposed": 49140,
+      "accepted": 41589,
+      "nan_logits": 0
+    },
+    "reasoning-007-86dba5d8": {
+      "context_tokens": 49152,
+      "generated_tokens": 48912,
+      "first_eos_output_index": null,
+      "proposed": 45961,
+      "accepted": 42345,
+      "nan_logits": 0
+    },
+    "math-008-83259dd0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49055,
+      "first_eos_output_index": null,
+      "proposed": 81941,
+      "accepted": 37347,
+      "nan_logits": 0
+    },
+    "code-008-9c71ad7e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48921,
+      "first_eos_output_index": null,
+      "proposed": 49520,
+      "accepted": 41845,
+      "nan_logits": 0
+    },
+    "chat-008-ac3b1d89": {
+      "context_tokens": 49152,
+      "generated_tokens": 48578,
+      "first_eos_output_index": null,
+      "proposed": 50774,
+      "accepted": 41323,
+      "nan_logits": 0
+    },
+    "reasoning-008-afae2e21": {
+      "context_tokens": 49152,
+      "generated_tokens": 49046,
+      "first_eos_output_index": null,
+      "proposed": 65910,
+      "accepted": 39628,
+      "nan_logits": 0
+    },
+    "math-009-a7e80e09": {
+      "context_tokens": 49152,
+      "generated_tokens": 49108,
+      "first_eos_output_index": null,
+      "proposed": 50395,
+      "accepted": 41906,
+      "nan_logits": 0
+    },
+    "code-009-9a345819": {
+      "context_tokens": 49152,
+      "generated_tokens": 49014,
+      "first_eos_output_index": null,
+      "proposed": 77878,
+      "accepted": 37885,
+      "nan_logits": 0
+    },
+    "chat-009-aca1818c": {
+      "context_tokens": 49152,
+      "generated_tokens": 48685,
+      "first_eos_output_index": null,
+      "proposed": 59393,
+      "accepted": 40198,
+      "nan_logits": 0
+    },
+    "reasoning-009-879ef703": {
+      "context_tokens": 49152,
+      "generated_tokens": 49006,
+      "first_eos_output_index": null,
+      "proposed": 76996,
+      "accepted": 38003,
+      "nan_logits": 0
+    },
+    "math-010-9bd3b700": {
+      "context_tokens": 49152,
+      "generated_tokens": 49114,
+      "first_eos_output_index": null,
+      "proposed": 74850,
+      "accepted": 38420,
+      "nan_logits": 0
+    },
+    "code-010-98410e12": {
+      "context_tokens": 49152,
+      "generated_tokens": 48976,
+      "first_eos_output_index": null,
+      "proposed": 70911,
+      "accepted": 38843,
+      "nan_logits": 0
+    },
+    "chat-010-a2055183": {
+      "context_tokens": 49152,
+      "generated_tokens": 48246,
+      "first_eos_output_index": null,
+      "proposed": 60540,
+      "accepted": 39595,
+      "nan_logits": 0
+    },
+    "reasoning-010-a4589a15": {
+      "context_tokens": 49152,
+      "generated_tokens": 48942,
+      "first_eos_output_index": null,
+      "proposed": 81893,
+      "accepted": 37240,
+      "nan_logits": 0
+    },
+    "math-011-98a5ab51": {
+      "context_tokens": 49152,
+      "generated_tokens": 49069,
+      "first_eos_output_index": null,
+      "proposed": 61190,
+      "accepted": 40323,
+      "nan_logits": 0
+    },
+    "code-011-be3f7cf3": {
+      "context_tokens": 49152,
+      "generated_tokens": 49070,
+      "first_eos_output_index": null,
+      "proposed": 61322,
+      "accepted": 40308,
+      "nan_logits": 0
+    },
+    "chat-011-99c5db71": {
+      "context_tokens": 49152,
+      "generated_tokens": 48946,
+      "first_eos_output_index": null,
+      "proposed": 64798,
+      "accepted": 39687,
+      "nan_logits": 0
+    },
+    "reasoning-011-a74dc54c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49035,
+      "first_eos_output_index": null,
+      "proposed": 45148,
+      "accepted": 42584,
+      "nan_logits": 0
+    },
+    "math-012-8bcdad7f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49122,
+      "first_eos_output_index": null,
+      "proposed": 81281,
+      "accepted": 37507,
+      "nan_logits": 0
+    },
+    "code-012-bdf0f84d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49004,
+      "first_eos_output_index": null,
+      "proposed": 58036,
+      "accepted": 40712,
+      "nan_logits": 0
+    },
+    "chat-012-b0da53c9": {
+      "context_tokens": 49152,
+      "generated_tokens": 48839,
+      "first_eos_output_index": null,
+      "proposed": 45383,
+      "accepted": 42354,
+      "nan_logits": 0
+    },
+    "reasoning-012-b7ebe3e5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49008,
+      "first_eos_output_index": null,
+      "proposed": 66929,
+      "accepted": 39444,
+      "nan_logits": 0
+    },
+    "math-013-89a2b4e0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49097,
+      "first_eos_output_index": null,
+      "proposed": 77632,
+      "accepted": 38004,
+      "nan_logits": 0
+    },
+    "code-013-82a2d310": {
+      "context_tokens": 49152,
+      "generated_tokens": 49039,
+      "first_eos_output_index": null,
+      "proposed": 66123,
+      "accepted": 39590,
+      "nan_logits": 0
+    },
+    "chat-013-8fcc197b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48730,
+      "first_eos_output_index": null,
+      "proposed": 109523,
+      "accepted": 33080,
+      "nan_logits": 0
+    },
+    "reasoning-013-8cd363e4": {
+      "context_tokens": 49152,
+      "generated_tokens": 49095,
+      "first_eos_output_index": null,
+      "proposed": 76677,
+      "accepted": 38139,
+      "nan_logits": 0
+    },
+    "math-014-a65de47e": {
+      "context_tokens": 49152,
+      "generated_tokens": 49095,
+      "first_eos_output_index": null,
+      "proposed": 45859,
+      "accepted": 42542,
+      "nan_logits": 0
+    },
+    "code-014-8e5b37ee": {
+      "context_tokens": 49152,
+      "generated_tokens": 49063,
+      "first_eos_output_index": null,
+      "proposed": 53296,
+      "accepted": 41448,
+      "nan_logits": 0
+    },
+    "chat-014-aefaf2c7": {
+      "context_tokens": 49152,
+      "generated_tokens": 48934,
+      "first_eos_output_index": null,
+      "proposed": 77782,
+      "accepted": 37819,
+      "nan_logits": 0
+    },
+    "reasoning-014-81baf916": {
+      "context_tokens": 49152,
+      "generated_tokens": 48964,
+      "first_eos_output_index": null,
+      "proposed": 52682,
+      "accepted": 41436,
+      "nan_logits": 0
+    },
+    "math-015-afc17837": {
+      "context_tokens": 49152,
+      "generated_tokens": 49123,
+      "first_eos_output_index": null,
+      "proposed": 46562,
+      "accepted": 42470,
+      "nan_logits": 0
+    },
+    "code-015-8a4a34f8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49037,
+      "first_eos_output_index": null,
+      "proposed": 58007,
+      "accepted": 40748,
+      "nan_logits": 0
+    },
+    "chat-015-a681e99b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49042,
+      "first_eos_output_index": null,
+      "proposed": 49848,
+      "accepted": 41919,
+      "nan_logits": 0
+    },
+    "reasoning-015-ac7bf23c": {
+      "context_tokens": 49152,
+      "generated_tokens": 49075,
+      "first_eos_output_index": null,
+      "proposed": 75882,
+      "accepted": 38232,
+      "nan_logits": 0
+    },
+    "math-016-9eb11f26": {
+      "context_tokens": 49152,
+      "generated_tokens": 49128,
+      "first_eos_output_index": null,
+      "proposed": 47523,
+      "accepted": 42337,
+      "nan_logits": 0
+    },
+    "code-016-94ec23b0": {
+      "context_tokens": 49152,
+      "generated_tokens": 49054,
+      "first_eos_output_index": null,
+      "proposed": 84622,
+      "accepted": 36963,
+      "nan_logits": 0
+    },
+    "chat-016-aef5307d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48460,
+      "first_eos_output_index": null,
+      "proposed": 50495,
+      "accepted": 41245,
+      "nan_logits": 0
+    },
+    "reasoning-016-b0177369": {
+      "context_tokens": 49152,
+      "generated_tokens": 49031,
+      "first_eos_output_index": null,
+      "proposed": 76126,
+      "accepted": 38154,
+      "nan_logits": 0
+    },
+    "math-017-b01d1ae9": {
+      "context_tokens": 49152,
+      "generated_tokens": 49131,
+      "first_eos_output_index": null,
+      "proposed": 78246,
+      "accepted": 37951,
+      "nan_logits": 0
+    },
+    "code-017-b86b287a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48985,
+      "first_eos_output_index": null,
+      "proposed": 55794,
+      "accepted": 41012,
+      "nan_logits": 0
+    },
+    "chat-017-96f0a752": {
+      "context_tokens": 49152,
+      "generated_tokens": 48845,
+      "first_eos_output_index": null,
+      "proposed": 108458,
+      "accepted": 33347,
+      "nan_logits": 0
+    },
+    "reasoning-017-8a45c717": {
+      "context_tokens": 49152,
+      "generated_tokens": 48975,
+      "first_eos_output_index": null,
+      "proposed": 81768,
+      "accepted": 37292,
+      "nan_logits": 0
+    },
+    "math-018-8e17c7e1": {
+      "context_tokens": 49152,
+      "generated_tokens": 49069,
+      "first_eos_output_index": null,
+      "proposed": 89377,
+      "accepted": 36299,
+      "nan_logits": 0
+    },
+    "code-018-9fbbbd9f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49012,
+      "first_eos_output_index": null,
+      "proposed": 46186,
+      "accepted": 42412,
+      "nan_logits": 0
+    },
+    "chat-018-80d672e6": {
+      "context_tokens": 49152,
+      "generated_tokens": 48734,
+      "first_eos_output_index": null,
+      "proposed": 84324,
+      "accepted": 36685,
+      "nan_logits": 0
+    },
+    "reasoning-018-8cc25bcd": {
+      "context_tokens": 49152,
+      "generated_tokens": 48941,
+      "first_eos_output_index": null,
+      "proposed": 75236,
+      "accepted": 38190,
+      "nan_logits": 0
+    },
+    "math-019-9f3a9ed6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49094,
+      "first_eos_output_index": null,
+      "proposed": 90941,
+      "accepted": 36099,
+      "nan_logits": 0
+    },
+    "code-019-a31dbce3": {
+      "context_tokens": 49152,
+      "generated_tokens": 48995,
+      "first_eos_output_index": null,
+      "proposed": 61531,
+      "accepted": 40202,
+      "nan_logits": 0
+    },
+    "chat-019-a4d4f5aa": {
+      "context_tokens": 49152,
+      "generated_tokens": 48913,
+      "first_eos_output_index": null,
+      "proposed": 90321,
+      "accepted": 36007,
+      "nan_logits": 0
+    },
+    "reasoning-019-aaf6d217": {
+      "context_tokens": 49152,
+      "generated_tokens": 49028,
+      "first_eos_output_index": null,
+      "proposed": 61222,
+      "accepted": 40279,
+      "nan_logits": 0
+    },
+    "math-020-8b7521a1": {
+      "context_tokens": 49152,
+      "generated_tokens": 49114,
+      "first_eos_output_index": null,
+      "proposed": 73914,
+      "accepted": 38551,
+      "nan_logits": 0
+    },
+    "code-020-b6dfef6b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49029,
+      "first_eos_output_index": null,
+      "proposed": 49860,
+      "accepted": 41905,
+      "nan_logits": 0
+    },
+    "chat-020-bb62d0a0": {
+      "context_tokens": 49152,
+      "generated_tokens": 48791,
+      "first_eos_output_index": null,
+      "proposed": 49948,
+      "accepted": 41654,
+      "nan_logits": 0
+    },
+    "reasoning-020-9fe22870": {
+      "context_tokens": 49152,
+      "generated_tokens": 49001,
+      "first_eos_output_index": null,
+      "proposed": 80600,
+      "accepted": 37485,
+      "nan_logits": 0
+    },
+    "math-021-b37e98d9": {
+      "context_tokens": 49152,
+      "generated_tokens": 48933,
+      "first_eos_output_index": null,
+      "proposed": 73900,
+      "accepted": 38372,
+      "nan_logits": 0
+    },
+    "code-021-81f2fffd": {
+      "context_tokens": 49152,
+      "generated_tokens": 48997,
+      "first_eos_output_index": null,
+      "proposed": 71696,
+      "accepted": 38752,
+      "nan_logits": 0
+    },
+    "chat-021-a3b3a1a3": {
+      "context_tokens": 49152,
+      "generated_tokens": 48923,
+      "first_eos_output_index": null,
+      "proposed": 47366,
+      "accepted": 42155,
+      "nan_logits": 0
+    },
+    "reasoning-021-b3ae2769": {
+      "context_tokens": 49152,
+      "generated_tokens": 48966,
+      "first_eos_output_index": null,
+      "proposed": 48137,
+      "accepted": 42088,
+      "nan_logits": 0
+    },
+    "math-022-b753199d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48829,
+      "first_eos_output_index": null,
+      "proposed": 45976,
+      "accepted": 42259,
+      "nan_logits": 0
+    },
+    "code-022-96f51c34": {
+      "context_tokens": 49152,
+      "generated_tokens": 49020,
+      "first_eos_output_index": null,
+      "proposed": 71266,
+      "accepted": 38836,
+      "nan_logits": 0
+    },
+    "chat-022-a0ccb846": {
+      "context_tokens": 49152,
+      "generated_tokens": 48640,
+      "first_eos_output_index": null,
+      "proposed": 46061,
+      "accepted": 42058,
+      "nan_logits": 0
+    },
+    "reasoning-022-8ae79d3b": {
+      "context_tokens": 49152,
+      "generated_tokens": 49006,
+      "first_eos_output_index": null,
+      "proposed": 66058,
+      "accepted": 39567,
+      "nan_logits": 0
+    },
+    "math-023-90f894e7": {
+      "context_tokens": 49152,
+      "generated_tokens": 49057,
+      "first_eos_output_index": null,
+      "proposed": 72990,
+      "accepted": 38628,
+      "nan_logits": 0
+    },
+    "code-023-b023ba17": {
+      "context_tokens": 49152,
+      "generated_tokens": 48957,
+      "first_eos_output_index": null,
+      "proposed": 53840,
+      "accepted": 41264,
+      "nan_logits": 0
+    },
+    "chat-023-b3579970": {
+      "context_tokens": 49152,
+      "generated_tokens": 48417,
+      "first_eos_output_index": null,
+      "proposed": 85392,
+      "accepted": 36216,
+      "nan_logits": 0
+    },
+    "reasoning-023-afe54b29": {
+      "context_tokens": 49152,
+      "generated_tokens": 48992,
+      "first_eos_output_index": null,
+      "proposed": 54207,
+      "accepted": 41247,
+      "nan_logits": 0
+    },
+    "math-024-a9c83d6d": {
+      "context_tokens": 49152,
+      "generated_tokens": 49104,
+      "first_eos_output_index": null,
+      "proposed": 47586,
+      "accepted": 42304,
+      "nan_logits": 0
+    },
+    "code-024-aee17ceb": {
+      "context_tokens": 49152,
+      "generated_tokens": 48937,
+      "first_eos_output_index": null,
+      "proposed": 49822,
+      "accepted": 41818,
+      "nan_logits": 0
+    },
+    "chat-024-b9a1e069": {
+      "context_tokens": 49152,
+      "generated_tokens": 48480,
+      "first_eos_output_index": null,
+      "proposed": 76295,
+      "accepted": 37578,
+      "nan_logits": 0
+    },
+    "reasoning-024-84c93ae4": {
+      "context_tokens": 49152,
+      "generated_tokens": 49099,
+      "first_eos_output_index": null,
+      "proposed": 53078,
+      "accepted": 41515,
+      "nan_logits": 0
+    },
+    "math-025-a83b1c64": {
+      "context_tokens": 49152,
+      "generated_tokens": 49081,
+      "first_eos_output_index": null,
+      "proposed": 85324,
+      "accepted": 36889,
+      "nan_logits": 0
+    },
+    "code-025-b2f13797": {
+      "context_tokens": 49152,
+      "generated_tokens": 48994,
+      "first_eos_output_index": null,
+      "proposed": 86184,
+      "accepted": 36679,
+      "nan_logits": 0
+    },
+    "chat-025-87ff46fe": {
+      "context_tokens": 49152,
+      "generated_tokens": 48857,
+      "first_eos_output_index": null,
+      "proposed": 75011,
+      "accepted": 38139,
+      "nan_logits": 0
+    },
+    "reasoning-025-966b188d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48998,
+      "first_eos_output_index": null,
+      "proposed": 46194,
+      "accepted": 42397,
+      "nan_logits": 0
+    },
+    "math-026-a8c98ef8": {
+      "context_tokens": 49152,
+      "generated_tokens": 49107,
+      "first_eos_output_index": null,
+      "proposed": 75923,
+      "accepted": 38258,
+      "nan_logits": 0
+    },
+    "code-026-91dcaf28": {
+      "context_tokens": 49152,
+      "generated_tokens": 49009,
+      "first_eos_output_index": null,
+      "proposed": 50767,
+      "accepted": 41755,
+      "nan_logits": 0
+    },
+    "chat-026-8865233a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48800,
+      "first_eos_output_index": null,
+      "proposed": 61595,
+      "accepted": 39998,
+      "nan_logits": 0
+    },
+    "reasoning-026-aae1015a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48944,
+      "first_eos_output_index": null,
+      "proposed": 77667,
+      "accepted": 37846,
+      "nan_logits": 0
+    },
+    "math-027-a80063e1": {
+      "context_tokens": 49152,
+      "generated_tokens": 49082,
+      "first_eos_output_index": null,
+      "proposed": 54967,
+      "accepted": 41227,
+      "nan_logits": 0
+    },
+    "code-027-ab681709": {
+      "context_tokens": 49152,
+      "generated_tokens": 49018,
+      "first_eos_output_index": null,
+      "proposed": 53268,
+      "accepted": 41406,
+      "nan_logits": 0
+    },
+    "chat-027-851e13c3": {
+      "context_tokens": 49152,
+      "generated_tokens": 48863,
+      "first_eos_output_index": null,
+      "proposed": 46926,
+      "accepted": 42157,
+      "nan_logits": 0
+    },
+    "reasoning-027-a006b7eb": {
+      "context_tokens": 49152,
+      "generated_tokens": 49001,
+      "first_eos_output_index": null,
+      "proposed": 81155,
+      "accepted": 37405,
+      "nan_logits": 0
+    },
+    "math-028-9c92514a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49093,
+      "first_eos_output_index": null,
+      "proposed": 99863,
+      "accepted": 34823,
+      "nan_logits": 0
+    },
+    "code-028-9c0cc0e5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49002,
+      "first_eos_output_index": null,
+      "proposed": 55286,
+      "accepted": 41103,
+      "nan_logits": 0
+    },
+    "chat-028-a54d6597": {
+      "context_tokens": 49152,
+      "generated_tokens": 48110,
+      "first_eos_output_index": null,
+      "proposed": 62904,
+      "accepted": 39121,
+      "nan_logits": 0
+    },
+    "reasoning-028-9282c319": {
+      "context_tokens": 49152,
+      "generated_tokens": 49023,
+      "first_eos_output_index": null,
+      "proposed": 73465,
+      "accepted": 38525,
+      "nan_logits": 0
+    },
+    "math-029-aabbd2d5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 64927,
+      "accepted": 39823,
+      "nan_logits": 0
+    },
+    "code-029-a0da9ca3": {
+      "context_tokens": 49152,
+      "generated_tokens": 49033,
+      "first_eos_output_index": null,
+      "proposed": 60339,
+      "accepted": 40411,
+      "nan_logits": 0
+    },
+    "chat-029-900fd188": {
+      "context_tokens": 49152,
+      "generated_tokens": 48627,
+      "first_eos_output_index": null,
+      "proposed": 51038,
+      "accepted": 41334,
+      "nan_logits": 0
+    },
+    "reasoning-029-bdebcc65": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 66721,
+      "accepted": 39463,
+      "nan_logits": 0
+    },
+    "math-030-ade18c5f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49115,
+      "first_eos_output_index": null,
+      "proposed": 57580,
+      "accepted": 40888,
+      "nan_logits": 0
+    },
+    "code-030-9d15f7a8": {
+      "context_tokens": 49152,
+      "generated_tokens": 48979,
+      "first_eos_output_index": null,
+      "proposed": 56086,
+      "accepted": 40965,
+      "nan_logits": 0
+    },
+    "chat-030-bbc3954e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48103,
+      "first_eos_output_index": null,
+      "proposed": 53965,
+      "accepted": 40392,
+      "nan_logits": 0
+    },
+    "reasoning-030-b0ffed36": {
+      "context_tokens": 49152,
+      "generated_tokens": 49074,
+      "first_eos_output_index": null,
+      "proposed": 69057,
+      "accepted": 39206,
+      "nan_logits": 0
+    },
+    "math-031-8bc9b620": {
+      "context_tokens": 49152,
+      "generated_tokens": 49125,
+      "first_eos_output_index": null,
+      "proposed": 46354,
+      "accepted": 42501,
+      "nan_logits": 0
+    },
+    "code-031-a2a2ee47": {
+      "context_tokens": 49152,
+      "generated_tokens": 49100,
+      "first_eos_output_index": null,
+      "proposed": 63378,
+      "accepted": 40045,
+      "nan_logits": 0
+    },
+    "chat-031-aba61e47": {
+      "context_tokens": 49152,
+      "generated_tokens": 48579,
+      "first_eos_output_index": null,
+      "proposed": 59744,
+      "accepted": 40042,
+      "nan_logits": 0
+    },
+    "reasoning-031-8b214b47": {
+      "context_tokens": 49152,
+      "generated_tokens": 48934,
+      "first_eos_output_index": null,
+      "proposed": 87918,
+      "accepted": 36371,
+      "nan_logits": 0
+    },
+    "math-032-a9a05694": {
+      "context_tokens": 49152,
+      "generated_tokens": 48353,
+      "first_eos_output_index": null,
+      "proposed": 96686,
+      "accepted": 34538,
+      "nan_logits": 0
+    },
+    "code-032-b872795c": {
+      "context_tokens": 49152,
+      "generated_tokens": 48978,
+      "first_eos_output_index": null,
+      "proposed": 78675,
+      "accepted": 37736,
+      "nan_logits": 0
+    },
+    "chat-032-b187784e": {
+      "context_tokens": 49152,
+      "generated_tokens": 48759,
+      "first_eos_output_index": null,
+      "proposed": 49310,
+      "accepted": 41713,
+      "nan_logits": 0
+    },
+    "reasoning-032-abb776cb": {
+      "context_tokens": 49152,
+      "generated_tokens": 49101,
+      "first_eos_output_index": null,
+      "proposed": 75155,
+      "accepted": 38361,
+      "nan_logits": 0
+    },
+    "math-033-ba8b7542": {
+      "context_tokens": 49152,
+      "generated_tokens": 49115,
+      "first_eos_output_index": null,
+      "proposed": 46857,
+      "accepted": 42420,
+      "nan_logits": 0
+    },
+    "code-033-9d469f79": {
+      "context_tokens": 49152,
+      "generated_tokens": 48829,
+      "first_eos_output_index": null,
+      "proposed": 52592,
+      "accepted": 41314,
+      "nan_logits": 0
+    },
+    "chat-033-986bb750": {
+      "context_tokens": 49152,
+      "generated_tokens": 48833,
+      "first_eos_output_index": null,
+      "proposed": 44713,
+      "accepted": 42444,
+      "nan_logits": 0
+    },
+    "reasoning-033-b6b6aec5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49039,
+      "first_eos_output_index": null,
+      "proposed": 87148,
+      "accepted": 36586,
+      "nan_logits": 0
+    },
+    "math-034-be1304e3": {
+      "context_tokens": 49152,
+      "generated_tokens": 49127,
+      "first_eos_output_index": null,
+      "proposed": 49168,
+      "accepted": 42101,
+      "nan_logits": 0
+    },
+    "code-034-b1c86b41": {
+      "context_tokens": 49152,
+      "generated_tokens": 48982,
+      "first_eos_output_index": null,
+      "proposed": 45440,
+      "accepted": 42489,
+      "nan_logits": 0
+    },
+    "chat-034-93435578": {
+      "context_tokens": 49152,
+      "generated_tokens": 48586,
+      "first_eos_output_index": null,
+      "proposed": 96662,
+      "accepted": 34773,
+      "nan_logits": 0
+    },
+    "reasoning-034-8a514c4d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 50980,
+      "accepted": 41712,
+      "nan_logits": 0
+    },
+    "math-035-aac4f4f6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49103,
+      "first_eos_output_index": null,
+      "proposed": 52547,
+      "accepted": 41595,
+      "nan_logits": 0
+    },
+    "code-035-92dcc907": {
+      "context_tokens": 49152,
+      "generated_tokens": 48885,
+      "first_eos_output_index": null,
+      "proposed": 81908,
+      "accepted": 37182,
+      "nan_logits": 0
+    },
+    "chat-035-988bebb4": {
+      "context_tokens": 49152,
+      "generated_tokens": 48348,
+      "first_eos_output_index": null,
+      "proposed": 47359,
+      "accepted": 41581,
+      "nan_logits": 0
+    },
+    "reasoning-035-8b8d69cd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49073,
+      "first_eos_output_index": null,
+      "proposed": 51646,
+      "accepted": 41693,
+      "nan_logits": 0
+    },
+    "math-036-945f0843": {
+      "context_tokens": 49152,
+      "generated_tokens": 49089,
+      "first_eos_output_index": null,
+      "proposed": 78666,
+      "accepted": 37849,
+      "nan_logits": 0
+    },
+    "code-036-96d0b506": {
+      "context_tokens": 49152,
+      "generated_tokens": 49051,
+      "first_eos_output_index": null,
+      "proposed": 46874,
+      "accepted": 42352,
+      "nan_logits": 0
+    },
+    "chat-036-87c6c50a": {
+      "context_tokens": 49152,
+      "generated_tokens": 48389,
+      "first_eos_output_index": null,
+      "proposed": 47498,
+      "accepted": 41602,
+      "nan_logits": 0
+    },
+    "reasoning-036-96a802fd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49028,
+      "first_eos_output_index": null,
+      "proposed": 46864,
+      "accepted": 42332,
+      "nan_logits": 0
+    },
+    "math-037-9ae4137b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48958,
+      "first_eos_output_index": null,
+      "proposed": 79550,
+      "accepted": 37592,
+      "nan_logits": 0
+    },
+    "code-037-8bdff0d6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49055,
+      "first_eos_output_index": null,
+      "proposed": 44898,
+      "accepted": 42640,
+      "nan_logits": 0
+    },
+    "chat-037-b77a3e81": {
+      "context_tokens": 49152,
+      "generated_tokens": 47955,
+      "first_eos_output_index": null,
+      "proposed": 107091,
+      "accepted": 32652,
+      "nan_logits": 0
+    },
+    "reasoning-037-a4ab5bb9": {
+      "context_tokens": 49152,
+      "generated_tokens": 48940,
+      "first_eos_output_index": null,
+      "proposed": 81741,
+      "accepted": 37261,
+      "nan_logits": 0
+    },
+    "math-038-ab135a31": {
+      "context_tokens": 49152,
+      "generated_tokens": 49083,
+      "first_eos_output_index": null,
+      "proposed": 102045,
+      "accepted": 34503,
+      "nan_logits": 0
+    },
+    "code-038-a76565e2": {
+      "context_tokens": 49152,
+      "generated_tokens": 48930,
+      "first_eos_output_index": null,
+      "proposed": 59664,
+      "accepted": 40405,
+      "nan_logits": 0
+    },
+    "chat-038-9fa70088": {
+      "context_tokens": 49152,
+      "generated_tokens": 48372,
+      "first_eos_output_index": null,
+      "proposed": 47708,
+      "accepted": 41554,
+      "nan_logits": 0
+    },
+    "reasoning-038-9863ed44": {
+      "context_tokens": 49152,
+      "generated_tokens": 49105,
+      "first_eos_output_index": null,
+      "proposed": 47250,
+      "accepted": 42354,
+      "nan_logits": 0
+    },
+    "math-039-bd347107": {
+      "context_tokens": 49152,
+      "generated_tokens": 49086,
+      "first_eos_output_index": null,
+      "proposed": 50416,
+      "accepted": 41882,
+      "nan_logits": 0
+    },
+    "code-039-bc170274": {
+      "context_tokens": 49152,
+      "generated_tokens": 48914,
+      "first_eos_output_index": null,
+      "proposed": 55198,
+      "accepted": 41026,
+      "nan_logits": 0
+    },
+    "chat-039-90da3c76": {
+      "context_tokens": 49152,
+      "generated_tokens": 48816,
+      "first_eos_output_index": null,
+      "proposed": 66861,
+      "accepted": 39262,
+      "nan_logits": 0
+    },
+    "reasoning-039-808c70bd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49019,
+      "first_eos_output_index": null,
+      "proposed": 77043,
+      "accepted": 38010,
+      "nan_logits": 0
+    },
+    "math-040-8c4093c6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49067,
+      "first_eos_output_index": null,
+      "proposed": 52101,
+      "accepted": 41623,
+      "nan_logits": 0
+    },
+    "code-040-b3901858": {
+      "context_tokens": 49152,
+      "generated_tokens": 49045,
+      "first_eos_output_index": null,
+      "proposed": 50689,
+      "accepted": 41802,
+      "nan_logits": 0
+    },
+    "chat-040-976119cb": {
+      "context_tokens": 49152,
+      "generated_tokens": 48933,
+      "first_eos_output_index": null,
+      "proposed": 47137,
+      "accepted": 42198,
+      "nan_logits": 0
+    },
+    "reasoning-040-9d16cc38": {
+      "context_tokens": 49152,
+      "generated_tokens": 49055,
+      "first_eos_output_index": null,
+      "proposed": 50512,
+      "accepted": 41837,
+      "nan_logits": 0
+    },
+    "math-041-8b5790ff": {
+      "context_tokens": 49152,
+      "generated_tokens": 49105,
+      "first_eos_output_index": null,
+      "proposed": 78380,
+      "accepted": 37906,
+      "nan_logits": 0
+    },
+    "code-041-883a64f5": {
+      "context_tokens": 49152,
+      "generated_tokens": 48845,
+      "first_eos_output_index": null,
+      "proposed": 59134,
+      "accepted": 40395,
+      "nan_logits": 0
+    },
+    "chat-041-bf6b2957": {
+      "context_tokens": 49152,
+      "generated_tokens": 48662,
+      "first_eos_output_index": null,
+      "proposed": 49735,
+      "accepted": 41555,
+      "nan_logits": 0
+    },
+    "reasoning-041-a89ba7c6": {
+      "context_tokens": 49152,
+      "generated_tokens": 49026,
+      "first_eos_output_index": null,
+      "proposed": 72897,
+      "accepted": 38610,
+      "nan_logits": 0
+    },
+    "math-042-98d6e27a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49079,
+      "first_eos_output_index": null,
+      "proposed": 79219,
+      "accepted": 37759,
+      "nan_logits": 0
+    },
+    "code-042-b69364ef": {
+      "context_tokens": 49152,
+      "generated_tokens": 49061,
+      "first_eos_output_index": null,
+      "proposed": 87766,
+      "accepted": 36520,
+      "nan_logits": 0
+    },
+    "chat-042-862b2a84": {
+      "context_tokens": 49152,
+      "generated_tokens": 47964,
+      "first_eos_output_index": null,
+      "proposed": 47552,
+      "accepted": 41169,
+      "nan_logits": 0
+    },
+    "reasoning-042-be97075f": {
+      "context_tokens": 49152,
+      "generated_tokens": 49076,
+      "first_eos_output_index": null,
+      "proposed": 56602,
+      "accepted": 40989,
+      "nan_logits": 0
+    },
+    "math-043-b5e290cc": {
+      "context_tokens": 49152,
+      "generated_tokens": 49076,
+      "first_eos_output_index": null,
+      "proposed": 74718,
+      "accepted": 38399,
+      "nan_logits": 0
+    },
+    "code-043-b633ff1c": {
+      "context_tokens": 49152,
+      "generated_tokens": 48962,
+      "first_eos_output_index": null,
+      "proposed": 55616,
+      "accepted": 41015,
+      "nan_logits": 0
+    },
+    "chat-043-bdf3874d": {
+      "context_tokens": 49152,
+      "generated_tokens": 47969,
+      "first_eos_output_index": null,
+      "proposed": 58806,
+      "accepted": 39566,
+      "nan_logits": 0
+    },
+    "reasoning-043-b2abb62a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49003,
+      "first_eos_output_index": null,
+      "proposed": 68525,
+      "accepted": 39212,
+      "nan_logits": 0
+    },
+    "math-044-b8f7f4d5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49069,
+      "first_eos_output_index": null,
+      "proposed": 50267,
+      "accepted": 41886,
+      "nan_logits": 0
+    },
+    "code-044-9c6ebcdd": {
+      "context_tokens": 49152,
+      "generated_tokens": 49031,
+      "first_eos_output_index": null,
+      "proposed": 64455,
+      "accepted": 39822,
+      "nan_logits": 0
+    },
+    "chat-044-a69d1e36": {
+      "context_tokens": 49152,
+      "generated_tokens": 47931,
+      "first_eos_output_index": null,
+      "proposed": 50183,
+      "accepted": 40761,
+      "nan_logits": 0
+    },
+    "reasoning-044-a97f35b8": {
+      "context_tokens": 49152,
+      "generated_tokens": 48936,
+      "first_eos_output_index": null,
+      "proposed": 57131,
+      "accepted": 40772,
+      "nan_logits": 0
+    },
+    "math-045-97a2cb19": {
+      "context_tokens": 49152,
+      "generated_tokens": 49130,
+      "first_eos_output_index": null,
+      "proposed": 45527,
+      "accepted": 42625,
+      "nan_logits": 0
+    },
+    "code-045-a1ef98b5": {
+      "context_tokens": 49152,
+      "generated_tokens": 49067,
+      "first_eos_output_index": null,
+      "proposed": 48901,
+      "accepted": 42080,
+      "nan_logits": 0
+    },
+    "chat-045-ae39d54d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48909,
+      "first_eos_output_index": null,
+      "proposed": 80675,
+      "accepted": 37380,
+      "nan_logits": 0
+    },
+    "reasoning-045-b0700541": {
+      "context_tokens": 49152,
+      "generated_tokens": 48941,
+      "first_eos_output_index": null,
+      "proposed": 45899,
+      "accepted": 42382,
+      "nan_logits": 0
+    },
+    "math-046-989ab105": {
+      "context_tokens": 49152,
+      "generated_tokens": 49110,
+      "first_eos_output_index": null,
+      "proposed": 45759,
+      "accepted": 42571,
+      "nan_logits": 0
+    },
+    "code-046-972e7c93": {
+      "context_tokens": 49152,
+      "generated_tokens": 49020,
+      "first_eos_output_index": null,
+      "proposed": 51232,
+      "accepted": 41700,
+      "nan_logits": 0
+    },
+    "chat-046-9b39dc44": {
+      "context_tokens": 49152,
+      "generated_tokens": 48484,
+      "first_eos_output_index": null,
+      "proposed": 49692,
+      "accepted": 41384,
+      "nan_logits": 0
+    },
+    "reasoning-046-8aee8e7b": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 75562,
+      "accepted": 38199,
+      "nan_logits": 0
+    },
+    "math-047-b4cf2bde": {
+      "context_tokens": 49152,
+      "generated_tokens": 48907,
+      "first_eos_output_index": null,
+      "proposed": 51797,
+      "accepted": 41506,
+      "nan_logits": 0
+    },
+    "code-047-af6ba302": {
+      "context_tokens": 49152,
+      "generated_tokens": 48983,
+      "first_eos_output_index": null,
+      "proposed": 64612,
+      "accepted": 39751,
+      "nan_logits": 0
+    },
+    "chat-047-ad73ae05": {
+      "context_tokens": 49152,
+      "generated_tokens": 48599,
+      "first_eos_output_index": null,
+      "proposed": 180533,
+      "accepted": 22803,
+      "nan_logits": 0
+    },
+    "reasoning-047-99695c5d": {
+      "context_tokens": 49152,
+      "generated_tokens": 48991,
+      "first_eos_output_index": null,
+      "proposed": 75327,
+      "accepted": 38227,
+      "nan_logits": 0
+    },
+    "math-048-ba4195bb": {
+      "context_tokens": 49152,
+      "generated_tokens": 49110,
+      "first_eos_output_index": null,
+      "proposed": 57251,
+      "accepted": 40930,
+      "nan_logits": 0
+    },
+    "code-048-afc39c31": {
+      "context_tokens": 49152,
+      "generated_tokens": 48829,
+      "first_eos_output_index": null,
+      "proposed": 45103,
+      "accepted": 42384,
+      "nan_logits": 0
+    },
+    "chat-048-93a5a099": {
+      "context_tokens": 49152,
+      "generated_tokens": 48612,
+      "first_eos_output_index": null,
+      "proposed": 46027,
+      "accepted": 42035,
+      "nan_logits": 0
+    },
+    "reasoning-048-9f9c50ec": {
+      "context_tokens": 49152,
+      "generated_tokens": 48948,
+      "first_eos_output_index": null,
+      "proposed": 49548,
+      "accepted": 41868,
+      "nan_logits": 0
+    },
+    "math-049-8d3fade9": {
+      "context_tokens": 49152,
+      "generated_tokens": 49114,
+      "first_eos_output_index": null,
+      "proposed": 45597,
+      "accepted": 42598,
+      "nan_logits": 0
+    },
+    "code-049-8ed8bd6a": {
+      "context_tokens": 49152,
+      "generated_tokens": 49057,
+      "first_eos_output_index": null,
+      "proposed": 46711,
+      "accepted": 42383,
+      "nan_logits": 0
+    },
+    "chat-049-8b44f852": {
+      "context_tokens": 49152,
+      "generated_tokens": 48996,
+      "first_eos_output_index": null,
+      "proposed": 50456,
+      "accepted": 41786,
+      "nan_logits": 0
+    },
+    "reasoning-049-af7d60fa": {
+      "context_tokens": 49152,
+      "generated_tokens": 49021,
+      "first_eos_output_index": null,
+      "proposed": 89195,
+      "accepted": 36277,
+      "nan_logits": 0
+    }
+  },
+  "peak_running_requests": 28,
+  "peak_running_computed_tokens": 1112574
+}

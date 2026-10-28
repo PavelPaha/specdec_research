@@ -1,0 +1,23 @@
+[
+  {
+    "run": "ar-k0",
+    "requests": 200,
+    "eos_tokens": 0,
+    "tail_exact_cycles": 182,
+    "tail_near_cycles": 182
+  },
+  {
+    "run": "dflash-k7",
+    "requests": 200,
+    "eos_tokens": 0,
+    "tail_exact_cycles": 170,
+    "tail_near_cycles": 170
+  },
+  {
+    "run": "eagle3-k7",
+    "requests": 200,
+    "eos_tokens": 0,
+    "tail_exact_cycles": 170,
+    "tail_near_cycles": 170
+  }
+]

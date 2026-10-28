@@ -1,0 +1,197 @@
+{
+  "main_runs": [
+    {
+      "method": "ar",
+      "budget": 0,
+      "batching": "continuous",
+      "requests": 200,
+      "generated_tokens": 9784196,
+      "seconds": 6750.235042690001,
+      "aggregate_tokens_per_second": 1449.4600466683826,
+      "run_directory": "/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/ar-k0",
+      "throughput_ratio_vs_ar": 1.0
+    },
+    {
+      "method": "dflash",
+      "budget": 7,
+      "batching": "continuous",
+      "requests": 200,
+      "generated_tokens": 9784196,
+      "seconds": 5715.410834020002,
+      "aggregate_tokens_per_second": 1711.8972343617459,
+      "run_directory": "/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/dflash-k7",
+      "throughput_ratio_vs_ar": 1.1810585868141596
+    },
+    {
+      "method": "eagle3",
+      "budget": 7,
+      "batching": "continuous",
+      "requests": 200,
+      "generated_tokens": 9784196,
+      "seconds": 1849.7629476010006,
+      "aggregate_tokens_per_second": 5289.432363584396,
+      "run_directory": "/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos/experiment/full/eagle3-k7",
+      "throughput_ratio_vs_ar": 3.649243299766888
+    }
+  ],
+  "cycle_audit": [
+    {
+      "run": "ar-k0",
+      "requests": 200,
+      "eos_tokens": 0,
+      "tail_exact_cycles": 182,
+      "tail_near_cycles": 182
+    },
+    {
+      "run": "dflash-k7",
+      "requests": 200,
+      "eos_tokens": 0,
+      "tail_exact_cycles": 170,
+      "tail_near_cycles": 170
+    },
+    {
+      "run": "eagle3-k7",
+      "requests": 200,
+      "eos_tokens": 0,
+      "tail_exact_cycles": 170,
+      "tail_near_cycles": 170
+    }
+  ],
+  "dflash_budget_control": [
+    {
+      "method": "dflash k=15",
+      "n": 28,
+      "early": 0.5417296285406813,
+      "late": 0.058638770897216266,
+      "early_accepted_per_round": 8.12594442811022,
+      "late_accepted_per_round": 0.8754267520430582,
+      "change_pp": -48.309085764346506,
+      "low_pp": -55.561306237537245,
+      "high_pp": -40.87027501951901
+    },
+    {
+      "method": "dflash k=7",
+      "n": 28,
+      "early": 0.6189576196588126,
+      "late": 0.05176083046554019,
+      "early_accepted_per_round": 4.3327033376116875,
+      "late_accepted_per_round": 0.36180733063133286,
+      "change_pp": -56.71967891932724,
+      "low_pp": -63.5991625682968,
+      "high_pp": -49.709272591828366
+    }
+  ],
+  "long_tail_audit": [
+    {
+      "run": "ar-k0",
+      "checked": 18,
+      "extra_exact_cycles": 18,
+      "extra_near_cycles": 18,
+      "total_detected_tail_cycles": 200,
+      "remaining_unclassified": 0
+    },
+    {
+      "run": "dflash-k7",
+      "checked": 30,
+      "extra_exact_cycles": 30,
+      "extra_near_cycles": 30,
+      "total_detected_tail_cycles": 200,
+      "remaining_unclassified": 0
+    },
+    {
+      "run": "eagle3-k7",
+      "checked": 30,
+      "extra_exact_cycles": 30,
+      "extra_near_cycles": 30,
+      "total_detected_tail_cycles": 200,
+      "remaining_unclassified": 0
+    }
+  ],
+  "identical_outputs_out_of_200": {
+    "ar_vs_dflash": 0,
+    "ar_vs_eagle3": 0,
+    "dflash_vs_eagle3": 197
+  },
+  "identical_trajectory_acceptance": [
+    {
+      "method": "dflash k=7",
+      "n": 197,
+      "early": 0.544463333427203,
+      "late": 0.0708629114450126,
+      "early_accepted_per_round": 3.8112433339904213,
+      "late_accepted_per_round": 0.4954027600852834,
+      "change_pp": -47.36004219821904,
+      "low_pp": -50.818189456226364,
+      "high_pp": -43.99842082695863
+    },
+    {
+      "method": "eagle3 k=7",
+      "n": 197,
+      "early": 0.7008337099676734,
+      "late": 0.7312113339884353,
+      "early_accepted_per_round": 4.905835969773713,
+      "late_accepted_per_round": 5.113748477627566,
+      "change_pp": 3.0377624020761975,
+      "low_pp": 0.007661771782216788,
+      "high_pp": 6.187884715372486
+    }
+  ],
+  "control_cycle_audit": [
+    {
+      "run": "dflash-k15-control28",
+      "requests": 28,
+      "eos_tokens": 0,
+      "tail_exact_cycles": 23,
+      "tail_near_cycles": 23
+    }
+  ],
+  "control_missed_short_cycles": [
+    {
+      "id": "chat-001",
+      "domain": "chat",
+      "audited_tokens": 8192,
+      "best_period": 206,
+      "lag_agreement": 1.0,
+      "near_cycle": true
+    },
+    {
+      "id": "chat-006",
+      "domain": "chat",
+      "audited_tokens": 8192,
+      "best_period": 225,
+      "lag_agreement": 1.0,
+      "near_cycle": true
+    },
+    {
+      "id": "chat-003",
+      "domain": "chat",
+      "audited_tokens": 8192,
+      "best_period": 191,
+      "lag_agreement": 1.0,
+      "near_cycle": true
+    },
+    {
+      "id": "code-006",
+      "domain": "code",
+      "audited_tokens": 8192,
+      "best_period": 161,
+      "lag_agreement": 1.0,
+      "near_cycle": true
+    },
+    {
+      "id": "code-000",
+      "domain": "code",
+      "audited_tokens": 8192,
+      "best_period": 302,
+      "lag_agreement": 1.0,
+      "near_cycle": true
+    }
+  ],
+  "dflash_control_identical_outputs_out_of_28": 0,
+  "drops_over_50pp": {
+    "dflash k=7": 102,
+    "eagle3 k=7": 6
+  },
+  "inference_commit": "517eb0a4790884c6959ad210134aba2e79aedf6f",
+  "raw_root": "/home/vasilievpavel/specdec_research/runs/issue11-20261028-qwen3-8b-noeos"
+}
