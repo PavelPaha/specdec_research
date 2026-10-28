@@ -188,7 +188,7 @@ vLLM архитектуры и `fc.bias`; код модели и движка п
 
 ```bash
 RUN=runs/issue11-20261028-qwen3-8b-noeos
-CUDA_VISIBLE_DEVICES=GPU-UUID .venv/bin/python -m benchmarks.long_context.run \
+CUDA_VISIBLE_DEVICES=GPU-UUID OMP_NUM_THREADS=1 .venv/bin/python -m benchmarks.long_context.run \
   --config benchmarks/long_context/config-qwen3-8b-noeos.json \
   --prompts data/long_context_qwen3_8b_prompts.jsonl \
   --method dflash --budget 15 --limit 28 \

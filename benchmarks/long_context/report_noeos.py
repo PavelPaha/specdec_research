@@ -232,12 +232,17 @@ def main():
         destination = metadata_output / run.name
         destination.mkdir(parents=True, exist_ok=True)
         for name in ["metadata.json", "capacity.json", "workload.json", "requests.jsonl",
-                     "progress.json", "gpu.jsonl", "throughput.jsonl", "effective_target_hf_config.json"]:
+                     "progress.json", "throughput.jsonl", "effective_target_hf_config.json"]:
             shutil.copy2(run / name, destination / name)
-        if (run / "effective_draft_hf_config.json").exists():
-            shutil.copy2(run / "effective_draft_hf_config.json", destination / "effective_draft_hf_config.json")
+        # Direct run.py invocations have no parent GPU monitor; AR has no draft config.
+        for name in ["gpu.jsonl", "effective_draft_hf_config.json"]:
+            if (run / name).exists():
+                shutil.copy2(run / name, destination / name)
     for name in ["source-integrity.json", "runtime-integrity.json", "smoke-summary.json", "boundary-summary.json"]:
-        shutil.copy2(root / name, metadata_output / name)
+        # These supplementary snapshots belong to the original orchestration.
+        # Replays using the documented CLI still have each run's own metadata.
+        if (root / name).exists():
+            shutil.copy2(root / name, metadata_output / name)
     summary = dict(main_runs=totals, cycle_audit=audit, dflash_budget_control=control_changes,
                    long_tail_audit=long_summary,
                    identical_outputs_out_of_200=identical_outputs,
