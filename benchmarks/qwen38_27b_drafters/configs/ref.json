@@ -1,0 +1,55 @@
+{
+  "target": "Qwen/Qwen3.8-27B",
+  "target_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+  "dtype": "bfloat16",
+  "tensor_parallel_size": 2,
+  "max_model_len": 262144,
+  "max_num_seqs": 16,
+  "max_num_batched_tokens": 8192,
+  "gpu_memory_utilization": 0.9,
+  "seed": 0,
+  "temperature": 0.0,
+  "eos": "mask",
+  "drafters": {
+    "mtp": {
+      "method": "mtp"
+    },
+    "dflash2": {
+      "model": "z-lab/Qwen3.8-27B-DFlash2",
+      "revision": "50307d4c4cde6860d4eee73e2547cd786fe8e8a4",
+      "method": "dflash"
+    },
+    "dspark_radixark": {
+      "model": "RadixArk/Qwen3.8-27B-DSpark",
+      "revision": "b9a5dbdf03bc999c6c73c426b19c2d9041cea393",
+      "method": "dspark"
+    },
+    "dspark_redhat": {
+      "model": "RedHatAI/Qwen3.8-27B-speculator.dspark",
+      "revision": "87ca2fdc67f316f6c1f9ebc7ef7bbb0ad299a4ce",
+      "method": "dspark"
+    },
+    "eagle4": {
+      "model": "EAGLE-Corp/Qwen3.8-27B-EAGLE4",
+      "revision": "f58a5985223040552ad404fba98f0dd27f5f676a",
+      "method": "eagle_harness",
+      "method_config": {
+        "mode": "static",
+        "node_top_k": 1,
+        "tree_depth": 7,
+        "max_verify_width": 8
+      }
+    }
+  },
+  "engine_overrides": {
+    "eagle4": {
+      "attention_backend": "CUSTOM",
+      "linear_backend": "triton"
+    }
+  },
+  "logprobs": {
+    "ar": 20
+  },
+  "notes": "eagle4 needs the EAGLE authors' vLLM fork (eagle_harness) on PYTHONPATH and VLLM_USE_V2_MODEL_RUNNER=1; static tree with node_top_k=1 is a 7-token chain. ref: one greedy AR trajectory per prompt with EOS masked; per-prompt budget from prepare_ref.py.",
+  "budget_from_prompt": true
+}
