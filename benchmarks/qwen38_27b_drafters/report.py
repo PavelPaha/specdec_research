@@ -32,7 +32,7 @@ p,li{color:var(--fg2);max-width:820px}.card{background:var(--card);border:1px so
 .controls{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:6px 0 4px;color:var(--fg2);font-size:14px}
 select{font:inherit;padding:3px 6px;border-radius:6px;border:1px solid var(--grid);background:var(--bg);color:var(--fg)}
 table{border-collapse:collapse;font-size:14px;width:100%}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--grid)}
-th{color:var(--fg2);font-weight:600}td.num{text-align:right;font-variant-numeric:tabular-nums}td.heat{text-align:center;font-variant-numeric:tabular-nums}
+th{color:var(--fg2);font-weight:600}td.num{text-align:right;font-variant-numeric:tabular-nums}td.heat{text-align:center;font-variant-numeric:tabular-nums}td.heat .hn{font-size:11px;opacity:.75}
 .ctitle{font-weight:600;font-size:14px;margin:2px 0 0}.plot{width:100%;height:420px}.small{height:340px}.note{font-size:13px;color:var(--muted)}
 a.btn{display:inline-block;padding:8px 14px;border-radius:8px;background:var(--fg);color:var(--bg);text-decoration:none;font-weight:600}
 pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--grid);border-radius:8px;padding:8px;font-size:12px;max-height:180px;overflow:auto}
@@ -62,12 +62,10 @@ pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--grid);borde
 <label>Раунды <select id="f-kind"><option value="all">все</option><option value="nc">без циклов</option></select></label></div>
 <div class="ctitle">Acceptance по позиции в ответе</div><div id="f1" class="plot"></div>
 <div class="note">Для каждого трейса — acceptance в окне (полуоктавы, ≥16 раундов), точка — среднее по трейсам, полоса — 95% bootstrap. Все драфтеры видят один и тот же текст, поэтому кривые сравнимы напрямую; состав трейсов в дальних окнах одинаков для всех драфтеров. Фаза определяется по первому &lt;/think&gt; в эталоне: после него target с запрещённым EOS дописывает и повторяет готовый ответ, который драфтер угадывает почти всегда, — поэтому кривая «всё» растёт по мере того, как трейсы выходят из рассуждения.</div></div>
-<div class="card"><div class="ctitle">Состав трейсов на каждой позиции графика выше</div><div id="f2" class="plot small"></div>
-<div class="note">Доли считаются среди трейсов, которые дошли до этой позиции (их число — серая линия и подсказка). Число падает, потому что эталон каждого трейса обрезан на старте цикла + 4K токенов: трейсы с ранним циклом заканчиваются рано, правее остаются трейсы без цикла или с поздним циклом. «Рассуждают» — первый &lt;/think&gt; эталона ещё впереди; «в цикле» — детектор уже нашёл цикл (проверка каждые 1K токенов, с 2K).</div></div>
 <h2>3. Внутри одного трейса</h2>
-<p>Чтобы отделить эффект длины от смены состава окон, каждый трейс сравнивается сам с собой: acceptance в окне минус acceptance того же трейса на его первых 2K сгенерированных токенов. Окна — полуоктавы; ячейка трейса учитывается, если в ней ≥16 раундов. «Без циклов» — только раунды вне обнаруженных циклов (детектор как в разделе 5), база та же. «Фаза» оставляет раунды только до или только после первого &lt;/think&gt; трейса; база — первые 2K токенов этой фазы (для ответа — от &lt;/think&gt;). Тепловая карта всегда по всем фазам.</p>
+<p>Чтобы отделить эффект длины от смены состава окон, каждый трейс сравнивается сам с собой: acceptance в окне минус acceptance того же трейса на его первых 2K сгенерированных токенов. Окна — полуоктавы; ячейка трейса учитывается, если в ней ≥16 раундов. «Без циклов» — только раунды вне обнаруженных циклов (детектор как в разделе 5), база та же. «Фаза» оставляет раунды только до или только после первого &lt;/think&gt; трейса; база — первые 2K токенов этой фазы (для ответа — от &lt;/think&gt;). Текст общий для всех драфтеров (teacher forcing).</p>
 <div class="card"><div class="controls">
-<label>Панель <select id="w-panel"></select></label>
+<select id="w-panel" hidden></select>
 <label>Ось <select id="w-axis"><option value="gen">позиция в ответе</option><option value="ctx">полный контекст</option></select></label>
 <label>Фаза <select id="w-phase"><option value="all">всё</option><option value="think">рассуждение (до &lt;/think&gt;)</option><option value="answer">ответ (после &lt;/think&gt;)</option></select></label>
 <label>Раунды <select id="w-kind"><option value="d">все</option><option value="d_nc">без циклов</option></select></label>
@@ -76,12 +74,10 @@ pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--grid);borde
 <div class="note">Точка — среднее по трейсам изменения в окне (п.п.), полоса — 95% bootstrap по трейсам. Дальние окна есть только у длинных трейсов, их число — в подсказке.</div>
 <div id="w-ent"><div class="controls"><label>Значение <select id="we-kind"><option value="d">изменение относительно начала трейса</option><option value="e">энтропия</option></select></label></div>
 <div class="ctitle">Энтропия target: парное изменение относительно начала трейса</div><div id="w4" class="plot small"></div>
-<div class="note">Те же трейсы, окна, фаза и раунды, что на графике выше; база — первые 2K токенов трейса (в фазе — от её начала). Энтропия распределения target по top-20 токенам, нат, на траектории AR до запрета EOS. Она зависит от текста, а не от драфтера, поэтому линия одна. В forced текст общий для всех драфтеров; в natural и noeos это текст AR, у драфтеров он может немного отличаться.</div></div></div>
-<div class="card"><div class="ctitle">Наклон внутри трейса: изменение acceptance на каждое удвоение длины</div><div id="w2" class="plot small"></div><table id="w2t"></table>
-<div class="note">Для каждого трейса — взвешенная по числу раундов регрессия acceptance окна на log₂(позиция); точка — среднее по трейсам, отрезок — 95% bootstrap. «Падают» — доля трейсов с отрицательным наклоном.</div></div>
-<div class="card"><div class="controls"><label>Драфтер <select id="w-hm"></select></label><label>Сортировка <select id="w-sort"><option value="ds">по сету</option><option value="s">по наклону</option><option value="base">по начальному acceptance</option></select></label></div>
-<div class="ctitle">Все трейсы: изменение acceptance относительно начала</div><div id="w3" class="plot" style="height:640px"></div>
-<div class="note">Строка — трейс, столбец — окно; синий — выше своего начала, красный — ниже, серый — без изменений (шкала ±30 п.п.). Клик по ячейке открывает трейс в примерах на этой позиции.</div></div>
+<div class="note">Те же трейсы, окна, фаза и раунды, что на графике выше; база — первые 2K токенов трейса (в фазе — от её начала). Энтропия распределения target по top-20 токенам, нат, на траектории AR до запрета EOS. Она зависит от текста, а не от драфтера, поэтому линия одна.</div></div></div>
+<div class="card"><div class="controls"><label>Драфтер <select id="w-hm"></select></label></div>
+<div class="ctitle">Изменение acceptance относительно начала трейса: длина входа × сгенерировано токенов</div><div style="overflow-x:auto"><table id="w3"></table></div>
+<div class="note">Раунды — из селектора выше (фаза и трейсы здесь не применяются). Первая строка — acceptance на первых 512 токенах ответа (база). Остальные клетки — среднее по трейсам разности acceptance в клетке и базы того же трейса, п.п.; мелко — число трейсов. Трейс входит в клетку, если там ≥16 его раундов; клетки с &lt;3 трейсами пустые. В подсказке — 95% bootstrap и сам acceptance. Синий — выше базы, красный — ниже; насыщенность нормирована на 10-й и 90-й перцентили клеток таблицы.</div></div>
 
 <h2>4. Естественная генерация: acceptance по полному контексту</h2>
 <p>Свой текст, естественная остановка по EOS, thinking включён, greedy, K=7 цепочкой. По оси X — полная длина контекста перед раундом проверки (вход + уже сгенерированное); каждый раунд попадает в своё окно, длинный ответ даёт точки в нескольких окнах. Это то, что видит пользователь, но здесь смешаны длина входа, позиция в ответе и состав сетов — для выводов о длине см. раздел 1. Шкала логарифмическая; точка — среднее по запросам в окне, полоса — 95% bootstrap-интервал по запросам.</p>
@@ -90,15 +86,12 @@ pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--grid);borde
 <label>Метрика <select id="c1-metric"><option value="acc">acceptance (принято / предложено)</option><option value="tau">принятых токенов за раунд</option></select></label>
 </div><div id="c1" class="plot"></div><div class="note" id="c1-note"></div></div>
 
-<h3>По сетам</h3>
-<div class="card"><div class="ctitle">Acceptance на всём ответе, по сетам</div><div id="c3" class="plot" style="height:560px"></div><div class="note">Сверху — короткие входы, снизу — длинные. Цвет нормирован на диапазон таблицы.</div></div>
 
 <h2>5. Что происходит, когда EOS запрещён</h2>
 <p>Свой текст. __NOEOS_INTRO__</p>
 <div class="card"><div class="ctitle">Acceptance по позиции генерации (EOS запрещён)</div><div class="controls"><label>Сет <select id="c4-ds"></select></label></div><div id="c4" class="plot"></div></div>
 <div class="card"><div class="ctitle">Доля траекторий, находящихся в цикле</div><div class="controls"><label>Разбивка <select id="c5-by"><option value="method">по методам (свои траектории)</option><option value="dataset">по сетам (AR)</option></select></label></div>
 <div id="c5" class="plot small"></div><div class="note">Цикл: последние 2048 токенов периодичны с периодом ≤128 (≥99% совпадений со сдвигом) или последние 8192 — с периодом 129–2048. Детектор как в ветке issue11. «По методам» — каждый метод на своём тексте, поэтому кривые не совпадают с AR; «по сетам» — только траектории AR.</div></div>
-<div class="card"><div class="ctitle">Как часто target хочет закончить (EOS — top-1)</div><div id="c6" class="plot small"></div><div class="note">Доля позиций, где у target (AR, сырые logprobs до запрета) EOS — top-1, т.е. модель «хотела» остановиться.</div></div>
 <div class="card"><div class="ctitle" id="c7-title">Где target впервые хочет EOS</div><div id="c7" class="plot small"></div></div>
 <div class="card"><div class="ctitle">Когда начинается цикл и какой у него период</div><div style="display:flex;flex-wrap:wrap;gap:8px"><div id="c10" class="plot small" style="flex:1 1 420px"></div><div id="c11" class="plot small" style="flex:1 1 420px"></div></div><div class="note">Слева: позиция первого обнаруженного цикла (точка — траектория; в подписи — траекторий с циклом / всего). Справа: медианный период цикла в траекториях AR, логарифмическая шкала.</div></div>
 <div class="card"><div class="ctitle">Acceptance до и после «желания» EOS, вне и внутри циклов</div><div id="c8" class="plot small"></div></div>
@@ -169,14 +162,6 @@ if (D.natural){
   }
   s1.onchange=draw1; met.onchange=draw1; draw1();
 
-  // heatmap: dataset x method
-  const ms=ORDER.filter(m=>N.overall_ds.some(p=>p.method===m));
-  const dss=dsOrder([...new Set(N.overall_ds.map(p=>p.dataset))]);
-  const z=dss.map(d=>ms.map(m=>{const p=N.overall_ds.find(q=>q.method===m&&q.dataset===d);return p?p.acc:null;}));
-  Plotly.react("c3",[{type:"heatmap",z:z,x:ms.map(LABEL),y:dss,colorscale:[[0,"#cde2fb"],[0.5,"#3987e5"],[1,"#0d366b"]],zmin:Math.min(...z.flat().filter(v=>v!=null)),zmax:Math.max(...z.flat().filter(v=>v!=null)),
-    text:z.map(r=>r.map(v=>v==null?"":(100*v).toFixed(0)+"%")),texttemplate:"%{text}",hovertemplate:"%{y} · %{x}: %{z:.1%}<extra></extra>",
-    xgap:2,ygap:2,colorbar:{tickformat:".0%",title:""}}], layout({margin:{l:120,r:20,t:10,b:60},hovermode:"closest",xaxis:{side:"bottom"},yaxis:{autorange:"reversed"},shapes:dss.some(d=>LONG.includes(d))&&dss.some(d=>SHORT.includes(d))?[{type:"line",xref:"paper",x0:0,x1:1,y0:dss.filter(d=>!LONG.includes(d)).length-0.5,y1:dss.filter(d=>!LONG.includes(d)).length-0.5,line:{color:css("--fg"),width:2}}]:[]}), cfg);
-
   // counts table
   const ct=document.getElementById("counts"); const cds=[...new Set(N.counts.map(c=>c.dataset))];
   const DSDESC={
@@ -221,11 +206,6 @@ if (D.noeos){
       yaxis:{tickformat:".0%",range:[0,1],gridcolor:css("--grid")}}), cfg); }
   s5.onchange=draw5; draw5();
   if (E.eos_wanted){
-    const pts=E.eos_wanted.sort((a,b)=>a.x-b.x);
-    const tr6=[{x:pts.map(p=>p.x+1024),y:pts.map(p=>p.wanted),mode:"lines+markers",line:{color:css("--fg"),width:3},marker:{size:8,color:css("--fg"),line:{color:css("--bg"),width:2}},name:"все сеты",hovertemplate:"%{y:.2%}<extra>все</extra>"}];
-    dsOrder([...new Set((E.eos_wanted_ds||[]).map(p=>p.dataset))]).forEach((d,i)=>{const q=E.eos_wanted_ds.filter(p=>p.dataset===d).sort((a,b)=>a.x-b.x);
-      tr6.push({x:q.map(p=>p.x+1024),y:q.map(p=>p.wanted),mode:"lines",line:{color:css("--fg2"),width:1.5,dash:DASH[(i+1)%DASH.length]},name:d,hovertemplate:"%{y:.2%}<extra>"+d+"</extra>"});});
-    Plotly.react("c6",tr6,layout({xaxis:Object.assign({title:"сгенерировано токенов",gridcolor:css("--grid")},GT),yaxis:{tickformat:".1%",rangemode:"tozero",gridcolor:css("--grid")}}), cfg);
     const fe=E.first_eos.filter(r=>r.first!=null);
     document.getElementById("c7-title").textContent=`Где target впервые хочет EOS (${fe.length} из ${E.first_eos.length} траекторий AR)`;
     Plotly.react("c7",[{x:fe.map(r=>r.first),type:"histogram",xbins:{size:512},marker:{color:css("--s1"),line:{color:css("--bg"),width:2}},hovertemplate:"%{x}: %{y}<extra></extra>"}],
@@ -267,12 +247,6 @@ if (D.forced && D.forced.position) (function(){
       tr[tr.length-1].customdata=q.map(p=>[p.n,fmtT(p.x)+"–"+fmtT(p.x1)]); tr[tr.length-1].hovertemplate="%{customdata[1]}: %{y:.1%} · трейсов %{customdata[0]}<extra>"+LABEL(m)+"</extra>"; });
     Plotly.react("f1",tr,layout({xaxis:{type:"log",title:"сгенерировано токенов (позиция в ответе)",tickvals:[256,1000,4000,16000,64000],ticktext:["256","1K","4K","16K","64K"],gridcolor:css("--grid")},
       yaxis:{title:"acceptance",tickformat:".0%",range:yr(tr.filter(t=>t.showlegend!==false).flatMap(t=>t.y)),gridcolor:css("--grid")}}),cfg); }
-  const cp=(F.comp||[]).slice().sort((a,b)=>a.x-b.x), N0=cp.length?cp[0].n:1, cd=cp.map(p=>[p.n,fmtT(p.x)]);
-  Plotly.react("f2",[
-    {x:cp.map(p=>p.x),y:cp.map(p=>p.n/N0),mode:"lines+markers",line:{color:css("--muted"),width:2},marker:{size:6},name:"дошли до позиции",customdata:cd,hovertemplate:"%{customdata[1]}: %{customdata[0]} трейсов (%{y:.0%})<extra></extra>"},
-    {x:cp.map(p=>p.x),y:cp.map(p=>p.think),mode:"lines+markers",line:{color:css("--s1"),width:2},marker:{size:6},name:"из них ещё рассуждают",customdata:cd,hovertemplate:"%{customdata[1]}: %{y:.0%} из %{customdata[0]}<extra>рассуждают</extra>"},
-    {x:cp.map(p=>p.x),y:cp.map(p=>p.cyc),mode:"lines+markers",line:{color:css("--s2"),width:2},marker:{size:6},name:"из них уже в цикле",customdata:cd,hovertemplate:"%{customdata[1]}: %{y:.0%} из %{customdata[0]}<extra>в цикле</extra>"}],
-    layout({showlegend:true,hovermode:"closest",xaxis:{type:"log",title:"сгенерировано токенов",tickvals:[256,1024,4096,16384,65536],ticktext:["256","1K","4K","16K","64K"],gridcolor:css("--grid")},yaxis:{tickformat:".0%",range:[0,1.02],gridcolor:css("--grid")}}),cfg);
   sg.onchange=draw1; sk.onchange=draw1; sph.onchange=draw1; draw1();
 })();
 
@@ -302,7 +276,7 @@ if (D.forced && D.forced.position) (function(){
 
 // 4. within one trace
 (function(){
-  const panels=["forced","natural","noeos"].filter(p=>D[p]&&D[p].within); if(!panels.length) return;
+  const panels=["forced"].filter(p=>D[p]&&D[p].within); if(!panels.length) return;
   const PL={natural:"свой текст · EOS разрешён",noeos:"свой текст · EOS запрещён",forced:"текст AR (teacher forcing) · EOS запрещён"};
   const opt=(id,items)=>{ const s=document.getElementById(id), prev=s.value; s.innerHTML=items.map(([v,t])=>`<option value="${v}">${t}</option>`).join(""); if(items.some(([v])=>v===prev)) s.value=prev; return s; };
   const sp=opt("w-panel",panels.map(p=>[p,PL[p]])), sa=document.getElementById("w-axis"), sk=document.getElementById("w-kind"), sw=document.getElementById("w-phase");
@@ -320,37 +294,22 @@ if (D.forced && D.forced.position) (function(){
     const ys=tr.filter(t=>t.mode==="lines+markers").flatMap(t=>t.y);
     Plotly.react("w1",tr,layout({xaxis:{type:"log",title:sa.value==="gen"?"сгенерировано токенов в трейсе":"полная длина контекста",tickvals:[256,1000,4000,16000,64000,256000],ticktext:["256","1K","4K","16K","64K","256K"],gridcolor:css("--grid")},
       yaxis:{title:"изменение, п.п.",ticksuffix:"",zeroline:true,zerolinecolor:css("--fg2"),zerolinewidth:1.5,gridcolor:css("--grid"),range:[Math.min(-5,Math.floor(Math.min(...ys,0)/5)*5-2),Math.max(5,Math.ceil(Math.max(...ys,0)/5)*5+2)]}}),cfg); }
-  function draw2(){ const S=A().slopes.filter(x=>x.group===sg.value&&(x.phase||"all")===sw.value), ms=ORDER.filter(m=>S.some(x=>x.method===m)), tr=[];
-    [["s","все раунды","circle"],["s_nc","без циклов","diamond"]].forEach(([k,name,sym],i)=>{ const q=ms.map(m=>S.find(x=>x.method===m&&x.kind===k)).filter(Boolean);
-      tr.push({type:"scatter",mode:"markers",name,y:q.map(x=>LABEL(x.method)),x:q.map(x=>100*x.mean),
-        error_x:{type:"data",symmetric:false,array:q.map(x=>100*((x.hi??x.mean)-x.mean)),arrayminus:q.map(x=>100*(x.mean-(x.lo??x.mean))),color:i?css("--muted"):css("--fg2"),thickness:1.5,width:4},
-        marker:{size:11,symbol:sym,color:q.map(x=>COLOR(x.method)),line:{color:i?css("--fg"):css("--bg"),width:i?1.5:2}},offsetgroup:k,
-        customdata:q.map(x=>[100*x.median,x.neg,x.n]),hovertemplate:"%{x:+.2f} п.п. на удвоение · медиана %{customdata[0]:+.2f} · падают %{customdata[1]:.0%} · трейсов %{customdata[2]}<extra>"+name+"</extra>"}); });
-    Plotly.react("w2",tr,layout({hovermode:"closest",scattermode:"group",margin:{l:150,r:20,t:36,b:50},xaxis:{title:"п.п. на удвоение длины",range:(()=>{const v=tr.flatMap(t=>t.x.map((x,i)=>[x+t.error_x.array[i],x-t.error_x.arrayminus[i]])).flat(); const lo=Math.min(0,...v), hi=Math.max(0,...v), pad=(hi-lo)*0.08||1; return [lo-pad,hi+pad];})(),zeroline:true,zerolinecolor:css("--fg2"),zerolinewidth:1.5,gridcolor:css("--grid")},yaxis:{autorange:"reversed",gridcolor:css("--grid")}}),cfg);
-    const f=(x)=>x?`${(100*x.mean>=0?"+":"")+(100*x.mean).toFixed(2)} [${x.lo==null?"—":(100*x.lo).toFixed(2)}; ${x.hi==null?"—":(100*x.hi).toFixed(2)}]`:"—";
-    let h="<tr><th>Драфтер</th><th class=\"num\">все раунды, п.п./удвоение</th><th class=\"num\">падают</th><th class=\"num\">без циклов</th><th class=\"num\">падают</th><th class=\"num\">трейсов</th></tr>";
-    ms.forEach(m=>{ const a=S.find(x=>x.method===m&&x.kind==="s"), b=S.find(x=>x.method===m&&x.kind==="s_nc");
-      h+=`<tr><td><span style="color:${COLOR(m)}">■</span> ${LABEL(m)}</td><td class="num">${f(a)}</td><td class="num">${a?(100*a.neg).toFixed(0)+"%":"—"}</td><td class="num">${f(b)}</td><td class="num">${b?(100*b.neg).toFixed(0)+"%":"—"}</td><td class="num">${a?a.n:"—"}</td></tr>`; });
-    document.getElementById("w2t").innerHTML=h; }
-  const sh=opt("w-hm",ORDER.filter(m=>A().heat[m]).map(m=>[m,LABEL(m)])), ss=document.getElementById("w-sort");
-  function draw3(){ const m=sh.value, all=(A().heat[m]||[]), grp=sg.value, ed=E_(), nc=sk.value==="d_nc";
-    let rows=all.filter(r=>grp==="all"||(grp==="long"?LONG.includes(r.ds):grp==="short"?!LONG.includes(r.ds):r.ds===grp));
-    const ord=dsOrder([...new Set(rows.map(r=>r.ds))]);
-    rows=rows.slice().sort(ss.value==="ds"?(a,b)=>ord.indexOf(a.ds)-ord.indexOf(b.ds)||a.p-b.p:ss.value==="s"?(a,b)=>(a.s??0)-(b.s??0):(a,b)=>a.base-b.base);
-    const bs=[...new Set(rows.flatMap(r=>r.c.map(c=>c[0])))].sort((a,b)=>a-b);
-    const z=rows.map(r=>{ const m_=new Map(r.c.map(c=>[c[0],c])); return bs.map(b=>{ const c=m_.get(b); const v=c?(nc?c[2]:c[1]):null; return v==null?null:100*(v-r.base); }); });
-    const cd=rows.map(r=>{ const m_=new Map(r.c.map(c=>[c[0],c])); return bs.map(b=>{ const c=m_.get(b); const v=c?(nc?c[2]:c[1]):null; return [r.id,r.ds,v,c?c[4]:0,c?c[3]:0,r.base,ed[b],fmtT(ed[b])+"–"+fmtT(ed[b+1]),v==null?"":((v-r.base>=0?"+":"")+(100*(v-r.base)).toFixed(1))]; }); });
-    const shapes=[]; if(ss.value==="ds"){ let prev=null; rows.forEach((r,i)=>{ if(prev!==null&&r.ds!==prev) shapes.push({type:"line",xref:"paper",x0:0,x1:1,y0:i-0.5,y1:i-0.5,line:{color:css("--fg2"),width:1}}); prev=r.ds; }); }
-    const annos=ss.value==="ds"?ord.map(d=>{ const idx=rows.map((r,i)=>r.ds===d?i:-1).filter(i=>i>=0); return {xref:"paper",x:-0.005,xanchor:"right",y:(idx[0]+idx[idx.length-1])/2,text:d,showarrow:false,font:{size:11,color:css("--fg2")}}; }):[];
-    const g=document.getElementById("w3"); g.style.height=Math.max(360,Math.min(1400,rows.length*3+120))+"px";
-    Plotly.react(g,[{type:"heatmap",z,x:bs.map(b=>fmtT(ed[b])),y:rows.map((r,i)=>i),customdata:cd,zmin:-30,zmax:30,zmid:0,
-      colorscale:[[0,css("--dneg")],[0.5,css("--dmid")],[1,css("--dpos")]],xgap:1,ygap:0,colorbar:{title:{text:"п.п.",side:"right"},ticksuffix:""},
-      hovertemplate:"%{customdata[1]} · %{customdata[0]}<br>окно %{customdata[7]}: acc %{customdata[2]:.1%} (начало %{customdata[5]:.1%}) · Δ %{customdata[8]} п.п.<br>раундов %{customdata[3]} · в цикле %{customdata[4]:.0%}<extra></extra>"}],
-      layout({hovermode:"closest",margin:{l:ss.value==="ds"?110:30,r:20,t:10,b:60},shapes,annotations:annos,xaxis:{title:{text:(sa.value==="gen"?"сгенерировано токенов в трейсе":"полная длина контекста")+" (начало окна)",standoff:12},tickangle:0,type:"category",automargin:true},yaxis:{autorange:"reversed",showticklabels:false,ticks:"",showgrid:false,zeroline:false,title:{text:"трейсы"}}}),cfg);
-    g.removeAllListeners&&g.removeAllListeners("plotly_click");
-    g.on("plotly_click",ev=>{ const pt=ev.points[0], c=pt.customdata; if(!c) return;
-      const r=all.find(x=>x.id===c[0]); const pos=sa.value==="gen"?c[6]:Math.max(0,c[6]-(r?r.p:0));
-      window.open("examples.html#"+[sp.value,c[0],m,"",Math.round(pos),1024].map(encodeURIComponent).join("/"),"_blank"); }); }
+  const GM=()=>ORDER.filter(m=>(D[sp.value].grid||{cells:[]}).cells.some(c=>c.method===m)).map(m=>[m,LABEL(m)]);
+  const sh=opt("w-hm",GM());
+  function draw3(){ const G=D[sp.value].grid, t=document.getElementById("w3"); if(!G){ t.innerHTML=""; return; }
+    const ie=G.in_edges, ge=G.gen_edges, kind=sk.value==="d_nc"?"nc":"all", rng=(e,i)=>fmtT(e[i])+"–"+(i+1<e.length?fmtT(e[i+1]):"…");
+    const cells=G.cells.filter(c=>c.method===sh.value&&c.kind===kind&&c.n>=3), at=new Map(cells.map(c=>[c.i+":"+c.g,c]));
+    const ii=ie.map((_,i)=>i).filter(i=>cells.some(c=>c.i===i)), gg=ge.map((_,g)=>g).filter(g=>cells.some(c=>c.g===g));
+    const f=v=>(v>=0?"+":"")+(100*v).toFixed(1), ds=cells.filter(c=>c.g>0).map(c=>c.d).sort((a,b)=>a-b), q=p=>ds.length?ds[Math.min(ds.length-1,Math.floor(p*ds.length))]:0;
+    const dmax=Math.max(1e-9,q(0.9)), dmin=Math.min(-1e-9,q(0.1));
+    const pos=css("--dpos"), neg=css("--dneg");
+    let h=`<tr><th>сгенерировано ↓ / вход →</th>`+ii.map(i=>`<th class="num">${rng(ie,i)}</th>`).join("")+"</tr>";
+    gg.forEach(g=>{ h+=`<tr><td>${rng(ge,g)}${g===0?" (база)":""}</td>`+ii.map(i=>{ const c=at.get(i+":"+g); if(!c) return `<td class="heat"></td>`;
+      if(g===0) return `<td class="heat" title="acceptance на первых ${fmtT(ge[1])} токенах · трейсов ${c.n}" style="background:var(--dmid)"><b>${(100*c.acc).toFixed(1)}%</b><div class="hn">${c.n}</div></td>`;
+      const a=Math.min(1,c.d>=0?c.d/dmax:c.d/dmin), pct=Math.round(4+a*86);
+      const tip=`вход ${rng(ie,i)}, сгенерировано ${rng(ge,g)}: ${f(c.d)} п.п.`+(c.lo!=null?` [${f(c.lo)}; ${f(c.hi)}]`:"")+` · acc ${(100*c.acc).toFixed(1)}% (база ${(100*c.base).toFixed(1)}%) · трейсов ${c.n}`;
+      return `<td class="heat" title="${tip}" style="background:color-mix(in srgb, ${c.d>=0?pos:neg} ${pct}%, var(--card))${a>0.8?";color:#fff":""}">${f(c.d)}<div class="hn">${c.n}</div></td>`; }).join("")+"</tr>"; });
+    t.innerHTML=h; }
   const ek=document.getElementById("we-kind");
   function draw4(){ const box=document.getElementById("w-ent"), E=D[sp.value].entropy;
     if(!E||!E[sa.value]){ box.style.display="none"; return; } box.style.display="";
@@ -365,9 +324,9 @@ if (D.forced && D.forced.position) (function(){
     Plotly.react("w4",tr,layout({xaxis:{type:"log",range:xr,title:sa.value==="gen"?"сгенерировано токенов в трейсе":"полная длина контекста",tickvals:[256,1000,4000,16000,64000,256000],ticktext:["256","1K","4K","16K","64K","256K"],gridcolor:css("--grid")},
       yaxis:{title:d?"изменение, нат":"энтропия, нат",zeroline:d,zerolinecolor:css("--fg2"),zerolinewidth:1.5,gridcolor:css("--grid"),rangemode:d?"normal":"tozero"}}),cfg); }
   ek.onchange=draw4;
-  const all3=()=>{ draw1(); draw2(); draw3(); draw4(); };
-  sp.onchange=()=>{ opt("w-group",groups()); opt("w-hm",ORDER.filter(m=>A().heat[m]).map(m=>[m,LABEL(m)])); all3(); };
-  sa.onchange=()=>{ opt("w-group",groups()); all3(); }; sk.onchange=all3; sw.onchange=()=>{ draw1(); draw2(); draw4(); }; sg.onchange=all3; sh.onchange=draw3; ss.onchange=draw3; all3();
+  const all3=()=>{ draw1(); draw3(); draw4(); };
+  sp.onchange=()=>{ opt("w-group",groups()); opt("w-hm",GM()); all3(); };
+  sa.onchange=()=>{ opt("w-group",groups()); all3(); }; sk.onchange=all3; sw.onchange=()=>{ draw1(); draw4(); }; sg.onchange=all3; sh.onchange=draw3; all3();
 })();
 }
 

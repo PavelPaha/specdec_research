@@ -326,6 +326,38 @@ def input_view(rounds):
     return out
 
 
+GRID_IN = [0, 1_024, 4_096, 8_192, 16_384, 32_768, 65_536, 131_072, 1 << 30]
+GRID_GEN = [0, 512, 1_024, 2_048, 4_096, 8_192, 16_384, 32_768, 1 << 30]
+
+
+def grid_view(rounds, flags):
+    """Paired change of acceptance by input length x generated tokens: per-trace acceptance in each cell
+    (>= MIN_ROUNDS rounds) minus the same trace's first GRID_GEN[1] tokens (the first row), then mean over traces
+    with a bootstrap CI. `nc` drops rounds inside a cycle from the cell (the baseline keeps all rounds)."""
+    r = rounds[rounds.proposed > 0].copy()
+    r["t"] = ((r.gen // CYCLE_STEP) * CYCLE_STEP).clip(lower=2048)
+    r = r.merge(flags, on=["method", "id", "t"], how="left")
+    r["cyc"] = r.cyc.fillna(False).astype(bool)
+    r["gi"] = np.searchsorted(GRID_IN, r.prompt_tokens, side="right") - 1
+    r["gg"] = np.searchsorted(GRID_GEN, r.gen, side="right") - 1
+    b0 = r[r.gen < GRID_GEN[1]].groupby(["method", "id"]).agg(ba=("accepted", "sum"), bp=("proposed", "sum"),
+                                                              n=("accepted", "size"))
+    b0 = b0[b0.n >= MIN_ROUNDS]
+    base = (b0.ba / b0.bp).rename("base").reset_index()
+    out = dict(in_edges=GRID_IN[:-1], gen_edges=GRID_GEN[:-1], base_gen=GRID_GEN[1], cells=[])
+    for kind, sub in (("all", r), ("nc", r[~r.cyc])):
+        tr = sub.groupby(["method", "id", "gi", "gg"]).agg(a=("accepted", "sum"), p=("proposed", "sum"),
+                                                            n=("accepted", "size")).reset_index()
+        tr = tr[tr.n >= MIN_ROUNDS].merge(base, on=["method", "id"])
+        tr["acc"] = tr.a / tr.p
+        tr["d"] = tr.acc - tr.base
+        for (m, i, g), x in tr.groupby(["method", "gi", "gg"]):
+            mu, lo, hi, n = boot(x.d, 300)
+            out["cells"].append(dict(kind=kind, method=m, i=int(i), g=int(g), d=mu, lo=lo, hi=hi, n=n,
+                                     acc=float(x.acc.mean()), base=float(x.base.mean())))
+    return out
+
+
 def think_ends(outputs, end_id):
     """Position of the first </think> in each reference output (None-like large value if absent)."""
     ends = {}
@@ -498,7 +530,7 @@ def main():
         else:
             e = {m: think_ends(res / m / "outputs", end_id) for m in methods}
             rounds["end"] = [e.get(m, {}).get(i, 1 << 30) for m, i in zip(rounds.method, rounds.id)]
-        w = within_trace(rounds, flags)
+        w = within_trace(rounds, flags, heat=False)
         for phase, sub in (("think", rounds[rounds.gen < rounds.end].assign(pstart=0)),
                            ("answer", rounds[rounds.gen >= rounds.end].assign(pstart=lambda x: x.end))):
             wp = within_trace(sub, flags, heat=False)
@@ -508,6 +540,7 @@ def main():
         data.setdefault(panel, {})["within"] = w
         if panel in ("natural", "forced"):
             data[panel]["input"] = input_view(rounds)
+        data[panel]["grid"] = grid_view(rounds, flags)
         if panel == "forced":
             data[panel]["position"] = position_view(rounds, flags, think_ends(res / "ar" / "outputs", end_id))
         # target entropy along the AR text (shared text in forced; AR's own text otherwise)
