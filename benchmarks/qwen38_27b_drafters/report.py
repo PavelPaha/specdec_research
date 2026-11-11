@@ -73,7 +73,10 @@ pre{white-space:pre-wrap;background:var(--bg);border:1px solid var(--grid);borde
 <label>Раунды <select id="w-kind"><option value="d">все</option><option value="d_nc">без циклов</option></select></label>
 <label>Трейсы <select id="w-group"></select></label></div>
 <div class="ctitle">Парное изменение acceptance относительно начала трейса</div><div id="w1" class="plot"></div>
-<div class="note">Точка — среднее по трейсам изменения в окне (п.п.), полоса — 95% bootstrap по трейсам. Дальние окна есть только у длинных трейсов, их число — в подсказке.</div></div>
+<div class="note">Точка — среднее по трейсам изменения в окне (п.п.), полоса — 95% bootstrap по трейсам. Дальние окна есть только у длинных трейсов, их число — в подсказке.</div>
+<div id="w-ent"><div class="controls"><label>Значение <select id="we-kind"><option value="d">изменение относительно начала трейса</option><option value="e">энтропия</option></select></label></div>
+<div class="ctitle">Энтропия target: парное изменение относительно начала трейса</div><div id="w4" class="plot small"></div>
+<div class="note">Те же трейсы, окна, фаза и раунды, что на графике выше; база — первые 2K токенов трейса (в фазе — от её начала). Энтропия распределения target по top-20 токенам, нат, на траектории AR до запрета EOS. Она зависит от текста, а не от драфтера, поэтому линия одна. В forced текст общий для всех драфтеров; в natural и noeos это текст AR, у драфтеров он может немного отличаться.</div></div></div>
 <div class="card"><div class="ctitle">Наклон внутри трейса: изменение acceptance на каждое удвоение длины</div><div id="w2" class="plot small"></div><table id="w2t"></table>
 <div class="note">Для каждого трейса — взвешенная по числу раундов регрессия acceptance окна на log₂(позиция); точка — среднее по трейсам, отрезок — 95% bootstrap. «Падают» — доля трейсов с отрицательным наклоном.</div></div>
 <div class="card"><div class="controls"><label>Драфтер <select id="w-hm"></select></label><label>Сортировка <select id="w-sort"><option value="ds">по сету</option><option value="s">по наклону</option><option value="base">по начальному acceptance</option></select></label></div>
@@ -348,9 +351,23 @@ if (D.forced && D.forced.position) (function(){
     g.on("plotly_click",ev=>{ const pt=ev.points[0], c=pt.customdata; if(!c) return;
       const r=all.find(x=>x.id===c[0]); const pos=sa.value==="gen"?c[6]:Math.max(0,c[6]-(r?r.p:0));
       window.open("examples.html#"+[sp.value,c[0],m,"",Math.round(pos),1024].map(encodeURIComponent).join("/"),"_blank"); }); }
-  const all3=()=>{ draw1(); draw2(); draw3(); };
+  const ek=document.getElementById("we-kind");
+  function draw4(){ const box=document.getElementById("w-ent"), E=D[sp.value].entropy;
+    if(!E||!E[sa.value]){ box.style.display="none"; return; } box.style.display="";
+    const sit=sw.value+":"+(sk.value==="d_nc"?"nc":"all"), d=ek.value==="d";
+    const q=E[sa.value].filter(c=>c.group===sg.value&&c.kind===ek.value&&c.sit===sit&&c.n>=3).sort((a,b)=>a.x-b.x), tr=[];
+    if(q.length){ const c=css("--fg2"), x=q.map(p=>xc(p.x,p.x1));
+      tr.push({x:x.concat(x.slice().reverse()),y:q.map(p=>p.hi??p.mean).concat(q.slice().reverse().map(p=>p.lo??p.mean)),fill:"toself",fillcolor:"rgba(128,128,128,.18)",line:{width:0},mode:"lines",hoverinfo:"skip",showlegend:false});
+      tr.push({x,y:q.map(p=>p.mean),name:"энтропия target",mode:"lines+markers",line:{color:c,width:2},marker:{size:8,color:c,line:{color:css("--bg"),width:2}},showlegend:false,
+        customdata:q.map(p=>[p.e,p.n,p.cyc,p.think,fmtT(p.x)+"–"+fmtT(p.x1)]),
+        hovertemplate:"%{customdata[4]}: "+(d?"%{y:+.3f} нат · ":"")+"энтропия %{customdata[0]:.3f} нат · трейсов %{customdata[1]} · рассуждают %{customdata[3]:.0%} · в цикле %{customdata[2]:.0%}<extra></extra>"}); }
+    const xr=document.getElementById("w1").layout?.xaxis?.range;
+    Plotly.react("w4",tr,layout({xaxis:{type:"log",range:xr,title:sa.value==="gen"?"сгенерировано токенов в трейсе":"полная длина контекста",tickvals:[256,1000,4000,16000,64000,256000],ticktext:["256","1K","4K","16K","64K","256K"],gridcolor:css("--grid")},
+      yaxis:{title:d?"изменение, нат":"энтропия, нат",zeroline:d,zerolinecolor:css("--fg2"),zerolinewidth:1.5,gridcolor:css("--grid"),rangemode:d?"normal":"tozero"}}),cfg); }
+  ek.onchange=draw4;
+  const all3=()=>{ draw1(); draw2(); draw3(); draw4(); };
   sp.onchange=()=>{ opt("w-group",groups()); opt("w-hm",ORDER.filter(m=>A().heat[m]).map(m=>[m,LABEL(m)])); all3(); };
-  sa.onchange=()=>{ opt("w-group",groups()); all3(); }; sk.onchange=all3; sw.onchange=()=>{ draw1(); draw2(); }; sg.onchange=all3; sh.onchange=draw3; ss.onchange=draw3; all3();
+  sa.onchange=()=>{ opt("w-group",groups()); all3(); }; sk.onchange=all3; sw.onchange=()=>{ draw1(); draw2(); draw4(); }; sg.onchange=all3; sh.onchange=draw3; ss.onchange=draw3; all3();
 })();
 }
 

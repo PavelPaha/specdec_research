@@ -376,6 +376,64 @@ def position_view(rounds, flags, ends):
     return dict(edges=HALF_OCT, min_rounds=MIN_ROUNDS, pos=pos, comp=comp)
 
 
+ENT_MIN_TOKENS = 64  # a (trace, window) cell needs this many tokens
+
+
+def entropy_view(tables, flags, ends, meta, limit=None):
+    """Target entropy (top-20, from the AR trajectory) inside each trace, by answer position and by full context.
+    Situations "<phase>:<rounds>": phase all / think / answer (first </think>), rounds all / nc (outside cycles).
+    Value: mean over traces of the per-(trace, window) mean, and the paired change from the trace's first
+    BASE_GEN tokens of the same situation. flags: AR cycle flags (id, t, cyc); meta: id -> (dataset, prompt_tokens);
+    limit: id -> number of tokens to keep (forced: the teacher-forced span)."""
+    fl = {(i, t): c for i, t, c in zip(flags.id, flags.t, flags.cyc)}
+    rows = []
+    for f in sorted((tables / "ar_logprobs").glob("*.npz")):
+        rid = f.stem
+        if rid not in meta:
+            continue
+        ent = np.load(f)["entropy_topk"].astype(float)
+        if limit is not None:
+            ent = ent[:limit.get(rid, len(ent))]
+        gen = np.arange(len(ent))
+        t = np.maximum((gen // CYCLE_STEP) * CYCLE_STEP, 2048)
+        cyc = np.array([fl.get((rid, int(x)), False) for x in t])
+        ds, ptok = meta[rid]
+        rows.append(pd.DataFrame(dict(id=rid, dataset=ds, gen=gen, ctx=gen + ptok, ent=ent, cyc=cyc,
+                                      think=gen < ends.get(rid, 1 << 30))))
+    if not rows:
+        return None
+    r = pd.concat(rows, ignore_index=True)
+    r = r[np.isfinite(r.ent)]
+    r["grp"] = np.where(r.dataset.isin(set(LONG_SETS)), "long", "short")
+    # same split as the acceptance curves: phase (all / reasoning / answer) x rounds (all / outside cycles)
+    sits = [(f"{ph}:{k}", rp[~rp.cyc] if k == "nc" else rp)
+            for ph, rp in (("all", r), ("think", r[r.think]), ("answer", r[~r.think])) for k in ("all", "nc")]
+    out = dict(edges=HALF_OCT, base_gen=BASE_GEN, min_tokens=ENT_MIN_TOKENS)
+    for axis in ("gen", "ctx"):
+        curves = []
+        for sit, rs in sits:
+            rs = rs.copy()
+            # baseline: the first BASE_GEN tokens of this situation in the trace
+            rs["k"] = rs.groupby("id").cumcount()
+            base = rs[rs.k < BASE_GEN].groupby("id").ent.mean().rename("base")
+            rs["b"] = np.searchsorted(HALF_OCT, rs[axis], side="right") - 1
+            g = rs.groupby(["id", "b"]).agg(e=("ent", "mean"), n=("ent", "size"), cyc=("cyc", "mean"),
+                                           think=("think", "mean"), dataset=("dataset", "first"),
+                                           grp=("grp", "first")).reset_index()
+            g = g[g.n >= ENT_MIN_TOKENS].merge(base.reset_index(), on="id")
+            g["d"] = g.e - g.base
+            for grp_name, gg in [("all", g)] + list(g.groupby("grp")) + list(g.groupby("dataset")):
+                for b, x in gg.groupby("b"):
+                    for kind in ("e", "d"):
+                        mu, lo, hi, n = boot(x[kind])
+                        if n:
+                            curves.append(dict(group=grp_name, sit=sit, kind=kind, x=HALF_OCT[b], x1=HALF_OCT[b + 1],
+                                               mean=mu, lo=lo, hi=hi, n=n, e=float(x.e.mean()),
+                                               cyc=float(x.cyc.mean()), think=float(x.think.mean())))
+        out[axis] = curves
+    return out
+
+
 def natural_analysis(tables):
     rounds = pd.read_parquet(tables / "rounds.parquet")
     reqs = pd.read_parquet(tables / "requests.parquet")
@@ -413,6 +471,7 @@ def main():
     p.add_argument("--out", default="report/data.json")
     p.add_argument("--config", default="configs/natural.json", help="run config naming the target (for the </think> token)")
     p.add_argument("--panels", nargs="*", help="limit the within-trace section to these panels")
+    p.add_argument("--prompts", default="data/prompts", help="prompt files (forced: force_tokens per prompt)")
     args = p.parse_args()
     data = {}
     t = Path(args.tables)
@@ -451,6 +510,18 @@ def main():
             data[panel]["input"] = input_view(rounds)
         if panel == "forced":
             data[panel]["position"] = position_view(rounds, flags, think_ends(res / "ar" / "outputs", end_id))
+        # target entropy along the AR text (shared text in forced; AR's own text otherwise)
+        if (res / "ar" / "outputs").is_dir() and (t / panel / "ar_logprobs").is_dir():
+            if same_text:
+                ar_flags = flags[flags.method == methods[0]]
+            else:
+                ar_flags = cycle_flags(res, ["ar"])
+            meta = {i: (d, int(p)) for i, d, p in rounds.drop_duplicates("id")[["id", "dataset", "prompt_tokens"]].itertuples(index=False)}
+            limit = None
+            if same_text:
+                fp = Path(args.prompts) / f"{panel}.jsonl"
+                limit = {j["id"]: int(j["force_tokens"]) for j in map(json.loads, fp.read_text().splitlines())}
+            data[panel]["entropy"] = entropy_view(t / panel, ar_flags, think_ends(res / "ar" / "outputs", end_id), meta, limit)
         print(panel, "within-trace done", flush=True)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     Path(args.out).write_text(json.dumps(data, default=lambda o: None if o != o else o))
