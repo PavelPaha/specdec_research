@@ -85,6 +85,18 @@ def rel(p):
     return os.path.basename(p)
 
 
+def script_hashes():
+    return {rel(p): sha256_file(p) for p in (os.path.abspath(__file__),
+                                             os.path.join(HERE, "..", "open-swe-traces-audit", "audit.py"))}
+
+
+def med(x):
+    """Median without truncation: 56.5 stays 56.5, 73.0 becomes 73."""
+    import numpy as np
+    v = float(np.median(x))
+    return int(v) if v.is_integer() else v
+
+
 def sample_key(seed, tid):
     return hashlib.sha256(f"{seed}:{tid}".encode()).hexdigest()
 
@@ -409,6 +421,15 @@ def cmd_export(a):
         "seconds": round(time.time() - t0),
     }
     print(json.dumps(checks, indent=1), flush=True)
+    # fail loudly: nothing is written unless every per-call and per-trajectory check passes
+    # (prefix_ids_eq_slice is informational: it may legitimately fail on empty reasoning, see README §4)
+    must = {k: len(calls) for k in ("audit_calls_rows_matched", "calls_input_len_eq_audit", "calls_output_len_eq_audit",
+                                    "calls_msg_index_eq_audit", "calls_prefix_str_eq", "calls_prefix_ids_eq_hist_gen")}
+    must.update({k: len(traj) for k in checks if k.startswith("traj_") and k != "traj_binding_mismatch_turns"})
+    must.update({"traj_binding_mismatch_turns": 0, "tool_responses_without_call": 0})
+    failed = {k: (checks[k], v) for k, v in must.items() if checks[k] != v}
+    if failed:
+        raise SystemExit(f"export checks failed (got, expected): {failed}")
 
     # 4. trajectories.parquet: original columns unchanged + provenance / selection / audit / render columns
     orig_check = {"instance_id": "instance_id", "repo": "repo", "language": "language", "resolved": "resolved"}
@@ -461,6 +482,7 @@ def cmd_export(a):
                          for f in ("trajectories.parquet", "calls.parquet", "tool_responses.parquet",
                                    "render_ids.parquet")}
     checks["audit_calls_file"] = {rel(a.audit_calls): sha256_file(a.audit_calls)}
+    checks["script_sha256"] = script_hashes()  # the exact code that produced the data
     checks["seconds"] = round(time.time() - t0)
     dump_json(checks, os.path.join(a.exp_out, "export_checks.json"))
     print(f"written in {time.time() - t0:.0f}s", flush=True)
@@ -502,10 +524,10 @@ def cmd_report(a):
                          sampling_fraction=round(len(g) / counts["pool_per_bin"][lab], 4),
                          scale_swe=int((g.source == "scale-swe").sum()),
                          swe_rebench_v2=int((g.source == "swe-rebench-v2").sum()),
-                         L_max_min=int(g.L_max.min()), L_max_median=int(g.L_max.median()), L_max_max=int(g.L_max.max()),
-                         calls_median=int(g.n_llm_calls.median()), calls_max=int(g.n_llm_calls.max()),
-                         calls_total=int(len(c)), input_len_median=int(c.input_len.median()),
-                         output_max_median=int(g.output_tokens_max.median()),
+                         L_max_min=int(g.L_max.min()), L_max_median=med(g.L_max), L_max_max=int(g.L_max.max()),
+                         calls_median=med(g.n_llm_calls), calls_max=int(g.n_llm_calls.max()),
+                         calls_total=int(len(c)), input_len_median=med(c.input_len),
+                         output_max_median=med(g.output_tokens_max),
                          repos=int(g.repo.nunique()), languages=int(g.language.nunique())))
     by_bin = pd.DataFrame(rows)
     D["by_bin"] = rows
@@ -581,17 +603,23 @@ def cmd_report(a):
             "distribution stops exactly at the 262,144-token window and no trajectory exceeds it (both sources), so "
             "the template render with preserved reasoning is what the model saw",
             "one fixed system prompt (system+tools prefix = 3,938 tokens) and 4 tools (execute_bash, "
-            "str_replace_editor, think, finish); no format-error turns; no incomplete runs; no compaction",
+            "str_replace_editor, think, finish); no format-error messages from the harness (model-side malformed "
+            "calls exist, see caveats); no incomplete runs; no compaction",
             "longest contexts among the clean configurations",
             "resolved == 1: the user's choice for the first run",
-            "stratified by L_max: uniform sampling would give only ~7 trajectories in 200-256K",
+            "stratified by L_max so that long contexts are as well represented as short ones: 200-256K holds only "
+            "149 of the 11,048 pool trajectories, so 500 drawn at random from the whole pool would include ~7 of them",
             "full trajectories, no pre-cutting: test points (call start, after a tool response, after reasoning, ...) "
             "are chosen later from the markup",
             "no per-repo cap: natural repository distribution; repo is kept for repository-clustered CIs",
         ],
         "caveats": [
-            "no sampling parameters, max_tokens or per-call usage in the data; generation_config: T=1.0, top_k=20, "
-            "top_p=0.95; whether OpenHands runs were greedy is unknown",
+            "confirmed by the data (metadata.teacher_model): Qwen3.8-27B, enable_thinking=true, reasoning_effort=xhigh. "
+            "Not published: sampling parameters, max_tokens, weights revision, inference backend, per-call usage; "
+            "whether OpenHands runs were greedy is unknown (mini-SWE-agent was not greedy). Assumed (Qwen3.8-27B "
+            "configuration, not NVIDIA): temperature=1.0, top_p=0.95, top_k=20, min_p=0, presence_penalty=0, "
+            "repetition_penalty=1.0; asked the authors in "
+            "https://huggingface.co/datasets/nvidia/Open-SWE-Traces/discussions/8",
             "OpenHands version v0.53.0 per the dataset author for v1.0, unconfirmed for v1.2",
             "tool responses are bound to calls by position (tool messages have no tool_call_id)",
             "failed responses (no tool call) were removed during dataset conversion in mini-SWE-agent; OpenHands "
@@ -599,20 +627,31 @@ def cmd_report(a):
             "no generated token ids, logprobs or usage in the dataset (checked: one schema across all 100 v1.2 shards, "
             "no such files in the repo tree, not mentioned in the card); tool_calls[].id is a vLLM call id, not token "
             "ids; render_ids.parquet holds our render of the text",
-            "call starts are exact despite that: the harness sends the history as text and the server re-tokenizes it "
-            "deterministically (canonically), so the model saw exactly ids[:call_start] + GEN_IDS",
-            "points inside a turn (after </think>, before/after <tool_call>) are canonicalized: during the rollout the "
-            "KV cache held the sampled ids, which may be a non-canonical split of the same text; the text and the "
-            "special-token boundaries are exact, the ids of the current turn's reasoning/arguments may differ and "
-            "cannot be recovered",
+            "call starts are exact under the audit's assumptions: the server rendered the stored (parsed) messages with "
+            "the same template, tools JSON and kwargs, parsed arguments into dicts, and tokenized the result; then the "
+            "model saw exactly ids[:call_start] + GEN_IDS. No usage or token ids exist to confirm this",
+            "points inside a turn (after </think>, before/after <tool_call>): the prefix is the template re-render of "
+            "the turn as parsed by the server (backend not confirmed; tool call ids look like vLLM's), tokenized "
+            "canonically; it equals the generated text for well-formed turns, "
+            "but the sampled ids may be a non-canonical split and cannot be recovered; non-string tool arguments "
+            "(6,063 values, e.g. view_range) are re-serialized as JSON",
+            "one call renders differently from what the model generated: a think call whose thought ends with a "
+            "nested '<tool_call>\\n<function=str_replace_editor>' (trajectory c4543971-970f-4521-9e78-5ba8ee869d26, "
+            "call 26); later calls are unaffected because the server re-rendered the same parsed fields. 11 more "
+            "calls violate the tool schemas (extra timeout_note, missing finish.message, an odd parameter name) but "
+            "are syntactically well-formed",
+            "that nested call puts one literal '<tool_call>' inside an argument; it is tokenized as the same token id "
+            "as a real one, so locate markers via calls.parquet offsets, never by searching token ids; no other "
+            "literal special or added token occurs in any text",
+            "the tokenizer NFC-normalizes text (as the server does): decode(ids) differs from the raw stored text in "
+            "9 fields (8 tool outputs, 1 user message) of 4 trajectories",
             "only call starts are real model inputs; points inside a turn are continuations of generated text",
             "lengths cannot be checked against the server (no usage); they are template renders",
         ],
         "outputs": checks["outputs"],
-        "checks": {k: v for k, v in checks.items() if k not in ("outputs",)},
-        "scripts_sha256": {rel(os.path.join(HERE, "build.py")): sha256_file(os.path.join(HERE, "build.py")),
-                           rel(os.path.join(HERE, "..", "open-swe-traces-audit", "audit.py")):
-                               sha256_file(os.path.join(HERE, "..", "open-swe-traces-audit", "audit.py"))},
+        "checks": {k: v for k, v in checks.items() if k not in ("outputs", "script_sha256")},
+        "scripts_sha256_export": checks.get("script_sha256"),  # code that produced the data files
+        "scripts_sha256_report": script_hashes(),               # code that wrote this manifest
         "software": {"python": platform.python_version(), "transformers": transformers.__version__,
                      "tokenizers": tokenizers.__version__, "pyarrow": pyarrow.__version__, "pandas": pd.__version__,
                      "numpy": np.__version__, "jinja2": jinja2.__version__},
@@ -628,46 +667,92 @@ def cmd_report(a):
 # ---------------------------------------------------------------------------------------------------------- verify
 def verify_one(job):
     """Fresh render of one exported trajectory: ids must equal the stored ids; markers must sit on their tokens."""
+    import unicodedata
     tid, messages, tools_raw, stored_ids, calls, tresp = job
     T = _T
     S = special_ids(T)
+    nfc = lambda s: unicodedata.normalize("NFC", s)  # the tokenizer's normalizer (tokenizer.json: NFC)
     msgs, _ = conv_msgs(messages)
     tools = conv_tools(tools_raw)
-    text = T.apply_chat_template(msgs, tools=tools, tokenize=False, add_generation_prompt=False, **RENDER_KW)
-    ids = T(text, add_special_tokens=False)["input_ids"]
-    gen_ids = T(GEN_PROMPT, add_special_tokens=False)["input_ids"]
-    bad = []
+    R = lambda ms, gen: T.apply_chat_template(ms, tools=tools, tokenize=False, add_generation_prompt=gen, **RENDER_KW)
+    enc = lambda s: T(s, add_special_tokens=False)["input_ids"]
+    ids = enc(R(msgs, False))
+    dec = lambda a, b: T.decode(ids[a:b], skip_special_tokens=False, clean_up_tokenization_spaces=False)
+    gen_ids = enc(GEN_PROMPT)
+    st = dict(prefix_eq_hist_gen=0, prefix_eq_slice=0, input_len_eq=0)
     if ids != stored_ids:
-        bad.append("ids")
-    for c in calls:
-        if ids[c["call_start"]] != S["<|im_start|>"] or ids[c["think_end"]] != S["</think>"] \
-                or ids[c["turn_end"]] != S["<|im_end|>"] or c["input_len"] != c["call_start"] + len(gen_ids) \
-                or any(ids[x] != S["<tool_call>"] for x in c["tool_call_starts"]) \
-                or any(ids[x] != S["</tool_call>"] for x in c["tool_call_ends"]) \
-                or len(c["tool_call_starts"]) != c["n_tool_calls"] \
-                or not (c["call_start"] < c["think_end"] < c["turn_end"]):
-            bad.append(f"call{c['call']}")
+        return tid, ["ids"], st
+    a_idx = [j for j, m in enumerate(msgs) if m["role"] == "assistant"]
+    if [c["msg_index"] for c in calls] != a_idx or [c["call"] for c in calls] != list(range(len(a_idx))):
+        return tid, ["calls_index"], st
+    by_call = {}
     for r in tresp:
-        if ids[r["resp_start"]] != S["<tool_response>"] or ids[r["resp_end"]] != S["</tool_response>"]:
-            bad.append(f"resp{r['msg_index']}")
-    # ordering: calls increase, each turn ends before the next call starts, responses sit between turns
-    cs = [c["call_start"] for c in calls]
-    if cs != sorted(cs) or any(calls[i]["turn_end"] >= calls[i + 1]["call_start"] for i in range(len(calls) - 1)):
-        bad.append("order")
-    if calls[-1]["turn_end"] != len(ids) - 2:  # last turn ends with "<|im_end|>\n"
+        by_call.setdefault(r["call"], []).append(r)
+    bad = []
+    for q, c in enumerate(calls):
+        j, m = c["msg_index"], msgs[c["msg_index"]]
+        cs, te, inp, tk = c["call_start"], c["turn_end"], c["input_len"], c["think_end"]
+        # (a) the real model input, recomputed: tokens of render(messages[:j]) + generation prompt
+        p = enc(R(msgs[:j], True))
+        st["prefix_eq_hist_gen"] += p == ids[:cs] + gen_ids
+        st["prefix_eq_slice"] += p == ids[:len(p)]
+        st["input_len_eq"] += len(p) == inp
+        # (b) the turn decoded from the stored offsets: checks the right occurrence of each marker, not just its id
+        r = nfc((m.get("reasoning_content") or "").strip())
+        ct = nfc((m["content"] or "").strip())
+        tcs = m.get("tool_calls") or []
+        tsa, tea = list(c["tool_call_starts"]), list(c["tool_call_ends"])
+        ok = (ids[cs] == S["<|im_start|>"] and inp == cs + len(gen_ids) and dec(cs, inp) == GEN_PROMPT
+              and ids[tk] == S["</think>"] and dec(inp, tk) == r + "\n"
+              and ids[te] == S["<|im_end|>"] and c["output_len"] == te + 1 - inp
+              and len(tsa) == len(tea) == len(tcs) == c["n_tool_calls"]
+              and list(c["tool_names"]) == [tc["function"]["name"] for tc in tcs])
+        if ok and tcs:
+            ok = dec(tk + 1, tsa[0]) == "\n\n" + ct + ("\n\n" if ct else "") and tea[-1] + 1 == te
+            for k, tc in enumerate(tcs):
+                blk = dec(tsa[k], tea[k] + 1)
+                ok = (ok and ids[tsa[k]] == S["<tool_call>"] and ids[tea[k]] == S["</tool_call>"]
+                      and blk.startswith(f"<tool_call>\n<function={tc['function']['name']}>\n")
+                      and blk.endswith("</function>\n</tool_call>"))
+                if k + 1 < len(tcs):
+                    ok = ok and dec(tea[k] + 1, tsa[k + 1]) == "\n"
+        elif ok:
+            ok = dec(tk + 1, te) == "\n\n" + ct
+        # (c) tool responses: k = 0..n-1 right after the turn, bound by position, inside one user turn
+        rs = sorted(by_call.get(q, []), key=lambda x: x["msg_index"])
+        n_exp = 0 if q == len(calls) - 1 else len(tcs)
+        ok = ok and len(rs) == n_exp and [x["k"] for x in rs] == list(range(n_exp))
+        if ok and rs:
+            raw_tcs = messages[j]["tool_calls"] or []
+            g0 = te + 2
+            ok = ids[g0] == S["<|im_start|>"] and dec(g0, rs[0]["resp_start"]) == "<|im_start|>user\n"
+            for i, x in enumerate(rs):
+                body = nfc((msgs[x["msg_index"]]["content"] or "").strip())
+                ok = (ok and x["msg_index"] == j + 1 + i and x["group_start"] == g0
+                      and ids[x["resp_start"]] == S["<tool_response>"] and ids[x["resp_end"]] == S["</tool_response>"]
+                      and dec(x["resp_start"] + 1, x["resp_end"]) == "\n" + body + "\n"
+                      and x["n_tokens"] == x["resp_end"] - x["resp_start"] - 1
+                      and x["tool_name"] == raw_tcs[i]["function"]["name"] and x["tool_call_id"] == raw_tcs[i]["id"])
+                if i + 1 < len(rs):
+                    ok = ok and dec(x["resp_end"] + 1, rs[i + 1]["resp_start"]) == "\n"
+            ok = ok and q + 1 < len(calls) and calls[q + 1]["call_start"] == rs[-1]["resp_end"] + 3
+        if not ok:
+            bad.append(f"call{q}")
+    if calls[-1]["turn_end"] != len(ids) - 2:  # the last turn ends with "<|im_end|>\n"
         bad.append("last_turn_end")
-    return tid, bad
+    return tid, bad, st
 
 
 def cmd_verify(a):
     import pandas as pd, pyarrow.parquet as pq
+    if not (a.shards and a.audit_calls and a.trajectories and a.termination and a.tok):
+        raise SystemExit("verify needs --shards, --audit-calls, --trajectories, --termination and --tok")
     t0 = time.time()
     V = {}
-    tra = pq.read_table(os.path.join(a.out, "trajectories.parquet"))
+    tpath = os.path.join(a.out, "trajectories.parquet")
+    tra = pq.read_table(tpath)
     tr = tra.drop_columns(["messages", "tools", "metadata", "render_tools_openai"]).to_pandas()
-    tr.insert(5, "messages", None)  # placeholders keep the original column order for the check below
-    tr.insert(6, "tools", None)
-    tr.insert(8, "metadata", tra.column("metadata").to_pylist())
+    tr["metadata"] = tra.column("metadata").to_pylist()
     calls = pq.read_table(os.path.join(a.out, "calls.parquet")).to_pandas()
     tresp = pq.read_table(os.path.join(a.out, "tool_responses.parquet")).to_pandas()
     ids = pq.read_table(os.path.join(a.out, "render_ids.parquet"))
@@ -682,31 +767,33 @@ def cmd_verify(a):
     V["all_L_max_eq_render"] = bool((tr.L_max == tr.render_L_max).all())
     V["all_teacher_xhigh_thinking"] = bool(all(m["teacher_model"]["reasoning_effort"] == "xhigh"
                                                and m["teacher_model"]["enable_thinking"] for m in tr.metadata))
-    V["original_columns_first"] = list(tr.columns[:len(ORIGINAL_COLUMNS)]) == ORIGINAL_COLUMNS
-    if a.shards:  # original columns are value-identical (incl. schema) to the source rows
-        same = 0
-        for p, g in tr.groupby("src_path", sort=True):
-            src = pq.read_table(os.path.join(a.shards, p), columns=ORIGINAL_COLUMNS).take(g.src_row.tolist())
-            mine = tra.select(ORIGINAL_COLUMNS).take(g.index.tolist())
-            same += len(g) if src.equals(mine) else 0
-        V["original_rows_identical_to_shards"] = same
+    V["original_columns_first"] = pq.read_schema(tpath).names[:len(ORIGINAL_COLUMNS)] == ORIGINAL_COLUMNS
+    same = 0  # original columns are value- and schema-identical to the source rows
+    for p, g in tr.groupby("src_path", sort=True):
+        src = pq.read_table(os.path.join(a.shards, p), columns=ORIGINAL_COLUMNS).take(g.src_row.tolist())
+        mine = tra.select(ORIGINAL_COLUMNS).take(g.index.tolist())
+        same += len(g) if src.equals(mine) else 0
+    V["original_rows_identical_to_shards"] = same
     # 2. re-selection with the stored seed reproduces the sample (ids, bins, ranks, order)
     seed = int(tr.seed.iloc[0])
     sel2, _ = do_select(a.trajectories, a.termination, seed)
     V["reselect_same_seed_identical"] = (sel2.trajectory_id.tolist() == tr.trajectory_id.tolist()
                                          and sel2.bin.tolist() == tr.bin.tolist()
                                          and sel2.rank_in_bin.tolist() == tr.rank_in_bin.tolist())
-    # 3. calls table vs audit and per-call token checks (computed in export)
-    V["calls"] = {"n": len(calls),
-                  "input_len_eq_audit": int((calls.input_len == calls.input_len_audit).sum()),
-                  "prefix_str_eq": int(calls.prefix_str_eq.sum()),
-                  "prefix_ids_eq_hist_gen": int(calls.prefix_ids_eq_hist_gen.sum()),
-                  "prefix_ids_eq_slice": int(calls.prefix_ids_eq_slice.sum()),
+    # 3. calls vs the audit CSV itself (not the *_audit columns written by export)
+    ac = load_audit_calls(a.audit_calls, tr.trajectory_id.tolist())
+    mm = calls.merge(ac, on=["trajectory_id", "call"], how="outer", suffixes=("", "_csv"), indicator=True)
+    both = mm[mm._merge == "both"]
+    V["calls"] = {"n": len(calls), "audit_rows_matched": int(len(both)), "audit_rows_unmatched": int(len(mm) - len(both)),
+                  "input_len_eq_audit_csv": int((both.input_len == both.input_visible_template).sum()),
+                  "output_len_eq_audit_csv": int((both.output_len == both.output_template).sum()),
+                  "msg_index_eq_audit_csv": int((both.msg_index == both.msg_index_csv).sum()),
                   "n_calls_eq_audit": bool((calls.groupby("trajectory_id").size().sort_index()
                                             == tr.set_index("trajectory_id").audit_n_llm_calls.sort_index()).all()),
                   "L_max_eq": bool((calls.groupby("trajectory_id").input_len.max().sort_index()
                                     == tr.set_index("trajectory_id").L_max.sort_index()).all())}
-    # 4. fresh render of every trajectory with a fresh tokenizer, ids and markers
+    # 4. per trajectory, recomputed from the original messages with a fresh tokenizer: full render == stored ids,
+    #    every call prefix re-rendered and tokenized, every marker / response offset checked by decoding
     cg = {k: g.sort_values("call").to_dict("records") for k, g in calls.groupby("trajectory_id")}
     rg = {k: g.to_dict("records") for k, g in tresp.groupby("trajectory_id")}
     id_by = dict(zip(ids.column("trajectory_id").to_pylist(), range(ids.num_rows)))
@@ -715,20 +802,26 @@ def cmd_verify(a):
     jobs = [(tr.trajectory_id[i], mcol[i].as_py(), tcol[i].as_py(),
              ids.column("input_ids")[id_by[tr.trajectory_id[i]]].as_py(),
              cg[tr.trajectory_id[i]], rg.get(tr.trajectory_id[i], [])) for i in order]
-    bad = {}
+    bad, tot = {}, {}
     with Pool(a.workers, initializer=_init, initargs=(a.tok,)) as pool:
-        for tid, b in pool.imap_unordered(verify_one, jobs):
+        for tid, b, st in pool.imap_unordered(verify_one, jobs):
             if b:
                 bad[tid] = b
+            for k, v in st.items():
+                tot[k] = tot.get(k, 0) + int(v)
+    V["recomputed_calls"] = {"n": len(calls), **tot}
     V["rerender_trajectories_ok"] = len(jobs) - len(bad)
     V["rerender_failures"] = bad
     V["seconds"] = round(time.time() - t0)
+    n = len(calls)
     ok = (V["rows"] == 500 and V["unique_trajectory_id"] == 500 and set(V["per_bin"].values()) == {N_PER_BIN}
           and V["all_resolved_1"] and V["all_finish_kind_finish"] and V["all_config_openhands"] and V["all_L_max_in_bin"]
-          and V["all_L_max_eq_render"] and V["reselect_same_seed_identical"] and not bad
-          and V["calls"]["input_len_eq_audit"] == V["calls"]["n"] and V["calls"]["prefix_str_eq"] == V["calls"]["n"]
-          and V["calls"]["prefix_ids_eq_hist_gen"] == V["calls"]["n"]
-          and V.get("original_rows_identical_to_shards", 500) == 500)
+          and V["all_L_max_eq_render"] and V["all_teacher_xhigh_thinking"] and V["original_columns_first"]
+          and V["original_rows_identical_to_shards"] == 500 and V["reselect_same_seed_identical"] and not bad
+          and V["calls"]["audit_rows_matched"] == n and V["calls"]["audit_rows_unmatched"] == 0
+          and V["calls"]["input_len_eq_audit_csv"] == n and V["calls"]["output_len_eq_audit_csv"] == n
+          and V["calls"]["msg_index_eq_audit_csv"] == n and V["calls"]["n_calls_eq_audit"] and V["calls"]["L_max_eq"]
+          and tot.get("prefix_eq_hist_gen") == n and tot.get("input_len_eq") == n)
     V["ALL_OK"] = bool(ok)
     dump_json(V, os.path.join(a.exp_out, "verify.json"))
     print(json.dumps(V, indent=1, default=str))

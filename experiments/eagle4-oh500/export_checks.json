@@ -22,7 +22,7 @@
   "traj_binding_mismatch_turns": 0,
   "traj_last_tool_finish": 500,
   "tool_responses_without_call": 0,
-  "seconds": 348,
+  "seconds": 378,
   "outputs": {
     "data/open-swe-traces/eagle4_oh500/trajectories.parquet": {
       "rows": 500,
@@ -47,5 +47,9 @@
   },
   "audit_calls_file": {
     "data/open-swe-traces/audit/full/calls.csv.gz": "4b5b2ccfaab0a99da694f9c3101736b1c52b23219a1faa8274c00b25b168d3cb"
+  },
+  "script_sha256": {
+    "experiments/eagle4-oh500/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
+    "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
   }
 }

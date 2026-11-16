@@ -19,15 +19,22 @@
   "reselect_same_seed_identical": true,
   "calls": {
     "n": 41753,
-    "input_len_eq_audit": 41753,
-    "prefix_str_eq": 41753,
-    "prefix_ids_eq_hist_gen": 41753,
-    "prefix_ids_eq_slice": 41753,
+    "audit_rows_matched": 41753,
+    "audit_rows_unmatched": 0,
+    "input_len_eq_audit_csv": 41753,
+    "output_len_eq_audit_csv": 41753,
+    "msg_index_eq_audit_csv": 41753,
     "n_calls_eq_audit": true,
     "L_max_eq": true
   },
+  "recomputed_calls": {
+    "n": 41753,
+    "prefix_eq_hist_gen": 41753,
+    "prefix_eq_slice": 41753,
+    "input_len_eq": 41753
+  },
   "rerender_trajectories_ok": 500,
   "rerender_failures": {},
-  "seconds": 40,
+  "seconds": 347,
   "ALL_OK": true
 }

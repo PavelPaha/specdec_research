@@ -1,6 +1,6 @@
 {
   "name": "eagle4_oh500",
-  "created_utc": "2026-11-16T11:11:08+00:00",
+  "created_utc": "2026-11-16T12:10:10+00:00",
   "purpose": "Full Qwen3.8-27B OpenHands trajectories whose per-call inputs can be rebuilt from the data, for measuring speculative decoding (EAGLE-4) on Qwen3.8-27B. No models were run.",
   "dataset": {
     "repo": "nvidia/Open-SWE-Traces",
@@ -111,21 +111,24 @@
   },
   "rationale": [
     "OpenHands is the cleanest configuration of the audit: with past reasoning in the context its L_max distribution stops exactly at the 262,144-token window and no trajectory exceeds it (both sources), so the template render with preserved reasoning is what the model saw",
-    "one fixed system prompt (system+tools prefix = 3,938 tokens) and 4 tools (execute_bash, str_replace_editor, think, finish); no format-error turns; no incomplete runs; no compaction",
+    "one fixed system prompt (system+tools prefix = 3,938 tokens) and 4 tools (execute_bash, str_replace_editor, think, finish); no format-error messages from the harness (model-side malformed calls exist, see caveats); no incomplete runs; no compaction",
     "longest contexts among the clean configurations",
     "resolved == 1: the user's choice for the first run",
-    "stratified by L_max: uniform sampling would give only ~7 trajectories in 200-256K",
+    "stratified by L_max so that long contexts are as well represented as short ones: 200-256K holds only 149 of the 11,048 pool trajectories, so 500 drawn at random from the whole pool would include ~7 of them",
     "full trajectories, no pre-cutting: test points (call start, after a tool response, after reasoning, ...) are chosen later from the markup",
     "no per-repo cap: natural repository distribution; repo is kept for repository-clustered CIs"
   ],
   "caveats": [
-    "no sampling parameters, max_tokens or per-call usage in the data; generation_config: T=1.0, top_k=20, top_p=0.95; whether OpenHands runs were greedy is unknown",
+    "confirmed by the data (metadata.teacher_model): Qwen3.8-27B, enable_thinking=true, reasoning_effort=xhigh. Not published: sampling parameters, max_tokens, weights revision, inference backend, per-call usage; whether OpenHands runs were greedy is unknown (mini-SWE-agent was not greedy). Assumed (Qwen3.8-27B configuration, not NVIDIA): temperature=1.0, top_p=0.95, top_k=20, min_p=0, presence_penalty=0, repetition_penalty=1.0; asked the authors in https://huggingface.co/datasets/nvidia/Open-SWE-Traces/discussions/8",
     "OpenHands version v0.53.0 per the dataset author for v1.0, unconfirmed for v1.2",
     "tool responses are bound to calls by position (tool messages have no tool_call_id)",
     "failed responses (no tool call) were removed during dataset conversion in mini-SWE-agent; OpenHands shows no trace of this, but it cannot be ruled out",
     "no generated token ids, logprobs or usage in the dataset (checked: one schema across all 100 v1.2 shards, no such files in the repo tree, not mentioned in the card); tool_calls[].id is a vLLM call id, not token ids; render_ids.parquet holds our render of the text",
-    "call starts are exact despite that: the harness sends the history as text and the server re-tokenizes it deterministically (canonically), so the model saw exactly ids[:call_start] + GEN_IDS",
-    "points inside a turn (after </think>, before/after <tool_call>) are canonicalized: during the rollout the KV cache held the sampled ids, which may be a non-canonical split of the same text; the text and the special-token boundaries are exact, the ids of the current turn's reasoning/arguments may differ and cannot be recovered",
+    "call starts are exact under the audit's assumptions: the server rendered the stored (parsed) messages with the same template, tools JSON and kwargs, parsed arguments into dicts, and tokenized the result; then the model saw exactly ids[:call_start] + GEN_IDS. No usage or token ids exist to confirm this",
+    "points inside a turn (after </think>, before/after <tool_call>): the prefix is the template re-render of the turn as parsed by the server (backend not confirmed; tool call ids look like vLLM's), tokenized canonically; it equals the generated text for well-formed turns, but the sampled ids may be a non-canonical split and cannot be recovered; non-string tool arguments (6,063 values, e.g. view_range) are re-serialized as JSON",
+    "one call renders differently from what the model generated: a think call whose thought ends with a nested '<tool_call>\\n<function=str_replace_editor>' (trajectory c4543971-970f-4521-9e78-5ba8ee869d26, call 26); later calls are unaffected because the server re-rendered the same parsed fields. 11 more calls violate the tool schemas (extra timeout_note, missing finish.message, an odd parameter name) but are syntactically well-formed",
+    "that nested call puts one literal '<tool_call>' inside an argument; it is tokenized as the same token id as a real one, so locate markers via calls.parquet offsets, never by searching token ids; no other literal special or added token occurs in any text",
+    "the tokenizer NFC-normalizes text (as the server does): decode(ids) differs from the raw stored text in 9 fields (8 tool outputs, 1 user message) of 4 trajectories",
     "only call starts are real model inputs; points inside a turn are continuations of generated text",
     "lengths cannot be checked against the server (no usage); they are template renders"
   ],
@@ -175,13 +178,17 @@
     "traj_binding_mismatch_turns": 0,
     "traj_last_tool_finish": 500,
     "tool_responses_without_call": 0,
-    "seconds": 348,
+    "seconds": 378,
     "audit_calls_file": {
       "data/open-swe-traces/audit/full/calls.csv.gz": "4b5b2ccfaab0a99da694f9c3101736b1c52b23219a1faa8274c00b25b168d3cb"
     }
   },
-  "scripts_sha256": {
-    "experiments/eagle4-oh500/build.py": "421152ef5bf9a978ac6f1741325e82d6bca0ae88c54d7381126a82ff46cb6d77",
+  "scripts_sha256_export": {
+    "experiments/eagle4-oh500/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
+    "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
+  },
+  "scripts_sha256_report": {
+    "experiments/eagle4-oh500/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
     "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
   },
   "software": {
@@ -218,16 +225,23 @@
     "reselect_same_seed_identical": true,
     "calls": {
       "n": 41753,
-      "input_len_eq_audit": 41753,
-      "prefix_str_eq": 41753,
-      "prefix_ids_eq_hist_gen": 41753,
-      "prefix_ids_eq_slice": 41753,
+      "audit_rows_matched": 41753,
+      "audit_rows_unmatched": 0,
+      "input_len_eq_audit_csv": 41753,
+      "output_len_eq_audit_csv": 41753,
+      "msg_index_eq_audit_csv": 41753,
       "n_calls_eq_audit": true,
       "L_max_eq": true
     },
+    "recomputed_calls": {
+      "n": 41753,
+      "prefix_eq_hist_gen": 41753,
+      "prefix_eq_slice": 41753,
+      "input_len_eq": 41753
+    },
     "rerender_trajectories_ok": 500,
     "rerender_failures": {},
-    "seconds": 40,
+    "seconds": 347,
     "ALL_OK": true
   }
 }
