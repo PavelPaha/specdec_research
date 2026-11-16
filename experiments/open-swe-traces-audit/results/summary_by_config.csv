@@ -1,0 +1,33 @@
+config,key,context_mode,metric,n,p25,median,p75,p90,p95,max,ge32K,ge64K,ge100K,ge128K,ge200K,ge250K,ge256K_window
+Qwen3.8-27B · Claude Code · xhigh,claudecode,preserve,L_max_best_estimate,34011,37407.0,60764.0,94641.0,136755.0,166064.0,226461,27311,15475,7612,3876,780,0,0
+Qwen3.8-27B · Claude Code · xhigh,claudecode,preserve,L_max_visible_template,34011,37407.0,60764.0,94641.0,136755.0,166064.0,847379,27311,15475,7612,3876,780,271,235
+Qwen3.8-27B · Claude Code · xhigh,claudecode,preserve,L_max_no_past_reasoning,34011,25621.0,39677.0,59358.0,83831.0,101192.0,479056,21061,6809,1777,533,75,22,18
+Qwen3.8-27B · Claude Code · xhigh,claudecode,preserve,L_max_preserve_reconstructible,34011,37407.0,60764.0,94641.0,136755.0,166064.0,226461,27311,15475,7612,3876,780,0,0
+Qwen3.8-27B · Claude Code · xhigh,claudecode,preserve,session_prompt_tokens_sum,34011,658259.0,1549191.0,3519434.0,7052176.0,10422576.0,253355918,33994,33823,33464,33118,32179,31454,31276
+Qwen3.8-27B · OpenCode · xhigh,opencode,preserve,L_max_best_estimate,35304,40547.0,65454.0,100720.0,130212.0,131000.0,171772,29352,17622,8980,1717,0,0,0
+Qwen3.8-27B · OpenCode · xhigh,opencode,preserve,L_max_visible_template,35304,40547.0,65454.0,100720.0,137942.0,181660.0,823656,29352,17622,8980,4216,1315,482,394
+Qwen3.8-27B · OpenCode · xhigh,opencode,preserve,L_max_no_past_reasoning,35304,30028.0,45344.0,66714.0,91939.0,114521.0,447629,24862,9197,2738,1131,167,59,42
+Qwen3.8-27B · OpenCode · xhigh,opencode,preserve,L_max_preserve_reconstructible,35304,40547.0,65454.0,100720.0,130212.0,131000.0,171772,29352,17622,8980,1717,0,0,0
+Qwen3.8-27B · OpenCode · xhigh,opencode,preserve,session_prompt_tokens_sum,35304,751916.0,1803882.0,4030875.0,7786510.0,12067416.0,203139957,35304,35258,35065,34767,33917,33213,33050
+Qwen3.8-27B · OpenHands · xhigh,openhands,preserve,L_max_best_estimate,25599,54530.0,78025.0,112150.0,152281.0,180195.0,261806,24391,16018,8330,4213,746,72,0
+Qwen3.8-27B · OpenHands · xhigh,openhands,preserve,L_max_visible_template,25599,54530.0,78025.0,112150.0,152281.0,180195.0,261806,24391,16018,8330,4213,746,72,0
+Qwen3.8-27B · OpenHands · xhigh,openhands,preserve,L_max_no_past_reasoning,25599,38480.0,53187.0,74144.0,98059.0,116205.0,206101,21693,8602,2381,644,1,0,0
+Qwen3.8-27B · OpenHands · xhigh,openhands,preserve,L_max_preserve_reconstructible,25599,54530.0,78025.0,112150.0,152281.0,180195.0,261806,24391,16018,8330,4213,746,72,0
+Qwen3.8-27B · OpenHands · xhigh,openhands,preserve,session_prompt_tokens_sum,25599,1305002.0,2495849.0,4917472.0,8698080.0,12012081.0,37408390,25599,25599,25598,25594,25565,25508,25488
+Qwen3.8-27B · SWE-agent · scale-swe · xhigh,sweagent/scale-swe,preserve,L_max_best_estimate,15727,42430.0,64622.0,99057.0,143288.0,174210.0,261026,13574,7723,3852,2039,418,56,0
+Qwen3.8-27B · SWE-agent · scale-swe · xhigh,sweagent/scale-swe,preserve,L_max_visible_template,15727,42430.0,64622.0,99057.0,143288.0,174210.0,261026,13574,7723,3852,2039,418,56,0
+Qwen3.8-27B · SWE-agent · scale-swe · xhigh,sweagent/scale-swe,preserve,L_max_no_past_reasoning,15727,29800.0,43451.0,63884.0,91267.0,111651.0,230987,10928,3748,1156,393,14,0,0
+Qwen3.8-27B · SWE-agent · scale-swe · xhigh,sweagent/scale-swe,preserve,L_max_preserve_reconstructible,15727,42430.0,64622.0,99057.0,143288.0,174210.0,261026,13574,7723,3852,2039,418,56,0
+Qwen3.8-27B · SWE-agent · scale-swe · xhigh,sweagent/scale-swe,preserve,session_prompt_tokens_sum,15727,972113.0,1995022.0,4161125.0,8026894.0,11538910.0,49550822,15727,15725,15697,15654,15507,15361,15312
+Qwen3.8-27B · SWE-agent · swe-rebench-v2 · xhigh,sweagent/swe-rebench-v2,no_past_reasoning,L_max_best_estimate,17483,42382.0,60975.0,85970.0,114938.0,134603.0,259868,15334,7738,2843,1001,89,4,0
+Qwen3.8-27B · SWE-agent · swe-rebench-v2 · xhigh,sweagent/swe-rebench-v2,no_past_reasoning,L_max_visible_template,17483,83239.0,139118.0,231052.0,358385.0,466577.0,1374721,16998,14645,11667,9258,5511,3785,3437
+Qwen3.8-27B · SWE-agent · swe-rebench-v2 · xhigh,sweagent/swe-rebench-v2,no_past_reasoning,L_max_no_past_reasoning,17483,42382.0,60975.0,85970.0,114938.0,134603.0,259868,15334,7738,2843,1001,89,4,0
+Qwen3.8-27B · SWE-agent · swe-rebench-v2 · xhigh,sweagent/swe-rebench-v2,no_past_reasoning,L_max_preserve_reconstructible,17483,83239.0,139118.0,231052.0,358385.0,466577.0,1374721,16998,14645,11667,9258,5511,3785,3437
+Qwen3.8-27B · SWE-agent · swe-rebench-v2 · xhigh,sweagent/swe-rebench-v2,no_past_reasoning,session_prompt_tokens_sum,17483,2833514.0,5993567.0,12748979.0,24139161.0,35512680.0,212395522,17483,17483,17479,17478,17465,17445,17433
+Qwen3.8-27B · mini-SWE-agent · xhigh,minisweagent,no_past_reasoning,L_max_best_estimate,107267,25341.0,37152.0,54853.0,77388.0,94280.0,361222,63109,17360,4233,1212,76,6,3
+Qwen3.8-27B · mini-SWE-agent · xhigh,minisweagent,no_past_reasoning,L_max_visible_template,107267,36842.0,57620.0,89404.0,129210.0,158873.0,392209,86031,45199,21129,10258,2024,675,522
+Qwen3.8-27B · mini-SWE-agent · xhigh,minisweagent,no_past_reasoning,L_max_no_past_reasoning,107267,25341.0,37152.0,54853.0,77388.0,94280.0,361222,63109,17360,4233,1212,76,6,3
+Qwen3.8-27B · mini-SWE-agent · xhigh,minisweagent,no_past_reasoning,L_max_preserve_reconstructible,107267,36842.0,57620.0,89404.0,129210.0,158873.0,392209,86031,45199,21129,10258,2024,675,522
+Qwen3.8-27B · mini-SWE-agent · xhigh,minisweagent,no_past_reasoning,session_prompt_tokens_sum,107267,646000.0,1407224.0,3146557.0,6462468.0,9875612.0,56365367,107256,107130,106605,105803,103136,100650,100051
+All Qwen3.8-27B v1.2,all,mixed,L_max_best_estimate,235391,31768.0,50213.0,79377.0,117297.0,134436.0,361222,173071,81936,35850,14058,2109,138,3
+All Qwen3.8-27B v1.2,all,mixed,L_max_visible_template,235391,40922.0,65069.0,102243.0,151147.0,194290.0,1374721,197657,116682,61570,33860,10794,5341,4588

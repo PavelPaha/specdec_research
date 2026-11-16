@@ -1,0 +1,7 @@
+config,context_mode,n_traj,n_calls,traj_over_window_no_past_reasoning,template_render_ok,bad_tool_args,exact_ids_checked,exact_ids_ok,system_prompt_variants,prefix_tokens_median,prefix_tokens_min,prefix_tokens_max,redaction_placeholders,user_msgs_mid,traj_over_window_visible,traj_suspected_hidden_compaction,calls_after_suspected_compaction,share_calls_reconstructible,output_tokens_max,output_tokens_p99_of_traj_max,tool_output_tokens_p95_of_traj_max,tool_output_tokens_median_of_traj_median
+claudecode,preserve,34011,1717635,18,34011,0,12843,12843,33447,1255.0,1168,2079,0,0,235,616,27005,0.9843,31960,22508.30000000001,18120.5,174.0
+opencode,preserve,35304,1791240,42,35304,0,13500,13500,22,7435.0,7435,8791,0,0,394,4332,178950,0.9001,131076,23334.73000000001,18362.85,148.0
+openhands,preserve,25599,1605255,0,25599,0,10023,10023,1,3938.0,3938,3938,6,0,0,0,0,1.0,56032,21380.02,8670.0,294.0
+sweagent/scale-swe,preserve,15727,987491,0,15727,0,6300,6300,1,1014.0,1014,1014,0,0,0,0,0,1.0,47700,22769.48,14918.099999999986,244.0
+sweagent/swe-rebench-v2,no_past_reasoning,17483,1541175,0,17483,0,6300,6299,1,1014.0,1014,1014,3,0,3437,0,0,1.0,63542,41338.520000000004,21149.19999999996,216.0
+minisweagent,no_past_reasoning,107267,5428910,3,107267,0,39600,39600,1,321.0,321,321,0,370,522,0,0,1.0,52986,22391.699999999983,5650.0,256.0

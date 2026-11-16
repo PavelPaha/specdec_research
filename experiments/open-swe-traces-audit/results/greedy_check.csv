@@ -1,0 +1,6 @@
+harness,runs,tasks,pairs_same_prefix,pairs_identical_first_output,pairs_identical_first_reasoning
+claudecode,34011,34011,0,0,0
+minisweagent,107267,41405,93637,59,660
+opencode,35304,35304,0,0,0
+openhands,25599,25599,0,0,0
+sweagent,33210,33210,0,0,0

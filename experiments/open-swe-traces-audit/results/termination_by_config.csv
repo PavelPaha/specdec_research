@@ -1,0 +1,7 @@
+config,complete_task,empty_final,final_text,finish,other_tool,submit,resolved_share_Lmax_ge128K
+claudecode,0,0,34011,0,0,0,0.218
+minisweagent,107267,0,0,0,0,0,0.237
+opencode,0,10,35294,0,0,0,0.204
+openhands,0,0,0,25599,0,0,0.253
+sweagent/scale-swe,0,0,0,0,18,15709,0.351
+sweagent/swe-rebench-v2,0,0,0,0,14,17469,0.157
