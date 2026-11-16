@@ -1,0 +1,34 @@
+<!doctype html><html lang='ru'><head><meta charset='utf-8'><title>Много точек для старта драфтинга</title><style>
+:root{--surface:#fcfcfb;--band:#f3f2ee;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;
+--ring:rgba(11,11,11,.10);--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100}
+html,body{margin:0;width:640px;height:640px;background:var(--surface);color:var(--ink);
+font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+.card{box-sizing:border-box;width:640px;height:640px;padding:28px 32px 20px;display:flex;flex-direction:column}
+h1{font-size:29px;line-height:1.15;font-weight:700;margin:0 0 7px;letter-spacing:-.015em}
+.sub{font-size:16px;line-height:1.38;color:var(--ink2);margin:0 0 16px}
+.tiles{display:flex;gap:10px;margin:0 0 16px}
+.tile{flex:1;border:1px solid var(--ring);border-radius:12px;padding:9px 13px 10px}
+.tv{font-size:31px;font-weight:650;line-height:1.1;letter-spacing:-.01em}
+.tl{font-size:15px;color:var(--ink2);line-height:1.25;margin-top:3px}
+.sec{font-size:17px;font-weight:600;margin:0 0 7px}
+.sec span{font-weight:400;color:var(--ink2)}
+.legend{display:flex;flex-wrap:wrap;gap:3px 16px;font-size:15px;color:var(--ink2);margin-top:8px}
+.legend b{font-weight:600;color:var(--ink)}
+.sw{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.seg{display:flex;gap:2px;height:28px}
+.seg>div{border-radius:4px;font-size:15px;font-weight:600;display:flex;align-items:center;padding-left:8px;
+box-sizing:border-box;white-space:nowrap;color:#fff}
+.block{margin-bottom:14px}
+.lrow{display:flex;align-items:center;height:24px}
+.ll{width:112px;font-size:16px}
+.lt{flex:1;display:flex;align-items:center}
+.lb{height:17px;background:var(--s1);border-radius:0 4px 4px 0}
+.lv{font-size:15px;color:var(--ink2);margin-left:8px;white-space:nowrap}
+.lv b{color:var(--ink);font-weight:600}
+svg{display:block;overflow:visible}
+svg text{font-family:inherit}
+.tick{font-size:14px;fill:var(--muted)}
+.ann{font-size:15px;fill:var(--ink2)}
+.bl{font-size:16px;font-weight:600;fill:var(--ink2)}
+.foot{margin-top:auto;font-size:13px;color:var(--muted)}
+</style></head><body><div class='card'><h1>Много точек для старта драфтинга</h1><p class='sub'>Каждый вызов модели — реальный вход с точно известным префиксом. Внутри хода можно стартовать после thinking и после tool call.</p><div class='tiles'><div class='tile'><div class='tv'>41 753</div><div class='tl'>стартов вызова — реальных входов модели</div></div><div class='tile'><div class='tv'>41 753</div><div class='tl'>концов thinking (он есть в каждом ходе)</div></div><div class='tile'><div class='tv'>46 449</div><div class='tl'>tool calls; в 4 201 ходах — параллельные</div></div></div><div class='sec'>Вызовы по длине контекста на входе <span>· столбик = 16K</span></div><svg width='576' height='214' viewBox='0 0 576 214'><line x1='34' x2='564' y1='186.0' y2='186.0' stroke='var(--grid)' stroke-width='1'/><text class='tick' x='27' y='186.0' dy='.35em' text-anchor='end'>0</text><line x1='34' x2='564' y1='127.3' y2='127.3' stroke='var(--grid)' stroke-width='1'/><text class='tick' x='27' y='127.3' dy='.35em' text-anchor='end'>2K</text><line x1='34' x2='564' y1='68.7' y2='68.7' stroke='var(--grid)' stroke-width='1'/><text class='tick' x='27' y='68.7' dy='.35em' text-anchor='end'>4K</text><line x1='34' x2='564' y1='10.0' y2='10.0' stroke='var(--grid)' stroke-width='1'/><text class='tick' x='27' y='10.0' dy='.35em' text-anchor='end'>6K</text><path d='M38.56,186.00V90.18Q38.56,86.18 42.56,86.18H58.56Q62.56,86.18 62.56,90.18V186.00Z' fill='var(--s1)'/><path d='M71.69,186.00V40.96Q71.69,36.96 75.69,36.96H91.69Q95.69,36.96 95.69,40.96V186.00Z' fill='var(--s1)'/><path d='M104.81,186.00V37.38Q104.81,33.38 108.81,33.38H124.81Q128.81,33.38 128.81,37.38V186.00Z' fill='var(--s1)'/><path d='M137.94,186.00V45.03Q137.94,41.03 141.94,41.03H157.94Q161.94,41.03 161.94,45.03V186.00Z' fill='var(--s1)'/><path d='M171.06,186.00V62.63Q171.06,58.63 175.06,58.63H191.06Q195.06,58.63 195.06,62.63V186.00Z' fill='var(--s1)'/><path d='M204.19,186.00V82.99Q204.19,78.99 208.19,78.99H224.19Q228.19,78.99 228.19,82.99V186.00Z' fill='var(--s1)'/><path d='M237.31,186.00V94.40Q237.31,90.40 241.31,90.40H257.31Q261.31,90.40 261.31,94.40V186.00Z' fill='var(--s1)'/><path d='M270.44,186.00V111.21Q270.44,107.21 274.44,107.21H290.44Q294.44,107.21 294.44,111.21V186.00Z' fill='var(--s1)'/><path d='M303.56,186.00V124.32Q303.56,120.32 307.56,120.32H323.56Q327.56,120.32 327.56,124.32V186.00Z' fill='var(--s1)'/><path d='M336.69,186.00V136.82Q336.69,132.82 340.69,132.82H356.69Q360.69,132.82 360.69,136.82V186.00Z' fill='var(--s1)'/><path d='M369.81,186.00V146.47Q369.81,142.47 373.81,142.47H389.81Q393.81,142.47 393.81,146.47V186.00Z' fill='var(--s1)'/><path d='M402.94,186.00V152.89Q402.94,148.89 406.94,148.89H422.94Q426.94,148.89 426.94,152.89V186.00Z' fill='var(--s1)'/><path d='M436.06,186.00V156.88Q436.06,152.88 440.06,152.88H456.06Q460.06,152.88 460.06,156.88V186.00Z' fill='var(--s1)'/><path d='M469.19,186.00V166.71Q469.19,162.71 473.19,162.71H489.19Q493.19,162.71 493.19,166.71V186.00Z' fill='var(--s1)'/><path d='M502.31,186.00V179.62Q502.31,175.62 506.31,175.62H522.31Q526.31,175.62 526.31,179.62V186.00Z' fill='var(--s1)'/><path d='M535.44,186.00V186.00Q535.44,182.74 538.69,182.74H556.18Q559.44,182.74 559.44,186.00V186.00Z' fill='var(--s1)'/><line x1='34' x2='564' y1='186.0' y2='186.0' stroke='var(--axis)' stroke-width='1'/><text class='tick' x='34.0' y='205' text-anchor='start'>0</text><text class='tick' x='166.5' y='205' text-anchor='middle'>64K</text><text class='tick' x='299.0' y='205' text-anchor='middle'>128K</text><text class='tick' x='431.5' y='205' text-anchor='middle'>192K</text><text class='tick' x='564.0' y='205' text-anchor='end'>256K</text><path d='M302.0,114.3V108.3H561.0V114.3' fill='none' stroke='var(--ink2)' stroke-width='1'/><text class='ann' x='431.5' y='100.3' text-anchor='middle'>≥128K: <tspan font-weight='600' fill='var(--ink)'>9 189</tspan> · ≥200K: <tspan font-weight='600' fill='var(--ink)'>2 131</tspan></text></svg><div class='block' style='margin-top:14px'><div class='sec'>Что генерирует модель <span>· 32.4M токенов</span></div><div class='seg'><div style='flex:21746191 1 0;background:var(--s1);color:#fff'>67%</div><div style='flex:9570985 1 0;background:var(--s2);color:#fff'>30%</div><div style='flex:1047510 1 0;background:var(--s3);color:#fff'></div></div><div class='legend'><span><i class='sw' style='background:var(--s1)'></i>thinking <b>21.7M</b></span><span><i class='sw' style='background:var(--s2)'></i>tool calls <b>9.6M</b></span><span><i class='sw' style='background:var(--s3)'></i>текст и разметка <b>1.0M</b> · 3%</span></div></div><div class='foot'>Open-SWE-Traces v1.2 · OpenHands · Qwen3.8-27B</div></div></body></html>
