@@ -24,22 +24,22 @@
   "tool_responses_without_call": 0,
   "seconds": 378,
   "outputs": {
-    "data/open-swe-traces/eagle4_oh500/trajectories.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/trajectories.parquet": {
       "rows": 500,
       "bytes": 59962031,
       "sha256": "5180c628db111e6aa6bb5811cb5fe6c146aa470b34492482b13dbe9c94cc8b66"
     },
-    "data/open-swe-traces/eagle4_oh500/calls.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/calls.parquet": {
       "rows": 41753,
       "bytes": 2033718,
       "sha256": "6256eaec3491cf05a170fc6ce3f78b53f16e7c9334e3e60853331cfd7ea29518"
     },
-    "data/open-swe-traces/eagle4_oh500/tool_responses.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/tool_responses.parquet": {
       "rows": 45949,
       "bytes": 1201437,
       "sha256": "a86c65c7cc6cb1b9a7ed0bc2383eed615c65ba31e607af61093969be4acfbe43"
     },
-    "data/open-swe-traces/eagle4_oh500/render_ids.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/render_ids.parquet": {
       "rows": 500,
       "bytes": 76910609,
       "sha256": "a49827d454f3b92d95290631227af9f9829c406a05ca59fe7323afa59ecb10d4"
@@ -49,7 +49,7 @@
     "data/open-swe-traces/audit/full/calls.csv.gz": "4b5b2ccfaab0a99da694f9c3101736b1c52b23219a1faa8274c00b25b168d3cb"
   },
   "script_sha256": {
-    "experiments/eagle4-oh500/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
+    "experiments/openhands-qwen3.8-27b-long-horizon/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
     "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
   }
 }

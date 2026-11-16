@@ -1,7 +1,10 @@
-# EAGLE-4 OH500: 500 полных траекторий OpenHands · Qwen3.8-27B
+# Сборка и проверка датасета openhands-qwen3.8-27b-long-horizon
 
-Подвыборка [`nvidia/Open-SWE-Traces`](https://huggingface.co/datasets/nvidia/Open-SWE-Traces) v1.2 (ревизия `4fa4c2ae9afc6b397bc50391d43450c79993c138`) для первого прогона EAGLE-4 на Qwen3.8-27B: 500 траекторий OpenHands, по 100 в каждой из 5 корзин длины контекста. Траектории полные, без нарезки; к ним приложена разметка токенов для выбора точек замера.
-Модели и GPU не запускались. Основа — аудит [`../open-swe-traces-audit/README.md`](../open-swe-traces-audit/README.md) (§2–§5.1).
+Здесь описано, как собран и проверен датасет. Краткое описание — в [`README.md`](README.md).
+
+Подвыборка [`nvidia/Open-SWE-Traces`](https://huggingface.co/datasets/nvidia/Open-SWE-Traces) v1.2 (ревизия `4fa4c2ae9afc6b397bc50391d43450c79993c138`): 500 траекторий OpenHands на Qwen3.8-27B, по 100 в каждой из 5 корзин длины контекста. Траектории полные, без нарезки; к ним приложена разметка токенов для выбора точек замера.
+
+Модели и GPU не запускались. Отбор опирается на предварительный аудит всего Open-SWE-Traces v1.2 ([`../open-swe-traces-audit/README.md`](../open-swe-traces-audit/README.md), §2–§5.1). Ниже «аудит» — это он.
 
 ## TL;DR
 
@@ -19,7 +22,7 @@
 - **Token ids генерации в датасете нет**: ни token ids, ни logprobs, ни usage. `ids` здесь — наш рендер.
   - Начала вызовов точны при допущениях аудита: сервер собирал запрос тем же шаблоном.
   - Внутри хода префикс — это рендер хода после разбора сервером, а токены — каноническое разбиение, не обязательно то, что сэмплировала модель (§6).
-- **Независимое ревью** (отдельный агент, свой рендерер) подтвердило выборку, все префиксы и всю разметку. Найденные неточности в документации и проверках исправлены (§5, §6).
+- **Независимая перепроверка** отдельным скриптом со своим рендерером подтвердила выборку, все префиксы и всю разметку. Найденные неточности в документации и проверках исправлены (§5, §6).
 - Подготовка шла на beleriand (72 процесса): export ~6 мин, verify ~6 мин. Модели не запускались.
 
 ## 1. Отбор
@@ -60,13 +63,13 @@
   - Один фиксированный system prompt: префикс system+tools — 3 938 токенов. Четыре инструмента: `execute_bash`, `str_replace_editor`, `think`, `finish`.
   - Harness не присылал сообщений об ошибках формата. Сама модель изредка ошибалась в вызовах (§6). Незавершённых прогонов и сжатия контекста нет.
   - Самые длинные контексты среди чистых конфигураций (median `L_max` 78K, p95 180K).
-- **`resolved = 1`** — выбор пользователя для первого прогона.
+- **`resolved = 1`.** В эту версию входят только успешные прогоны; нерешённые можно добавить отдельной подвыборкой.
 - **Корзины по длине** нужны, чтобы длинных контекстов было столько же, сколько коротких. В 200–256K всего 149 траекторий из 11 048, и в 500 случайных траекторий из всего пула их попало бы около 7.
 - **Траектории полные, без нарезки.** Точки замера (начало вызова, после ответа инструмента, после reasoning и т. д.) выбираются позже по разметке (§4).
 
 ## 3. Файлы
 
-Данные лежат в `data/open-swe-traces/eagle4_oh500/` (каталог исключён из Git). Копия на beleriand: `~/specdec-open-swe/data/open-swe-traces/eagle4_oh500/`.
+Данные лежат в `data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/` (каталог исключён из Git). Копия на beleriand: `~/specdec-open-swe/data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/`.
 
 | Файл | Строк | Размер | Что внутри |
 |---|---|---|---|
@@ -114,7 +117,7 @@ sha256 файлов записаны в `manifest.json` → `outputs`.
 
 ## 4. Рендер и разметка
 
-Рендер тот же, что в аудите:
+Рендер:
 
 - `Qwen/Qwen3.8-27B@1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`: `chat_template.jinja` и `tokenizer.json`, sha256 в `manifest.json`;
 - `apply_chat_template(messages, tools=tools, reasoning_effort="xhigh", enable_thinking=True, preserve_thinking=True)`, затем `tokenizer(text, add_special_tokens=False)`;
@@ -153,7 +156,7 @@ sha256 файлов записаны в `manifest.json` → `outputs`.
 
 ```python
 import pyarrow.parquet as pq
-D = "data/open-swe-traces/eagle4_oh500"
+D = "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon"
 GEN_IDS = [248045, 74455, 198, 248068, 198]
 tid = pq.read_table(f"{D}/trajectories.parquet", columns=["trajectory_id"]).column(0)[0].as_py()
 ids = pq.read_table(f"{D}/render_ids.parquet", filters=[("trajectory_id", "=", tid)]).column("input_ids")[0].as_py()
@@ -171,7 +174,9 @@ reference = ids[c.input_len:c.turn_end + 1]        # канонические т
 - `export_checks.json` — проверки при экспорте. Если хоть одна не прошла, export падает и ничего не пишет.
 - `verify.json` — отдельный проход по готовым файлам. Он не читает флаги, которые записал export, а заново рендерит всё из `messages` свежим токенайзером. Без `--shards` и `--audit-calls` verify не запускается.
 
-Данные собраны той версией `build.py`, что лежит в Git: её sha256 записан при экспорте (`export_checks.json` → `script_sha256`, `manifest.json` → `scripts_sha256_export`). После правок по ревью экспорт перезапущен, и файлы данных побайтно не изменились.
+Данные собраны версией `build.py` из коммита `aecfb4f`. Её sha256 записан при экспорте: `export_checks.json` → `script_sha256`, `manifest.json` → `scripts_sha256_export`. После правок по ревью экспорт перезапускался, и файлы данных побайтно не изменились.
+
+Позже каталоги переименованы из `eagle4-oh500` / `eagle4_oh500` в `openhands-qwen3.8-27b-long-horizon`, а в `build.py` поправлены только тексты и имена. Файлы данных те же, sha256 не изменились.
 
 | Проверка | Где | Результат |
 |---|---|---|
@@ -190,14 +195,14 @@ reference = ids[c.input_len:c.turn_end + 1]        # канонические т
 | по траекториям совпадают с аудитом: число вызовов, длина рендера, сумма входов по сессии, max выхода, префикс system+tools (3 938), индекс вызова с `L_max`, число tool-сообщений | export | ✅ 500/500 по каждой |
 | последний вызов — `finish`, последний ход заканчивается в конце рендера | export + verify | ✅ 500/500 |
 
-**Независимое ревью.** Отдельный агент написал свой рендерер, повторяющий цикл шаблона, и ничего не брал из `build.py`. Совпало:
+**Независимая перепроверка.** Отдельный скрипт со своим рендерером, повторяющим цикл шаблона, ничего не брал из `build.py`. Совпало:
 - выборка: воронка, пулы, id, ранги;
 - рендер посимвольно: 500/500;
 - все 41 753 префикса и вся разметка: 41 753 вызова и 45 949 ответов;
 - все колонки `audit_*`;
 - все хеши.
 
-Его замечания касались формулировок и силы проверок. Они учтены: усилен verify, хеш скрипта пишется при экспорте, оговорки в §4 и §6 переписаны.
+Замечания по итогам перепроверки касались формулировок и силы проверок. Они учтены: усилен verify, хеш скрипта пишется при экспорте, оговорки в §4 и §6 переписаны.
 
 ## 6. Оговорки
 
@@ -233,22 +238,23 @@ reference = ids[c.input_len:c.turn_end + 1]        # канонические т
 
 ```bash
 cd ~/specdec-open-swe
-D=$PWD/data/open-swe-traces; E=$PWD/eagle4-oh500/repo/experiments/eagle4-oh500   # копия experiments/ из репозитория
+D=$PWD/data/open-swe-traces
+E=<клон репозитория>/experiments/openhands-qwen3.8-27b-long-horizon   # рядом нужен ../open-swe-traces-audit/audit.py
+O=$D/openhands-qwen3.8-27b-long-horizon
 PY=(.venv/bin/python -I)
 $PY $E/build.py select --trajectories $D/audit/final/trajectories.csv --termination $D/audit/final/termination.csv
 $PY $E/build.py export --shards $D/shards --tok $D/tokenizer/qwen3.8-27b@1d4bf0f2ff \
-    --audit-calls $D/audit/full/calls.csv.gz --out $D/eagle4_oh500 --workers 72          # ~6 мин на 72 ядрах
+    --audit-calls $D/audit/full/calls.csv.gz --out $O --workers 72                     # ~6 мин на 72 ядрах
 $PY $E/build.py verify --trajectories $D/audit/final/trajectories.csv --termination $D/audit/final/termination.csv \
     --audit-calls $D/audit/full/calls.csv.gz --shards $D/shards --tok $D/tokenizer/qwen3.8-27b@1d4bf0f2ff \
-    --out $D/eagle4_oh500 --workers 72                                                  # ~6 мин на 72 ядрах
-$PY $E/build.py report --tok $D/tokenizer/qwen3.8-27b@1d4bf0f2ff --out $D/eagle4_oh500
+    --out $O --workers 72                                                              # ~6 мин на 72 ядрах
+$PY $E/build.py report --tok $D/tokenizer/qwen3.8-27b@1d4bf0f2ff --out $O
 ```
 
-Обратно на Mac:
+Данные на Mac:
 
 ```bash
-rsync -av beleriand:specdec-open-swe/data/open-swe-traces/eagle4_oh500/ data/open-swe-traces/eagle4_oh500/
-rsync -av beleriand:specdec-open-swe/eagle4-oh500/repo/experiments/eagle4-oh500/ experiments/eagle4-oh500/
+rsync -av beleriand:specdec-open-swe/data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/ data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/
 ```
 
 Локально всё тоже работает (`.venv-mac`, те же версии пакетов), но нужны все 12 shards OpenHands (3.54 GB).
@@ -261,5 +267,5 @@ rsync -av beleriand:specdec-open-swe/eagle4-oh500/repo/experiments/eagle4-oh500/
 - `export_checks.json`, `verify.json` — результаты проверок.
 - `manifest.json` — ревизии датасета и токенайзера, sha256 токенайзера, параметры рендера, фильтры, корзины, seed, размеры пулов и выборки, обоснование, оговорки, sha256 скриптов, входов и выходов, версии пакетов.
 - `distributions.md`, `distributions.json` — распределения выборки: корзины, источники, языки, категории, репозитории, длины.
-- `DATASET_CARD.md` — короткое описание датасета для пользователей.
+- `README.md` — краткое описание датасета; этот файл (`BUILD.md`) — сборка и проверки.
 - `figures/` — три квадратных PNG (длины, состав, точки замера) и их генератор `make_figures.py`.

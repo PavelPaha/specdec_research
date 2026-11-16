@@ -1,6 +1,7 @@
-"""Square, phone-readable figures of the EAGLE-4 OH500 dataset: HTML (inline SVG) -> PNG 1280x1280 via headless Chrome.
+"""Square, phone-readable figures of the openhands-qwen3.8-27b-long-horizon dataset: HTML (inline SVG) -> PNG 1280x1280
+via headless Chrome.
 
-usage: python -I make_figures.py <data_dir: …/data/open-swe-traces/eagle4_oh500> <out_dir> [--chrome PATH]
+usage: python -I make_figures.py <data_dir: …/data/open-swe-traces/openhands-qwen3.8-27b-long-horizon> <out_dir> [--chrome PATH]
 
   1_lengths.png      distribution of trace lengths (L_max) with the 5 strata of 100
   2_composition.png  what the 500 tasks are: repos, languages, task types, task sources

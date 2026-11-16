@@ -1,8 +1,8 @@
-# OH500: 500 трейсов агента OpenHands на Qwen3.8-27B
+# OpenHands · Qwen3.8-27B · long horizon: 500 трейсов
 
-Датасет для замеров speculative decoding на Qwen3.8-27B в длинном агентном контексте. Это 500 трейсов из [`nvidia/Open-SWE-Traces`](https://huggingface.co/datasets/nvidia/Open-SWE-Traces) v1.2 — датасета NVIDIA, где агенты на Qwen3.8-27B решают реальные задачи из GitHub.
+Датасет для экспериментов с Qwen3.8-27B в длинном агентном контексте, например для замеров speculative decoding. Это 500 трейсов из [`nvidia/Open-SWE-Traces`](https://huggingface.co/datasets/nvidia/Open-SWE-Traces) v1.2 — датасета NVIDIA, где агенты на Qwen3.8-27B решают реальные задачи из GitHub.
 
-Для каждого запроса к модели в трейсе можно восстановить его точный вход в токенах. Значит, можно подать модели ровно тот контекст, который она видела, и мерить, как драфтер угадывает её продолжение.
+Для каждого запроса к модели в трейсе можно восстановить его точный вход в токенах. Значит, модели можно подать ровно тот контекст, который она видела, и смотреть, что она генерирует дальше.
 
 **Термины**
 - **Трейс** — полная запись работы агента над одной задачей: все запросы к модели, её ответы и выводы инструментов.
@@ -12,8 +12,8 @@
 - **`L_max`** — самый длинный вход одного вызова в трейсе, в токенах.
 
 **Где лежит**
-- Код: репозиторий `PavelPaha/specdec_research`, ветка `qwen3.8-27b-long-horizon-traces`, каталог `experiments/eagle4-oh500/`. Там `build.py` собирает датасет, а `README.md` описывает сборку и проверки.
-- Данные в Git не входят. Готовая копия лежит на beleriand: `/home/batuevni/specdec-open-swe/data/open-swe-traces/eagle4_oh500/`.
+- Код: репозиторий `PavelPaha/specdec_research`, ветка `qwen3.8-27b-long-horizon-traces`, каталог `experiments/openhands-qwen3.8-27b-long-horizon/`. Там `build.py` собирает датасет, а `BUILD.md` описывает сборку и проверки.
+- Данные в Git не входят. Готовая копия лежит на beleriand: `/home/batuevni/specdec-open-swe/data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/`.
 
 ## Состав
 
@@ -36,11 +36,11 @@
 
 ## Файлы
 
-`data/open-swe-traces/eagle4_oh500/`: Parquet (zstd), 140 MB. Все позиции в разметке — номера токенов в рендере трейса (`render_ids.parquet`).
+`data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/`: Parquet (zstd), 140 MB. Все позиции в разметке — номера токенов в рендере трейса (`render_ids.parquet`).
 
 - `trajectories.parquet` (500 строк):
   - исходные колонки без изменений: `instance_id`, `repo`, `license`, `language`, `trajectory_id`, `messages`, `tools`, `resolved`, `metadata`, `hf_dataset_name`;
-  - добавленные: `src_*` (откуда взят трейс), `bin`, `L_max`, `rank_in_bin`, `seed`, `render_*` (параметры и итоги рендера), `audit_*` (метрики аудита).
+  - добавленные: `src_*` (откуда взят трейс), `bin`, `L_max`, `rank_in_bin`, `seed`, `render_*` (параметры и итоги рендера), `audit_*` (посчитанные метрики трейса: длины, число вызовов, размеры выводов и т. п.).
 - `calls.parquet` (строка на вызов):
   - `call_start` — начало вызова (`<|im_start|>`);
   - `think_end` — конец рассуждения (`</think>`);
@@ -120,4 +120,4 @@ tool_responses.parquet     a86c65c7cc6cb1b9a7ed0bc2383eed615c65ba31e607af6109396
 render_ids.parquet         a49827d454f3b92d95290631227af9f9829c406a05ca59fe7323afa59ecb10d4
 ```
 
-Подробности сборки, полная схема и все хеши — в `README.md` и `manifest.json`.
+Подробности сборки, полная схема и все хеши — в `BUILD.md` и `manifest.json`.

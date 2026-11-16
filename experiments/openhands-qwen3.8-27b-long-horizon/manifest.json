@@ -1,7 +1,7 @@
 {
-  "name": "eagle4_oh500",
-  "created_utc": "2026-11-16T12:10:10+00:00",
-  "purpose": "Full Qwen3.8-27B OpenHands trajectories whose per-call inputs can be rebuilt from the data, for measuring speculative decoding (EAGLE-4) on Qwen3.8-27B. No models were run.",
+  "name": "openhands-qwen3.8-27b-long-horizon",
+  "created_utc": "2026-11-16T12:23:10+00:00",
+  "purpose": "Full Qwen3.8-27B OpenHands trajectories with long contexts whose per-call inputs can be rebuilt from the data, for experiments on Qwen3.8-27B such as speculative decoding. No models were run.",
   "dataset": {
     "repo": "nvidia/Open-SWE-Traces",
     "config": "v1.2",
@@ -103,7 +103,7 @@
       "128K-200K": 100,
       "200K-256K": 100
     },
-    "pool_matches_audit_handoff": true,
+    "pool_matches_audit": true,
     "inputs_sha256": {
       "data/open-swe-traces/audit/final/trajectories.csv": "ec63b4e9d1eb76656a1f7580c9cf80b775f86189b8b33600625c8f6e19137333",
       "data/open-swe-traces/audit/final/termination.csv": "2569d0d0a794ed96565274437d64c978c30ae5927f442cc51d3c4fdf81191c5d"
@@ -113,7 +113,7 @@
     "OpenHands is the cleanest configuration of the audit: with past reasoning in the context its L_max distribution stops exactly at the 262,144-token window and no trajectory exceeds it (both sources), so the template render with preserved reasoning is what the model saw",
     "one fixed system prompt (system+tools prefix = 3,938 tokens) and 4 tools (execute_bash, str_replace_editor, think, finish); no format-error messages from the harness (model-side malformed calls exist, see caveats); no incomplete runs; no compaction",
     "longest contexts among the clean configurations",
-    "resolved == 1: the user's choice for the first run",
+    "resolved == 1: only successful runs in this version; unresolved runs can be added as a separate subset",
     "stratified by L_max so that long contexts are as well represented as short ones: 200-256K holds only 149 of the 11,048 pool trajectories, so 500 drawn at random from the whole pool would include ~7 of them",
     "full trajectories, no pre-cutting: test points (call start, after a tool response, after reasoning, ...) are chosen later from the markup",
     "no per-repo cap: natural repository distribution; repo is kept for repository-clustered CIs"
@@ -133,22 +133,22 @@
     "lengths cannot be checked against the server (no usage); they are template renders"
   ],
   "outputs": {
-    "data/open-swe-traces/eagle4_oh500/trajectories.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/trajectories.parquet": {
       "rows": 500,
       "bytes": 59962031,
       "sha256": "5180c628db111e6aa6bb5811cb5fe6c146aa470b34492482b13dbe9c94cc8b66"
     },
-    "data/open-swe-traces/eagle4_oh500/calls.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/calls.parquet": {
       "rows": 41753,
       "bytes": 2033718,
       "sha256": "6256eaec3491cf05a170fc6ce3f78b53f16e7c9334e3e60853331cfd7ea29518"
     },
-    "data/open-swe-traces/eagle4_oh500/tool_responses.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/tool_responses.parquet": {
       "rows": 45949,
       "bytes": 1201437,
       "sha256": "a86c65c7cc6cb1b9a7ed0bc2383eed615c65ba31e607af61093969be4acfbe43"
     },
-    "data/open-swe-traces/eagle4_oh500/render_ids.parquet": {
+    "data/open-swe-traces/openhands-qwen3.8-27b-long-horizon/render_ids.parquet": {
       "rows": 500,
       "bytes": 76910609,
       "sha256": "a49827d454f3b92d95290631227af9f9829c406a05ca59fe7323afa59ecb10d4"
@@ -184,15 +184,15 @@
     }
   },
   "scripts_sha256_export": {
-    "experiments/eagle4-oh500/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
+    "experiments/openhands-qwen3.8-27b-long-horizon/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
     "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
   },
   "scripts_sha256_report": {
-    "experiments/eagle4-oh500/build.py": "1861a9c19442958914cf09c04d58b584d5efb64330f77e31e3e44368e8ab530e",
+    "experiments/openhands-qwen3.8-27b-long-horizon/build.py": "99fcb1463b05c6387248b53f72c46c9b0b512478236e805de6a02e9719da2deb",
     "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
   },
   "software": {
-    "python": "3.12.3",
+    "python": "3.12.13",
     "transformers": "5.23.0",
     "tokenizers": "0.23.3",
     "pyarrow": "26.0.1",
@@ -201,8 +201,8 @@
     "jinja2": "3.1.6"
   },
   "host": {
-    "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
-    "cpus": 80
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "cpus": 8
   },
   "verify": {
     "rows": 500,
