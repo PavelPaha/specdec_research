@@ -1,0 +1,51 @@
+{
+  "n_trajectories": 500,
+  "n_calls": 41753,
+  "n_tool_responses": 45949,
+  "audit_calls_rows_matched": 41753,
+  "calls_input_len_eq_audit": 41753,
+  "calls_output_len_eq_audit": 41753,
+  "calls_msg_index_eq_audit": 41753,
+  "calls_prefix_str_eq": 41753,
+  "calls_prefix_ids_eq_hist_gen": 41753,
+  "calls_prefix_ids_eq_slice": 41753,
+  "calls_slice_mismatch_with_empty_reasoning": 0,
+  "calls_reasoning_empty": 0,
+  "traj_L_max_eq_selection": 500,
+  "traj_n_calls_eq_audit": 500,
+  "traj_n_tokens_eq_audit": 500,
+  "traj_session_sum_eq_audit": 500,
+  "traj_output_max_eq_audit": 500,
+  "traj_prefix_system_tools_eq_audit": 500,
+  "traj_L_max_call_eq_audit": 500,
+  "traj_n_tool_msgs_eq_audit": 500,
+  "traj_binding_mismatch_turns": 0,
+  "traj_last_tool_finish": 500,
+  "tool_responses_without_call": 0,
+  "seconds": 348,
+  "outputs": {
+    "data/open-swe-traces/eagle4_oh500/trajectories.parquet": {
+      "rows": 500,
+      "bytes": 59962031,
+      "sha256": "5180c628db111e6aa6bb5811cb5fe6c146aa470b34492482b13dbe9c94cc8b66"
+    },
+    "data/open-swe-traces/eagle4_oh500/calls.parquet": {
+      "rows": 41753,
+      "bytes": 2033718,
+      "sha256": "6256eaec3491cf05a170fc6ce3f78b53f16e7c9334e3e60853331cfd7ea29518"
+    },
+    "data/open-swe-traces/eagle4_oh500/tool_responses.parquet": {
+      "rows": 45949,
+      "bytes": 1201437,
+      "sha256": "a86c65c7cc6cb1b9a7ed0bc2383eed615c65ba31e607af61093969be4acfbe43"
+    },
+    "data/open-swe-traces/eagle4_oh500/render_ids.parquet": {
+      "rows": 500,
+      "bytes": 76910609,
+      "sha256": "a49827d454f3b92d95290631227af9f9829c406a05ca59fe7323afa59ecb10d4"
+    }
+  },
+  "audit_calls_file": {
+    "data/open-swe-traces/audit/full/calls.csv.gz": "4b5b2ccfaab0a99da694f9c3101736b1c52b23219a1faa8274c00b25b168d3cb"
+  }
+}

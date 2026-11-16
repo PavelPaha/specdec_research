@@ -1,0 +1,210 @@
+{
+  "by_bin": [
+    {
+      "bin": "32K-64K",
+      "pool": 5087,
+      "sample": 100,
+      "sampling_fraction": 0.0197,
+      "scale_swe": 64,
+      "swe_rebench_v2": 36,
+      "L_max_min": 33216,
+      "L_max_median": 51887,
+      "L_max_max": 65483,
+      "calls_median": 38,
+      "calls_max": 63,
+      "calls_total": 3984,
+      "input_len_median": 31546,
+      "output_max_median": 3002,
+      "repos": 91,
+      "languages": 6
+    },
+    {
+      "bin": "64K-100K",
+      "pool": 3467,
+      "sample": 100,
+      "sampling_fraction": 0.0288,
+      "scale_swe": 55,
+      "swe_rebench_v2": 45,
+      "L_max_min": 65588,
+      "L_max_median": 79919,
+      "L_max_max": 99699,
+      "calls_median": 56,
+      "calls_max": 102,
+      "calls_total": 5617,
+      "input_len_median": 49048,
+      "output_max_median": 4923,
+      "repos": 90,
+      "languages": 6
+    },
+    {
+      "bin": "100K-128K",
+      "pool": 1428,
+      "sample": 100,
+      "sampling_fraction": 0.07,
+      "scale_swe": 63,
+      "swe_rebench_v2": 37,
+      "L_max_min": 100283,
+      "L_max_median": 113177,
+      "L_max_max": 130924,
+      "calls_median": 75,
+      "calls_max": 128,
+      "calls_total": 7667,
+      "input_len_median": 68454,
+      "output_max_median": 5634,
+      "repos": 91,
+      "languages": 5
+    },
+    {
+      "bin": "128K-200K",
+      "pool": 917,
+      "sample": 100,
+      "sampling_fraction": 0.1091,
+      "scale_swe": 50,
+      "swe_rebench_v2": 50,
+      "L_max_min": 131463,
+      "L_max_median": 148723,
+      "L_max_max": 196301,
+      "calls_median": 100,
+      "calls_max": 174,
+      "calls_total": 10208,
+      "input_len_median": 92195,
+      "output_max_median": 6766,
+      "repos": 90,
+      "languages": 7
+    },
+    {
+      "bin": "200K-256K",
+      "pool": 149,
+      "sample": 100,
+      "sampling_fraction": 0.6711,
+      "scale_swe": 50,
+      "swe_rebench_v2": 50,
+      "L_max_min": 200082,
+      "L_max_median": 224654,
+      "L_max_max": 258139,
+      "calls_median": 140,
+      "calls_max": 225,
+      "calls_total": 14277,
+      "input_len_median": 130245,
+      "output_max_median": 9038,
+      "repos": 78,
+      "languages": 9
+    }
+  ],
+  "sources": {
+    "scale-swe": 282,
+    "swe-rebench-v2": 218
+  },
+  "languages": {
+    "python": 348,
+    "ts": 59,
+    "go": 43,
+    "js": 25,
+    "php": 13,
+    "java": 5,
+    "rust": 5,
+    "c": 1,
+    "cpp": 1
+  },
+  "categories": {
+    "bug-fix": 277,
+    "feature-request": 139,
+    "enhancement": 58,
+    "other": 26
+  },
+  "repos": {
+    "n_unique": 348,
+    "max_per_repo": 11,
+    "n_repos_with_1": 267,
+    "top20": {
+      "fonttools/fonttools": 11,
+      "app-sre/qontract-reconcile": 8,
+      "python-poetry/poetry-core": 7,
+      "pandas-dev/pandas": 7,
+      "k2-fsa/sherpa-onnx": 6,
+      "PennyLaneAI/pennylane": 6,
+      "canonical/operator": 5,
+      "google/flatbuffers": 5,
+      "microsoft/lsprotocol": 5,
+      "omni-us/jsonargparse": 5,
+      "mongodb/mongo-python-driver": 4,
+      "getmoto/moto": 4,
+      "projectmesa/mesa": 4,
+      "more-itertools/more-itertools": 4,
+      "bqplot/bqplot": 4,
+      "yt-project/unyt": 4,
+      "facelessuser/coloraide": 4,
+      "FHIR/sushi": 4,
+      "onnx/tensorflow-onnx": 4,
+      "bids-standard/pybids": 3
+    },
+    "share_top10": 0.13
+  },
+  "instances_unique": 500,
+  "quantiles": {
+    "L_max": {
+      "0": 33216.0,
+      "0.1": 51935.8,
+      "0.25": 71881.75,
+      "0.5": 113177.5,
+      "0.75": 166247.25,
+      "0.9": 224642.0,
+      "1": 258139.0
+    },
+    "n_llm_calls": {
+      "0": 18.0,
+      "0.1": 37.0,
+      "0.25": 51.0,
+      "0.5": 73.0,
+      "0.75": 108.0,
+      "0.9": 149.10000000000002,
+      "1": 225.0
+    },
+    "output_tokens_max": {
+      "0": 1255.0,
+      "0.1": 2571.9,
+      "0.25": 3635.0,
+      "0.5": 5562.5,
+      "0.75": 8567.0,
+      "0.9": 13629.000000000002,
+      "1": 54693.0
+    },
+    "tool_output_tokens_max": {
+      "0": 1142.0,
+      "0.1": 2540.7000000000003,
+      "0.25": 3784.75,
+      "0.5": 5837.0,
+      "0.75": 7173.25,
+      "0.9": 9223.7,
+      "1": 28051.0
+    },
+    "session_prompt_tokens_sum": {
+      "0": 440240.0,
+      "0.1": 1180952.1,
+      "0.25": 2159964.25,
+      "0.5": 4874858.5,
+      "0.75": 10056962.75,
+      "0.9": 17241563.000000004,
+      "1": 30526522.0
+    },
+    "call_input_len (all calls)": {
+      "0": 4542.0,
+      "0.1": 19044.2,
+      "0.25": 38724.0,
+      "0.5": 73994.0,
+      "0.75": 123103.0,
+      "0.9": 174383.40000000002,
+      "1": 258139.0
+    },
+    "call_output_len (all calls)": {
+      "0": 42.0,
+      "0.1": 99.0,
+      "0.25": 150.0,
+      "0.5": 322.0,
+      "0.75": 836.0,
+      "0.9": 1828.800000000003,
+      "1": 54693.0
+    }
+  },
+  "calls_total": 41753
+}

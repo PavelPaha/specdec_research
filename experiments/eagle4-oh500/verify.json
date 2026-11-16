@@ -1,0 +1,33 @@
+{
+  "rows": 500,
+  "unique_trajectory_id": 500,
+  "per_bin": {
+    "32K-64K": 100,
+    "64K-100K": 100,
+    "100K-128K": 100,
+    "128K-200K": 100,
+    "200K-256K": 100
+  },
+  "all_resolved_1": true,
+  "all_finish_kind_finish": true,
+  "all_config_openhands": true,
+  "all_L_max_in_bin": true,
+  "all_L_max_eq_render": true,
+  "all_teacher_xhigh_thinking": true,
+  "original_columns_first": true,
+  "original_rows_identical_to_shards": 500,
+  "reselect_same_seed_identical": true,
+  "calls": {
+    "n": 41753,
+    "input_len_eq_audit": 41753,
+    "prefix_str_eq": 41753,
+    "prefix_ids_eq_hist_gen": 41753,
+    "prefix_ids_eq_slice": 41753,
+    "n_calls_eq_audit": true,
+    "L_max_eq": true
+  },
+  "rerender_trajectories_ok": 500,
+  "rerender_failures": {},
+  "seconds": 40,
+  "ALL_OK": true
+}

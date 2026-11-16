@@ -1,0 +1,65 @@
+{
+  "funnel": {
+    "all_v1.2": 235391,
+    "config==openhands": 25599,
+    "+resolved==1": 11933,
+    "+finish_kind==finish": 11933,
+    "+L_max in [32768,262144)": 11048
+  },
+  "openhands_finish_kind": {
+    "finish": 25599
+  },
+  "openhands_resolved": {
+    "0": 13666,
+    "1": 11933
+  },
+  "pool_per_bin": {
+    "32K-64K": 5087,
+    "64K-100K": 3467,
+    "100K-128K": 1428,
+    "128K-200K": 917,
+    "200K-256K": 149
+  },
+  "pool_per_bin_source": {
+    "32K-64K": {
+      "scale-swe": 3438,
+      "swe-rebench-v2": 1649
+    },
+    "64K-100K": {
+      "scale-swe": 1906,
+      "swe-rebench-v2": 1561
+    },
+    "100K-128K": {
+      "scale-swe": 726,
+      "swe-rebench-v2": 702
+    },
+    "128K-200K": {
+      "scale-swe": 493,
+      "swe-rebench-v2": 424
+    },
+    "200K-256K": {
+      "scale-swe": 79,
+      "swe-rebench-v2": 70
+    }
+  },
+  "sample_per_bin": {
+    "32K-64K": 100,
+    "64K-100K": 100,
+    "100K-128K": 100,
+    "128K-200K": 100,
+    "200K-256K": 100
+  },
+  "expected_pool_per_bin": {
+    "32K-64K": 5087,
+    "64K-100K": 3467,
+    "100K-128K": 1428,
+    "128K-200K": 917,
+    "200K-256K": 149
+  },
+  "pool_matches_expected": true,
+  "inputs": {
+    "data/open-swe-traces/audit/final/trajectories.csv": "ec63b4e9d1eb76656a1f7580c9cf80b775f86189b8b33600625c8f6e19137333",
+    "data/open-swe-traces/audit/final/termination.csv": "2569d0d0a794ed96565274437d64c978c30ae5927f442cc51d3c4fdf81191c5d"
+  },
+  "seed": 20261116
+}

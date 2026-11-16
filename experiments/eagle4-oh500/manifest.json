@@ -1,0 +1,233 @@
+{
+  "name": "eagle4_oh500",
+  "created_utc": "2026-11-16T11:11:08+00:00",
+  "purpose": "Full Qwen3.8-27B OpenHands trajectories whose per-call inputs can be rebuilt from the data, for measuring speculative decoding (EAGLE-4) on Qwen3.8-27B. No models were run.",
+  "dataset": {
+    "repo": "nvidia/Open-SWE-Traces",
+    "config": "v1.2",
+    "revision": "4fa4c2ae9afc6b397bc50391d43450c79993c138",
+    "files": "data/openhands/qwen38_27b/{scale-swe,swe-rebench-v2}/train-*.parquet (12 files)"
+  },
+  "tokenizer": {
+    "repo": "Qwen/Qwen3.8-27B",
+    "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+    "sha256": {
+      "chat_template.jinja": "c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041",
+      "tokenizer.json": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+      "tokenizer_config.json": "b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27",
+      "config.json": "191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab",
+      "generation_config.json": "e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e"
+    },
+    "note": "revision in effect when the trajectories were generated (Aug-Sep 2026); the next template change (2026-11-07, 37561816e6) only adds {% generation %} tags"
+  },
+  "render": {
+    "chat_template": "tokenizer chat_template.jinja",
+    "reasoning_effort": "xhigh",
+    "enable_thinking": true,
+    "preserve_thinking": true,
+    "context_mode": "preserve",
+    "add_generation_prompt_for_call_inputs": true,
+    "tools": "OpenAI format ({type: function, function: {...}}), as stored for OpenHands",
+    "tool_call_arguments": "JSON strings parsed into dicts before rendering (as vLLM does)",
+    "generation_prompt": "<|im_start|>assistant\n<think>\n",
+    "add_special_tokens": false
+  },
+  "selection": {
+    "filters": {
+      "config": "openhands",
+      "resolved": 1,
+      "finish_kind": "finish",
+      "L_max_best_estimate": "[32768, 262144)"
+    },
+    "L_max_definition": "max over calls of input tokens of one call (render of messages[:j] + generation prompt); for OpenHands L_max_best_estimate == L_max_visible_template",
+    "bins": [
+      32768,
+      65536,
+      100000,
+      131072,
+      200000,
+      262144
+    ],
+    "bin_labels": [
+      "32K-64K",
+      "64K-100K",
+      "100K-128K",
+      "128K-200K",
+      "200K-256K"
+    ],
+    "n_per_bin": 100,
+    "seed": 20261116,
+    "method": "inside each bin rank by sha256(f'{seed}:{trajectory_id}') ascending, take ranks 0..99 (seeded uniform sampling without replacement; top-k of a bin is a uniform subsample)",
+    "per_repo_cap": null,
+    "per_task": "one trajectory per task in OpenHands, so automatically one per task",
+    "funnel": {
+      "all_v1.2": 235391,
+      "config==openhands": 25599,
+      "+resolved==1": 11933,
+      "+finish_kind==finish": 11933,
+      "+L_max in [32768,262144)": 11048
+    },
+    "pool_per_bin": {
+      "32K-64K": 5087,
+      "64K-100K": 3467,
+      "100K-128K": 1428,
+      "128K-200K": 917,
+      "200K-256K": 149
+    },
+    "pool_per_bin_source": {
+      "32K-64K": {
+        "scale-swe": 3438,
+        "swe-rebench-v2": 1649
+      },
+      "64K-100K": {
+        "scale-swe": 1906,
+        "swe-rebench-v2": 1561
+      },
+      "100K-128K": {
+        "scale-swe": 726,
+        "swe-rebench-v2": 702
+      },
+      "128K-200K": {
+        "scale-swe": 493,
+        "swe-rebench-v2": 424
+      },
+      "200K-256K": {
+        "scale-swe": 79,
+        "swe-rebench-v2": 70
+      }
+    },
+    "sample_per_bin": {
+      "32K-64K": 100,
+      "64K-100K": 100,
+      "100K-128K": 100,
+      "128K-200K": 100,
+      "200K-256K": 100
+    },
+    "pool_matches_audit_handoff": true,
+    "inputs_sha256": {
+      "data/open-swe-traces/audit/final/trajectories.csv": "ec63b4e9d1eb76656a1f7580c9cf80b775f86189b8b33600625c8f6e19137333",
+      "data/open-swe-traces/audit/final/termination.csv": "2569d0d0a794ed96565274437d64c978c30ae5927f442cc51d3c4fdf81191c5d"
+    }
+  },
+  "rationale": [
+    "OpenHands is the cleanest configuration of the audit: with past reasoning in the context its L_max distribution stops exactly at the 262,144-token window and no trajectory exceeds it (both sources), so the template render with preserved reasoning is what the model saw",
+    "one fixed system prompt (system+tools prefix = 3,938 tokens) and 4 tools (execute_bash, str_replace_editor, think, finish); no format-error turns; no incomplete runs; no compaction",
+    "longest contexts among the clean configurations",
+    "resolved == 1: the user's choice for the first run",
+    "stratified by L_max: uniform sampling would give only ~7 trajectories in 200-256K",
+    "full trajectories, no pre-cutting: test points (call start, after a tool response, after reasoning, ...) are chosen later from the markup",
+    "no per-repo cap: natural repository distribution; repo is kept for repository-clustered CIs"
+  ],
+  "caveats": [
+    "no sampling parameters, max_tokens or per-call usage in the data; generation_config: T=1.0, top_k=20, top_p=0.95; whether OpenHands runs were greedy is unknown",
+    "OpenHands version v0.53.0 per the dataset author for v1.0, unconfirmed for v1.2",
+    "tool responses are bound to calls by position (tool messages have no tool_call_id)",
+    "failed responses (no tool call) were removed during dataset conversion in mini-SWE-agent; OpenHands shows no trace of this, but it cannot be ruled out",
+    "no generated token ids, logprobs or usage in the dataset (checked: one schema across all 100 v1.2 shards, no such files in the repo tree, not mentioned in the card); tool_calls[].id is a vLLM call id, not token ids; render_ids.parquet holds our render of the text",
+    "call starts are exact despite that: the harness sends the history as text and the server re-tokenizes it deterministically (canonically), so the model saw exactly ids[:call_start] + GEN_IDS",
+    "points inside a turn (after </think>, before/after <tool_call>) are canonicalized: during the rollout the KV cache held the sampled ids, which may be a non-canonical split of the same text; the text and the special-token boundaries are exact, the ids of the current turn's reasoning/arguments may differ and cannot be recovered",
+    "only call starts are real model inputs; points inside a turn are continuations of generated text",
+    "lengths cannot be checked against the server (no usage); they are template renders"
+  ],
+  "outputs": {
+    "data/open-swe-traces/eagle4_oh500/trajectories.parquet": {
+      "rows": 500,
+      "bytes": 59962031,
+      "sha256": "5180c628db111e6aa6bb5811cb5fe6c146aa470b34492482b13dbe9c94cc8b66"
+    },
+    "data/open-swe-traces/eagle4_oh500/calls.parquet": {
+      "rows": 41753,
+      "bytes": 2033718,
+      "sha256": "6256eaec3491cf05a170fc6ce3f78b53f16e7c9334e3e60853331cfd7ea29518"
+    },
+    "data/open-swe-traces/eagle4_oh500/tool_responses.parquet": {
+      "rows": 45949,
+      "bytes": 1201437,
+      "sha256": "a86c65c7cc6cb1b9a7ed0bc2383eed615c65ba31e607af61093969be4acfbe43"
+    },
+    "data/open-swe-traces/eagle4_oh500/render_ids.parquet": {
+      "rows": 500,
+      "bytes": 76910609,
+      "sha256": "a49827d454f3b92d95290631227af9f9829c406a05ca59fe7323afa59ecb10d4"
+    }
+  },
+  "checks": {
+    "n_trajectories": 500,
+    "n_calls": 41753,
+    "n_tool_responses": 45949,
+    "audit_calls_rows_matched": 41753,
+    "calls_input_len_eq_audit": 41753,
+    "calls_output_len_eq_audit": 41753,
+    "calls_msg_index_eq_audit": 41753,
+    "calls_prefix_str_eq": 41753,
+    "calls_prefix_ids_eq_hist_gen": 41753,
+    "calls_prefix_ids_eq_slice": 41753,
+    "calls_slice_mismatch_with_empty_reasoning": 0,
+    "calls_reasoning_empty": 0,
+    "traj_L_max_eq_selection": 500,
+    "traj_n_calls_eq_audit": 500,
+    "traj_n_tokens_eq_audit": 500,
+    "traj_session_sum_eq_audit": 500,
+    "traj_output_max_eq_audit": 500,
+    "traj_prefix_system_tools_eq_audit": 500,
+    "traj_L_max_call_eq_audit": 500,
+    "traj_n_tool_msgs_eq_audit": 500,
+    "traj_binding_mismatch_turns": 0,
+    "traj_last_tool_finish": 500,
+    "tool_responses_without_call": 0,
+    "seconds": 348,
+    "audit_calls_file": {
+      "data/open-swe-traces/audit/full/calls.csv.gz": "4b5b2ccfaab0a99da694f9c3101736b1c52b23219a1faa8274c00b25b168d3cb"
+    }
+  },
+  "scripts_sha256": {
+    "experiments/eagle4-oh500/build.py": "421152ef5bf9a978ac6f1741325e82d6bca0ae88c54d7381126a82ff46cb6d77",
+    "experiments/open-swe-traces-audit/audit.py": "bea1ba257a19588ca000aac84c99aa8429d1d688ee33a1619e98d22830b60104"
+  },
+  "software": {
+    "python": "3.12.3",
+    "transformers": "5.23.0",
+    "tokenizers": "0.23.3",
+    "pyarrow": "26.0.1",
+    "pandas": "3.1.1",
+    "numpy": "2.5.4",
+    "jinja2": "3.1.6"
+  },
+  "host": {
+    "platform": "Linux-6.8.0-149-generic-x86_64-with-glibc2.39",
+    "cpus": 80
+  },
+  "verify": {
+    "rows": 500,
+    "unique_trajectory_id": 500,
+    "per_bin": {
+      "32K-64K": 100,
+      "64K-100K": 100,
+      "100K-128K": 100,
+      "128K-200K": 100,
+      "200K-256K": 100
+    },
+    "all_resolved_1": true,
+    "all_finish_kind_finish": true,
+    "all_config_openhands": true,
+    "all_L_max_in_bin": true,
+    "all_L_max_eq_render": true,
+    "all_teacher_xhigh_thinking": true,
+    "original_columns_first": true,
+    "original_rows_identical_to_shards": 500,
+    "reselect_same_seed_identical": true,
+    "calls": {
+      "n": 41753,
+      "input_len_eq_audit": 41753,
+      "prefix_str_eq": 41753,
+      "prefix_ids_eq_hist_gen": 41753,
+      "prefix_ids_eq_slice": 41753,
+      "n_calls_eq_audit": true,
+      "L_max_eq": true
+    },
+    "rerender_trajectories_ok": 500,
+    "rerender_failures": {},
+    "seconds": 40,
+    "ALL_OK": true
+  }
+}
